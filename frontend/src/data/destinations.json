@@ -1,0 +1,1573 @@
+[
+  {
+    "state": "Uttar Pradesh",
+    "city": "Agra",
+    "slug": "agra",
+    "attractions": [
+      "Popular tourist destination"
+    ],
+    "thumb": "/destinationImage/image/agra/tour/agra.webp",
+    "banners": [
+      "/destinationImage/image/agra/holiday/agra.webp",
+      "/destinationImage/image/agra/holiday/agra-2.webp",
+      "/destinationImage/image/agra/holiday/agra-3.webp",
+      "/destinationImage/image/agra/holiday/agra-4.webp",
+      "/destinationImage/image/agra/holiday/agra-5.webp",
+      "/destinationImage/image/agra/holiday/agra-6.webp",
+      "/destinationImage/image/agra/holiday/agra-7.webp",
+      "/destinationImage/image/agra/holiday/agra-8.webp",
+      "/destinationImage/image/agra/holiday/agra-9.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Fatehpur sikir",
+    "slug": "fatehpur-sikir",
+    "attractions": [],
+    "thumb": "/destinationImage/image/fatehpur-sikir/tour/fatehpur-sikir.webp",
+    "banners": [
+      "/destinationImage/image/fatehpur-sikir/holiday/fatehpur-sikir.webp",
+      "/destinationImage/image/fatehpur-sikir/holiday/fatehpur-sikir-2.webp",
+      "/destinationImage/image/fatehpur-sikir/holiday/fatehpur-sikir-3.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Aharbal Waterfall",
+    "slug": "aharbal-waterfall",
+    "attractions": [
+      "Waterfall",
+      "nature picnic spot"
+    ],
+    "thumb": "/destinationImage/image/aharbal-waterfall/tour/aharbal-waterfall.webp",
+    "banners": [
+      "/destinationImage/image/aharbal-waterfall/holiday/aharbal-waterfall.webp",
+      "/destinationImage/image/aharbal-waterfall/holiday/aharbal-waterfall-2.webp",
+      "/destinationImage/image/aharbal-waterfall/holiday/aharbal-waterfall-3.webp",
+      "/destinationImage/image/aharbal-waterfall/holiday/aharbal-waterfall-4.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Alchi Monastery",
+    "slug": "alchi-monastery",
+    "attractions": [
+      "Ancient Buddhist art and architecture"
+    ],
+    "thumb": "/destinationImage/image/alchi-monastery/tour/alchi-monastery.webp",
+    "banners": [
+      "/destinationImage/image/alchi-monastery/holiday/alchi-monastery.webp",
+      "/destinationImage/image/alchi-monastery/holiday/alchi-monastery-2.webp",
+      "/destinationImage/image/alchi-monastery/holiday/alchi-monastery-3.webp",
+      "/destinationImage/image/alchi-monastery/holiday/alchi-monastery-4.webp",
+      "/destinationImage/image/alchi-monastery/holiday/alchi-monastery-5.webp",
+      "/destinationImage/image/alchi-monastery/holiday/alchi-monastery-6.webp",
+      "/destinationImage/image/alchi-monastery/holiday/alchi-monastery-7.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Almora",
+    "slug": "almora",
+    "attractions": [
+      "Heritage town",
+      "temples",
+      "mountain views"
+    ],
+    "thumb": "/destinationImage/image/almora/tour/almora.webp",
+    "banners": [
+      "/destinationImage/image/almora/holiday/almora.webp",
+      "/destinationImage/image/almora/holiday/almora-2.webp",
+      "/destinationImage/image/almora/holiday/almora-3.webp",
+      "/destinationImage/image/almora/holiday/almora-4.webp",
+      "/destinationImage/image/almora/holiday/almora-5.webp",
+      "/destinationImage/image/almora/holiday/almora-6.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Alwar",
+    "slug": "alwar",
+    "attractions": [
+      "Bala Quila",
+      "Sariska Tiger Reserve"
+    ],
+    "thumb": "/destinationImage/image/alwar/tour/alwar.webp",
+    "banners": [
+      "/destinationImage/image/alwar/holiday/alwar-bala-quila.webp",
+      "/destinationImage/image/alwar/holiday/alwar-sariska-tiger-reserve.webp",
+      "/destinationImage/image/alwar/holiday/alwar.webp",
+      "/destinationImage/image/alwar/holiday/alwar-2.webp",
+      "/destinationImage/image/alwar/holiday/alwar-3.webp",
+      "/destinationImage/image/alwar/holiday/alwar-4.webp",
+      "/destinationImage/image/alwar/holiday/alwar-5.webp",
+      "/destinationImage/image/alwar/holiday/alwar-6.webp"
+    ]
+  },
+  {
+    "state": "Punjab",
+    "city": "Amritsar",
+    "slug": "amritsar",
+    "attractions": [
+      "Golden Temple",
+      "Jallianwala Bagh",
+      "Wagah Border"
+    ],
+    "thumb": "/destinationImage/image/amritsar/tour/amritsar.webp",
+    "banners": [
+      "/destinationImage/image/amritsar/holiday/amritsar-golden-temple.webp",
+      "/destinationImage/image/amritsar/holiday/amritsar-jallianwala-bagh.webp",
+      "/destinationImage/image/amritsar/holiday/amritsar-wagah-border.webp",
+      "/destinationImage/image/amritsar/holiday/amritsar.webp",
+      "/destinationImage/image/amritsar/holiday/amritsar-2.webp",
+      "/destinationImage/image/amritsar/holiday/amritsar-3.webp",
+      "/destinationImage/image/amritsar/holiday/amritsar-4.webp",
+      "/destinationImage/image/amritsar/holiday/amritsar-5.webp"
+    ]
+  },
+  {
+    "state": "Punjab",
+    "city": "Anandpur Sahib",
+    "slug": "anandpur-sahib",
+    "attractions": [
+      "Takht Sri Kesgarh Sahib",
+      "Hola Mohalla Festival"
+    ],
+    "thumb": "/destinationImage/image/anandpur-sahib/tour/anandpur-sahib.webp",
+    "banners": [
+      "/destinationImage/image/anandpur-sahib/holiday/anandpur-sahib-takht-sri-kesgarh-sahib.webp",
+      "/destinationImage/image/anandpur-sahib/holiday/anandpur-sahib-hola-mohalla-festival.webp",
+      "/destinationImage/image/anandpur-sahib/holiday/anandpur-sahib.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Aru Valley",
+    "slug": "aru-valley",
+    "attractions": [
+      "Nature",
+      "camping",
+      "trekking"
+    ],
+    "thumb": "/destinationImage/image/aru-valley/tour/aru-valley.webp",
+    "banners": [
+      "/destinationImage/image/aru-valley/holiday/aru-valley.webp",
+      "/destinationImage/image/aru-valley/holiday/aru-valley-2.webp",
+      "/destinationImage/image/aru-valley/holiday/aru-valley-3.webp",
+      "/destinationImage/image/aru-valley/holiday/aru-valley-4.webp",
+      "/destinationImage/image/aru-valley/holiday/aru-valley-5.webp",
+      "/destinationImage/image/aru-valley/holiday/aru-valley-6.webp",
+      "/destinationImage/image/aru-valley/holiday/aru-valley-7.webp",
+      "/destinationImage/image/aru-valley/holiday/aru-valley-8.webp",
+      "/destinationImage/image/aru-valley/holiday/aru-valley-9.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Auli",
+    "slug": "auli",
+    "attractions": [
+      "Skiing",
+      "cable car",
+      "Himalayan views"
+    ],
+    "thumb": "/destinationImage/image/auli/tour/auli.webp",
+    "banners": [
+      "/destinationImage/image/auli/holiday/auli.webp",
+      "/destinationImage/image/auli/holiday/auli-2.webp",
+      "/destinationImage/image/auli/holiday/auli-3.webp",
+      "/destinationImage/image/auli/holiday/auli-4.webp",
+      "/destinationImage/image/auli/holiday/auli-5.webp",
+      "/destinationImage/image/auli/holiday/auli-6.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Ayodhya",
+    "slug": "ayodhya",
+    "attractions": [
+      "Ram Mandir",
+      "Hanuman Garhi",
+      "Saryu River"
+    ],
+    "thumb": "/destinationImage/image/ayodhya/tour/ayodhya.webp",
+    "banners": [
+      "/destinationImage/image/ayodhya/holiday/ayodhya-ram-mandir.webp",
+      "/destinationImage/image/ayodhya/holiday/ayodhya-hanuman-garhi.webp",
+      "/destinationImage/image/ayodhya/holiday/ayodhya-saryu-river.webp",
+      "/destinationImage/image/ayodhya/holiday/ayodhya.webp",
+      "/destinationImage/image/ayodhya/holiday/ayodhya-2.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Badrinath",
+    "slug": "badrinath",
+    "attractions": [
+      "Badrinath Temple",
+      "Mana Village"
+    ],
+    "thumb": "/destinationImage/image/badrinath/tour/badrinath.webp",
+    "banners": [
+      "/destinationImage/image/badrinath/holiday/badrinath-badrinath-temple.webp",
+      "/destinationImage/image/badrinath/holiday/badrinath-mana-village.webp",
+      "/destinationImage/image/badrinath/holiday/badrinath.webp",
+      "/destinationImage/image/badrinath/holiday/badrinath-2.webp",
+      "/destinationImage/image/badrinath/holiday/badrinath-3.webp"
+    ]
+  },
+  {
+    "state": "Punjab",
+    "city": "Bathinda",
+    "slug": "bathinda",
+    "attractions": [
+      "Bathinda Fort",
+      "Qila Mubarak"
+    ],
+    "thumb": "/destinationImage/image/bathinda/tour/bathinda.webp",
+    "banners": [
+      "/destinationImage/image/bathinda/holiday/bathinda-bathinda-fort.webp",
+      "/destinationImage/image/bathinda/holiday/bathinda-qila-mubarak.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Bikaner",
+    "slug": "bikaner",
+    "attractions": [
+      "Junagarh Fort",
+      "Karni Mata Temple"
+    ],
+    "thumb": "/destinationImage/image/bikaner/tour/bikaner.webp",
+    "banners": [
+      "/destinationImage/image/bikaner/holiday/bikaner-junagarh-fort.webp",
+      "/destinationImage/image/bikaner/holiday/bikaner-karni-mata-temple.webp",
+      "/destinationImage/image/bikaner/holiday/bikaner.webp",
+      "/destinationImage/image/bikaner/holiday/bikaner-2.webp",
+      "/destinationImage/image/bikaner/holiday/bikaner-3.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Bir Billing",
+    "slug": "bir-billing",
+    "attractions": [
+      "Paragliding",
+      "monasteries",
+      "adventure tourism"
+    ],
+    "thumb": "/destinationImage/image/bir-billing/tour/bir-billing.webp",
+    "banners": [
+      "/destinationImage/image/bir-billing/holiday/bir-billing.webp",
+      "/destinationImage/image/bir-billing/holiday/bir-billing-2.webp",
+      "/destinationImage/image/bir-billing/holiday/bir-billing-3.webp",
+      "/destinationImage/image/bir-billing/holiday/bir-billing-4.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "bundi",
+    "slug": "bundi",
+    "attractions": [
+      "Taragarh Fort",
+      "Stepwells (Baoris)"
+    ],
+    "thumb": "/destinationImage/image/bundi/tour/bundi.webp",
+    "banners": [
+      "/destinationImage/image/bundi/holiday/bundi-taragarh-fort.webp",
+      "/destinationImage/image/bundi/holiday/bundi.webp",
+      "/destinationImage/image/bundi/holiday/bundi-2.webp",
+      "/destinationImage/image/bundi/holiday/bundi-3.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Chamba",
+    "slug": "chamba",
+    "attractions": [
+      "Temples",
+      "Bhuri Singh Museum",
+      "mountain scenery"
+    ],
+    "thumb": "/destinationImage/image/chamba/tour/chamba.webp",
+    "banners": [
+      "/destinationImage/image/chamba/holiday/chamba.webp",
+      "/destinationImage/image/chamba/holiday/chamba-bhuri-singh-museum.webp",
+      "/destinationImage/image/chamba/holiday/chamba-2.webp"
+    ]
+  },
+  {
+    "state": "Punjab",
+    "city": "Chandigarh",
+    "slug": "chandigarh",
+    "attractions": [
+      "Rock Garden",
+      "Sukhna Lake",
+      "Rose Garden"
+    ],
+    "thumb": "/destinationImage/image/chandigarh/tour/chandigarh.webp",
+    "banners": [
+      "/destinationImage/image/chandigarh/holiday/chandigarh-rock-garden.webp",
+      "/destinationImage/image/chandigarh/holiday/chandigarh-sukhna-lake.webp",
+      "/destinationImage/image/chandigarh/holiday/chandigarh-rose-garden.webp",
+      "/destinationImage/image/chandigarh/holiday/chandigarh.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Chitrakoot",
+    "slug": "chitrakoot",
+    "attractions": [
+      "Ram Ghat",
+      "Kamadgiri",
+      "Gupt Godavari"
+    ],
+    "thumb": "/destinationImage/image/chitrakoot/tour/chitrakoot.webp",
+    "banners": [
+      "/destinationImage/image/chitrakoot/holiday/chitrakoot-ram-ghat.webp",
+      "/destinationImage/image/chitrakoot/holiday/chitrakoot.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Chittorgarh",
+    "slug": "chittorgarh",
+    "attractions": [
+      "Chittorgarh Fort",
+      "Vijay Stambh"
+    ],
+    "thumb": "/destinationImage/image/chittorgarh/tour/chittorgarh.webp",
+    "banners": [
+      "/destinationImage/image/chittorgarh/holiday/chittorgarh-chittorgarh-fort.webp",
+      "/destinationImage/image/chittorgarh/holiday/chittorgarh-vijay-stambh.webp",
+      "/destinationImage/image/chittorgarh/holiday/chittorgarh.webp",
+      "/destinationImage/image/chittorgarh/holiday/chittorgarh-2.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Chopta",
+    "slug": "chopta",
+    "attractions": [
+      "Trekking",
+      "Tungnath Temple",
+      "Chandrashila"
+    ],
+    "thumb": "/destinationImage/image/chopta/tour/chopta.webp",
+    "banners": [
+      "/destinationImage/image/chopta/holiday/chopta.webp",
+      "/destinationImage/image/chopta/holiday/chopta-tungnath-temple.webp",
+      "/destinationImage/image/chopta/holiday/chopta-2.webp",
+      "/destinationImage/image/chopta/holiday/chopta-3.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Dalhousie",
+    "slug": "dalhousie",
+    "attractions": [
+      "Khajjiar",
+      "Panchpula",
+      "colonial architecture"
+    ],
+    "thumb": "/destinationImage/image/dalhousie/tour/dalhousie.webp",
+    "banners": [
+      "/destinationImage/image/dalhousie/holiday/dalhousie.webp",
+      "/destinationImage/image/dalhousie/holiday/dalhousie-2.webp",
+      "/destinationImage/image/dalhousie/holiday/dalhousie-3.webp",
+      "/destinationImage/image/dalhousie/holiday/dalhousie-4.webp"
+    ]
+  },
+  {
+    "state": "Delhi NCR",
+    "city": "Delhi",
+    "slug": "delhi",
+    "attractions": [
+      "India Gate",
+      "Red Fort",
+      "Qutub Minar",
+      "Lotus Temple",
+      "Humayun's Tomb",
+      "Akshardham Temple",
+      "Chandni Chowk",
+      "Jama Masjid",
+      "Kingdom of Dreams",
+      "Cyber Hub",
+      "Sultanpur National Park",
+      "Damdama Lake",
+      "Akshardham Temple",
+      "Worlds of Wonder",
+      "Buddh International Circuit",
+      "Okhla Bird Sanctuary",
+      "Surajkund",
+      "Raja Nahar Singh Palace"
+    ],
+    "thumb": "/destinationImage/image/delhi/tour/delhi.webp",
+    "banners": [
+      "/destinationImage/image/delhi/holiday/delhi-india-gate.webp",
+      "/destinationImage/image/delhi/holiday/delhi-red-fort.webp",
+      "/destinationImage/image/delhi/holiday/delhi-qutub-minar.webp",
+      "/destinationImage/image/delhi/holiday/delhi-lotus-temple.webp",
+      "/destinationImage/image/delhi/holiday/delhi-humayuns-tomb.webp",
+      "/destinationImage/image/delhi/holiday/delhi-akshardham-temple.webp",
+      "/destinationImage/image/delhi/holiday/delhi-chandni-chowk.webp",
+      "/destinationImage/image/delhi/holiday/delhi-jama-masjid.webp",
+      "/destinationImage/image/delhi/holiday/delhi-kingdom-of-dreams.webp",
+      "/destinationImage/image/delhi/holiday/delhi-cyber-hub.webp",
+      "/destinationImage/image/delhi/holiday/delhi.webp",
+      "/destinationImage/image/delhi/holiday/delhi-damdama-lake.webp",
+      "/destinationImage/image/delhi/holiday/delhi-akshardham-temple.webp",
+      "/destinationImage/image/delhi/holiday/delhi-worlds-of-wonder.webp",
+      "/destinationImage/image/delhi/holiday/delhi-buddh-international-circuit.webp",
+      "/destinationImage/image/delhi/holiday/delhi-okhla-bird-sanctuary.webp",
+      "/destinationImage/image/delhi/holiday/delhi-2.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Dharamshala",
+    "slug": "dharamshala",
+    "attractions": [
+      "McLeod Ganj",
+      "Dalai Lama Temple",
+      "Triund Trek"
+    ],
+    "thumb": "/destinationImage/image/dharamshala/tour/dharamshala.webp",
+    "banners": [
+      "/destinationImage/image/dharamshala/holiday/dharamshala-mcleod-ganj.webp",
+      "/destinationImage/image/dharamshala/holiday/dharamshala-dalai-lama-temple.webp",
+      "/destinationImage/image/dharamshala/holiday/dharamshala-triund-trek.webp",
+      "/destinationImage/image/dharamshala/holiday/dharamshala.webp",
+      "/destinationImage/image/dharamshala/holiday/dharamshala-2.webp",
+      "/destinationImage/image/dharamshala/holiday/dharamshala-3.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Doda",
+    "slug": "doda",
+    "attractions": [
+      "Natural beauty",
+      "valleys",
+      "trekking spots"
+    ],
+    "thumb": "/destinationImage/image/doda/tour/doda.webp",
+    "banners": [
+      "/destinationImage/image/doda/holiday/doda.webp",
+      "/destinationImage/image/doda/holiday/doda-2.webp",
+      "/destinationImage/image/doda/holiday/doda-3.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Doodhpathri",
+    "slug": "doodhpathri",
+    "attractions": [
+      "Meadows",
+      "rivers",
+      "offbeat destination"
+    ],
+    "thumb": "/destinationImage/image/doodhpathri/tour/doodhpathri.webp",
+    "banners": [
+      "/destinationImage/image/doodhpathri/holiday/doodhpathri.webp",
+      "/destinationImage/image/doodhpathri/holiday/doodhpathri-2.webp",
+      "/destinationImage/image/doodhpathri/holiday/doodhpathri-3.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Dudhwa National Park",
+    "slug": "dudhwa-national-park",
+    "attractions": [
+      "Wildlife safari",
+      "tigers",
+      "rhinos",
+      "and birds"
+    ],
+    "thumb": "/destinationImage/image/dudhwa-national-park/tour/dudhwa-national-park.webp",
+    "banners": [
+      "/destinationImage/image/dudhwa-national-park/holiday/dudhwa-national-park.webp",
+      "/destinationImage/image/dudhwa-national-park/holiday/dudhwa-national-park-2.webp",
+      "/destinationImage/image/dudhwa-national-park/holiday/dudhwa-national-park-3.webp"
+    ]
+  },
+  {
+    "state": "Punjab",
+    "city": "Firozpur",
+    "slug": "firozpur",
+    "attractions": [
+      "National Martyrs Memorial",
+      "Hussainiwala Border"
+    ],
+    "thumb": "/destinationImage/image/firozpur/tour/firozpur.webp",
+    "banners": [
+      "/destinationImage/image/firozpur/holiday/firozpur-national-martyrs-memorial.webp",
+      "/destinationImage/image/firozpur/holiday/firozpur-hussainiwala-border.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Gulmarg",
+    "slug": "gulmarg",
+    "attractions": [
+      "Snow activities",
+      "skiing",
+      "Gulmarg Gondola",
+      "mountain view"
+    ],
+    "thumb": "/destinationImage/image/gulmarg/tour/gulmarg.webp",
+    "banners": [
+      "/destinationImage/image/gulmarg/holiday/gulmarg.webp",
+      "/destinationImage/image/gulmarg/holiday/gulmarg-2.webp",
+      "/destinationImage/image/gulmarg/holiday/gulmarg-gulmarg-gondola.webp",
+      "/destinationImage/image/gulmarg/holiday/gulmarg-3.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Gurugram",
+    "slug": "gurugram",
+    "attractions": [
+      "Kingdom of Dreams area",
+      "Cyber Hub",
+      "Damdama Lake"
+    ],
+    "thumb": "/destinationImage/image/gurugram/tour/gurugram.webp",
+    "banners": [
+      "/destinationImage/image/gurugram/holiday/gurugram-kingdom-of-dreams-area.webp",
+      "/destinationImage/image/gurugram/holiday/gurugram-cyber-hub.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Haridwar",
+    "slug": "haridwar",
+    "attractions": [
+      "Har Ki Pauri",
+      "Ganga Aarti",
+      "Mansa Devi Temple"
+    ],
+    "thumb": "/destinationImage/image/haridwar/tour/haridwar.webp",
+    "banners": [
+      "/destinationImage/image/haridwar/holiday/haridwar-har-ki-pauri.webp",
+      "/destinationImage/image/haridwar/holiday/haridwar-ganga-aarti.webp",
+      "/destinationImage/image/haridwar/holiday/haridwar-mansa-devi-temple.webp",
+      "/destinationImage/image/haridwar/holiday/haridwar.webp",
+      "/destinationImage/image/haridwar/holiday/haridwar-2.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Hemis Monastery",
+    "slug": "hemis-monastery",
+    "attractions": [
+      "Famous Buddhist monastery and Hemis Festival"
+    ],
+    "thumb": "/destinationImage/image/hemis-monastery/tour/hemis-monastery.webp",
+    "banners": [
+      "/destinationImage/image/hemis-monastery/holiday/hemis-monastery.webp",
+      "/destinationImage/image/hemis-monastery/holiday/hemis-monastery-2.webp",
+      "/destinationImage/image/hemis-monastery/holiday/hemis-monastery-3.webp",
+      "/destinationImage/image/hemis-monastery/holiday/hemis-monastery-4.webp",
+      "/destinationImage/image/hemis-monastery/holiday/hemis-monastery-5.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Jaipur",
+    "slug": "jaipur",
+    "attractions": [
+      "Hawa Mahal",
+      "Amber Fort",
+      "City Palace",
+      "Jantar Mantar"
+    ],
+    "thumb": "/destinationImage/image/jaipur/tour/jaipur.webp",
+    "banners": [
+      "/destinationImage/image/jaipur/holiday/jaipur-hawa-mahal.webp",
+      "/destinationImage/image/jaipur/holiday/jaipur-amber-fort.webp",
+      "/destinationImage/image/jaipur/holiday/jaipur-city-palace.webp",
+      "/destinationImage/image/jaipur/holiday/jaipur-jantar-mantar.webp",
+      "/destinationImage/image/jaipur/holiday/jaipur.webp",
+      "/destinationImage/image/jaipur/holiday/jaipur-2.webp",
+      "/destinationImage/image/jaipur/holiday/jaipur-3.webp",
+      "/destinationImage/image/jaipur/holiday/jaipur-4.webp",
+      "/destinationImage/image/jaipur/holiday/jaipur-5.webp",
+      "/destinationImage/image/jaipur/holiday/jaipur-6.webp",
+      "/destinationImage/image/jaipur/holiday/jaipur-7.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Jaisalmer",
+    "slug": "jaisalmer",
+    "attractions": [
+      "Jaisalmer Fort",
+      "Sam Sand Dunes",
+      "Patwon Ki Haveli"
+    ],
+    "thumb": "/destinationImage/image/jaisalmer/tour/jaisalmer.webp",
+    "banners": [
+      "/destinationImage/image/jaisalmer/holiday/jaisalmer-jaisalmer-fort.webp",
+      "/destinationImage/image/jaisalmer/holiday/jaisalmer-sam-sand-dunes.webp",
+      "/destinationImage/image/jaisalmer/holiday/jaisalmer-patwon-ki-haveli.webp",
+      "/destinationImage/image/jaisalmer/holiday/jaisalmer.webp",
+      "/destinationImage/image/jaisalmer/holiday/jaisalmer-2.webp",
+      "/destinationImage/image/jaisalmer/holiday/jaisalmer-3.webp"
+    ]
+  },
+  {
+    "state": "Punjab",
+    "city": "Jalandhar",
+    "slug": "jalandhar",
+    "attractions": [
+      "Devi Talab Mandir",
+      "Wonderland Theme Park"
+    ],
+    "thumb": "/destinationImage/image/jalandhar/tour/jalandhar.webp",
+    "banners": [
+      "/destinationImage/image/jalandhar/holiday/jalandhar-devi-talab-mandir.webp",
+      "/destinationImage/image/jalandhar/holiday/jalandhar-wonderland-theme-park.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Jammu",
+    "slug": "jammu",
+    "attractions": [
+      "Vaishno Devi route",
+      "Raghunath Temple",
+      "Bahu Fort"
+    ],
+    "thumb": "/destinationImage/image/jammu/tour/jammu.webp",
+    "banners": [
+      "/destinationImage/image/jammu/holiday/jammu-vaishno-devi-route.webp",
+      "/destinationImage/image/jammu/holiday/jammu-raghunath-temple.webp",
+      "/destinationImage/image/jammu/holiday/jammu-bahu-fort.webp",
+      "/destinationImage/image/jammu/holiday/jammu.webp",
+      "/destinationImage/image/jammu/holiday/jammu-2.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Jhansi",
+    "slug": "jhansi",
+    "attractions": [
+      "Jhansi Fort",
+      "Rani Mahal"
+    ],
+    "thumb": "/destinationImage/image/jhansi/tour/jhansi.webp",
+    "banners": [
+      "/destinationImage/image/jhansi/holiday/jhansi-jhansi-fort.webp",
+      "/destinationImage/image/jhansi/holiday/jhansi-rani-mahal.webp",
+      "/destinationImage/image/jhansi/holiday/jhansi.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Jim Corbett National Park",
+    "slug": "jim-corbett-national-park",
+    "attractions": [
+      "Tiger safaris",
+      "wildlife",
+      "birdwatching"
+    ],
+    "thumb": "/destinationImage/image/jim-corbett-national-park/tour/jim-corbett-national-park.webp",
+    "banners": [
+      "/destinationImage/image/jim-corbett-national-park/holiday/jim-corbett-national-park.webp",
+      "/destinationImage/image/jim-corbett-national-park/holiday/jim-corbett-national-park-2.webp",
+      "/destinationImage/image/jim-corbett-national-park/holiday/jim-corbett-national-park-3.webp",
+      "/destinationImage/image/jim-corbett-national-park/holiday/jim-corbett-national-park-4.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Jodhpur",
+    "slug": "jodhpur",
+    "attractions": [
+      "Mehrangarh Fort",
+      "Jaswant Thada",
+      "Umaid Bhawan Palace"
+    ],
+    "thumb": "/destinationImage/image/jodhpur/tour/jodhpur.webp",
+    "banners": [
+      "/destinationImage/image/jodhpur/holiday/jodhpur-mehrangarh-fort.webp",
+      "/destinationImage/image/jodhpur/holiday/jodhpur-jaswant-thada.webp",
+      "/destinationImage/image/jodhpur/holiday/jodhpur-umaid-bhawan-palace.webp",
+      "/destinationImage/image/jodhpur/holiday/jodhpur.webp",
+      "/destinationImage/image/jodhpur/holiday/jodhpur-2.webp",
+      "/destinationImage/image/jodhpur/holiday/jodhpur-3.webp"
+    ]
+  },
+  {
+    "state": "Punjab",
+    "city": "Kapurthala",
+    "slug": "kapurthala",
+    "attractions": [
+      "Jagatjit Palace",
+      "Moorish Mosque"
+    ],
+    "thumb": "/destinationImage/image/kapurthala/tour/kapurthala.webp",
+    "banners": [
+      "/destinationImage/image/kapurthala/holiday/kapurthala-jagatjit-palace.webp",
+      "/destinationImage/image/kapurthala/holiday/kapurthala.webp",
+      "/destinationImage/image/kapurthala/holiday/kapurthala-2.webp",
+      "/destinationImage/image/kapurthala/holiday/kapurthala-3.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Kargil",
+    "slug": "kargil",
+    "attractions": [
+      "War memorial",
+      "Suru Valley",
+      "mountain landscapes"
+    ],
+    "thumb": "/destinationImage/image/kargil/tour/kargil.webp",
+    "banners": [
+      "/destinationImage/image/kargil/holiday/kargil.webp",
+      "/destinationImage/image/kargil/holiday/kargil-suru-valley.webp",
+      "/destinationImage/image/kargil/holiday/kargil-2.webp",
+      "/destinationImage/image/kargil/holiday/kargil-3.webp",
+      "/destinationImage/image/kargil/holiday/kargil-4.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Kasauli",
+    "slug": "kasauli",
+    "attractions": [
+      "Popular tourist destination"
+    ],
+    "thumb": "/destinationImage/image/kasauli/tour/kasauli.webp",
+    "banners": [
+      "/destinationImage/image/kasauli/holiday/kasauli.webp",
+      "/destinationImage/image/kasauli/holiday/kasauli-2.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Kasol",
+    "slug": "kasol",
+    "attractions": [
+      "Parvati Valley",
+      "trekking",
+      "nature views"
+    ],
+    "thumb": "/destinationImage/image/kasol/tour/kasol.webp",
+    "banners": [
+      "/destinationImage/image/kasol/holiday/kasol-parvati-valley.webp",
+      "/destinationImage/image/kasol/holiday/kasol.webp",
+      "/destinationImage/image/kasol/holiday/kasol-2.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Katra",
+    "slug": "katra",
+    "attractions": [
+      "Base town for Vaishno Devi pilgrimage"
+    ],
+    "thumb": "/destinationImage/image/katra/tour/katra.webp",
+    "banners": [
+      "/destinationImage/image/katra/holiday/katra.webp",
+      "/destinationImage/image/katra/holiday/katra-2.webp",
+      "/destinationImage/image/katra/holiday/katra-3.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Kausani",
+    "slug": "kausani",
+    "attractions": [
+      "Monkey Point",
+      "Mall Road",
+      "Christ Church"
+    ],
+    "thumb": "/destinationImage/image/kausani/tour/kausani.webp",
+    "banners": [
+      "/destinationImage/image/kausani/holiday/kausani-monkey-point.webp",
+      "/destinationImage/image/kausani/holiday/kausani-mall-road.webp",
+      "/destinationImage/image/kausani/holiday/kausani-christ-church.webp",
+      "/destinationImage/image/kausani/holiday/kausani.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Kedarnath",
+    "slug": "kedarnath",
+    "attractions": [
+      "Kedarnath Temple",
+      "Char Dham pilgrimage"
+    ],
+    "thumb": "/destinationImage/image/kedarnath/tour/kedarnath.webp",
+    "banners": [
+      "/destinationImage/image/kedarnath/holiday/kedarnath-kedarnath-temple.webp",
+      "/destinationImage/image/kedarnath/holiday/kedarnath-char-dham-pilgrimage.webp",
+      "/destinationImage/image/kedarnath/holiday/kedarnath.webp",
+      "/destinationImage/image/kedarnath/holiday/kedarnath-2.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Khardung La",
+    "slug": "khardung-la",
+    "attractions": [
+      "One of the highest motorable mountain"
+    ],
+    "thumb": "/destinationImage/image/khardung-la/tour/khardung-la.webp",
+    "banners": [
+      "/destinationImage/image/khardung-la/holiday/khardung-la.webp",
+      "/destinationImage/image/khardung-la/holiday/khardung-la-2.webp",
+      "/destinationImage/image/khardung-la/holiday/khardung-la-3.webp",
+      "/destinationImage/image/khardung-la/holiday/khardung-la-4.webp",
+      "/destinationImage/image/khardung-la/holiday/khardung-la-5.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Kinnaur",
+    "slug": "kinnaur",
+    "attractions": [
+      "Sangla Valley",
+      "Kalpa",
+      "apple orchards"
+    ],
+    "thumb": "/destinationImage/image/kinnaur/tour/kinnaur.webp",
+    "banners": [
+      "/destinationImage/image/kinnaur/holiday/kinnaur-sangla-valley.webp",
+      "/destinationImage/image/kinnaur/holiday/kinnaur.webp",
+      "/destinationImage/image/kinnaur/holiday/kinnaur-2.webp",
+      "/destinationImage/image/kinnaur/holiday/kinnaur-3.webp",
+      "/destinationImage/image/kinnaur/holiday/kinnaur-4.webp",
+      "/destinationImage/image/kinnaur/holiday/kinnaur-5.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Kota",
+    "slug": "kota",
+    "attractions": [
+      "Seven Wonders Park",
+      "Chambal Garden"
+    ],
+    "thumb": "/destinationImage/image/kota/tour/kota.webp",
+    "banners": [
+      "/destinationImage/image/kota/holiday/kota-seven-wonders-park.webp",
+      "/destinationImage/image/kota/holiday/kota-chambal-garden.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Kullu",
+    "slug": "kullu",
+    "attractions": [
+      "Dussehra Festival",
+      "river rafting",
+      "valleys"
+    ],
+    "thumb": "/destinationImage/image/kullu/tour/kullu.webp",
+    "banners": [
+      "/destinationImage/image/kullu/holiday/kullu-dussehra-festival.webp",
+      "/destinationImage/image/kullu/holiday/kullu.webp",
+      "/destinationImage/image/kullu/holiday/kullu-2.webp",
+      "/destinationImage/image/kullu/holiday/kullu-3.webp",
+      "/destinationImage/image/kullu/holiday/kullu-4.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Kushinagar",
+    "slug": "kushinagar",
+    "attractions": [
+      "Mahaparinirvana Temple",
+      "Buddhist Stupas"
+    ],
+    "thumb": "/destinationImage/image/kushinagar/tour/kushinagar.webp",
+    "banners": [
+      "/destinationImage/image/kushinagar/holiday/kushinagar-mahaparinirvana-temple.webp",
+      "/destinationImage/image/kushinagar/holiday/kushinagar-buddhist-stupas.webp",
+      "/destinationImage/image/kushinagar/holiday/kushinagar.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Lamayuru Monastery",
+    "slug": "lamayuru-monastery",
+    "attractions": [
+      "Ancient monastery",
+      "Moonland landscapes"
+    ],
+    "thumb": "/destinationImage/image/lamayuru-monastery/tour/lamayuru-monastery.webp",
+    "banners": [
+      "/destinationImage/image/lamayuru-monastery/holiday/lamayuru-monastery.webp",
+      "/destinationImage/image/lamayuru-monastery/holiday/lamayuru-monastery-2.webp",
+      "/destinationImage/image/lamayuru-monastery/holiday/lamayuru-monastery-3.webp",
+      "/destinationImage/image/lamayuru-monastery/holiday/lamayuru-monastery-4.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Leh",
+    "slug": "leh",
+    "attractions": [
+      "Leh Palace",
+      "Shanti Stupa",
+      "monasteries",
+      "markets"
+    ],
+    "thumb": "/destinationImage/image/leh/tour/leh.webp",
+    "banners": [
+      "/destinationImage/image/leh/holiday/leh-leh-palace.webp",
+      "/destinationImage/image/leh/holiday/leh-shanti-stupa.webp",
+      "/destinationImage/image/leh/holiday/leh.webp",
+      "/destinationImage/image/leh/holiday/leh-2.webp",
+      "/destinationImage/image/leh/holiday/leh-3.webp",
+      "/destinationImage/image/leh/holiday/leh-4.webp",
+      "/destinationImage/image/leh/holiday/leh-5.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Lucknow",
+    "slug": "lucknow",
+    "attractions": [
+      "Bara Imambara",
+      "Rumi Darwaza",
+      "Chota Imambara"
+    ],
+    "thumb": "/destinationImage/image/lucknow/tour/lucknow.webp",
+    "banners": [
+      "/destinationImage/image/lucknow/holiday/lucknow-bara-imambara.webp",
+      "/destinationImage/image/lucknow/holiday/lucknow-rumi-darwaza.webp",
+      "/destinationImage/image/lucknow/holiday/lucknow-chota-imambara.webp"
+    ]
+  },
+  {
+    "state": "Punjab",
+    "city": "Ludhiana",
+    "slug": "ludhiana",
+    "attractions": [
+      "Punjab Rural Heritage Museum",
+      "Maharaja Ranjit Singh Museum"
+    ],
+    "thumb": "/destinationImage/image/ludhiana/tour/ludhiana.webp",
+    "banners": [
+      "/destinationImage/image/ludhiana/holiday/ludhiana-punjab-rural-heritage-museum.webp",
+      "/destinationImage/image/ludhiana/holiday/ludhiana-maharaja-ranjit-singh-museum.webp",
+      "/destinationImage/image/ludhiana/holiday/ludhiana.webp",
+      "/destinationImage/image/ludhiana/holiday/ludhiana-2.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Magnetic Hill",
+    "slug": "magnetic-hill",
+    "attractions": [
+      "Popular roadside attraction near Leh"
+    ],
+    "thumb": "/destinationImage/image/magnetic-hill/tour/magnetic-hill.webp",
+    "banners": [
+      "/destinationImage/image/magnetic-hill/holiday/magnetic-hill.webp",
+      "/destinationImage/image/magnetic-hill/holiday/magnetic-hill-2.webp",
+      "/destinationImage/image/magnetic-hill/holiday/magnetic-hill-3.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Malana",
+    "slug": "malana",
+    "attractions": [
+      "Ancient village",
+      "Himalayan culture"
+    ],
+    "thumb": "/destinationImage/image/malana/tour/malana.webp",
+    "banners": [
+      "/destinationImage/image/malana/holiday/malana.webp",
+      "/destinationImage/image/malana/holiday/malana-2.webp",
+      "/destinationImage/image/malana/holiday/malana-3.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Manali",
+    "slug": "manali",
+    "attractions": [
+      "Solang Valley",
+      "Rohtang Pass",
+      "Hidimba Temple",
+      "Atal Tunnel"
+    ],
+    "thumb": "/destinationImage/image/manali/tour/manali.webp",
+    "banners": [
+      "/destinationImage/image/manali/holiday/manali-solang-valley.webp",
+      "/destinationImage/image/manali/holiday/manali-rohtang-pass.webp",
+      "/destinationImage/image/manali/holiday/manali-hidimba-temple.webp",
+      "/destinationImage/image/manali/holiday/manali-atal-tunnel.webp",
+      "/destinationImage/image/manali/holiday/manali.webp",
+      "/destinationImage/image/manali/holiday/manali-2.webp",
+      "/destinationImage/image/manali/holiday/manali-3.webp",
+      "/destinationImage/image/manali/holiday/manali-4.webp",
+      "/destinationImage/image/manali/holiday/manali-5.webp",
+      "/destinationImage/image/manali/holiday/manali-6.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Mathura",
+    "slug": "mathura",
+    "attractions": [
+      "Shri Krishna Janmabhoomi Temple"
+    ],
+    "thumb": "/destinationImage/image/mathura/tour/mathura.webp",
+    "banners": [
+      "/destinationImage/image/mathura/holiday/mathura-shri-krishna-janmabhoomi-temple.webp",
+      "/destinationImage/image/mathura/holiday/mathura.webp",
+      "/destinationImage/image/mathura/holiday/mathura-2.webp",
+      "/destinationImage/image/mathura/holiday/mathura-3.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Mcleod Ganj",
+    "slug": "mcleod-ganj",
+    "attractions": [
+      "Tibetan culture",
+      "monasteries",
+      "cafes"
+    ],
+    "thumb": "/destinationImage/image/mcleod-ganj/tour/mcleod-ganj.webp",
+    "banners": [
+      "/destinationImage/image/mcleod-ganj/holiday/mcleod-ganj.webp",
+      "/destinationImage/image/mcleod-ganj/holiday/mcleod-ganj-2.webp",
+      "/destinationImage/image/mcleod-ganj/holiday/mcleod-ganj-3.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Mount Abu",
+    "slug": "mount-abu",
+    "attractions": [
+      "Dilwara Temples",
+      "Nakki Lake",
+      "Guru Shikhar"
+    ],
+    "thumb": "/destinationImage/image/mount-abu/tour/mount-abu.webp",
+    "banners": [
+      "/destinationImage/image/mount-abu/holiday/mount-abu-dilwara-temples.webp",
+      "/destinationImage/image/mount-abu/holiday/mount-abu-nakki-lake.webp",
+      "/destinationImage/image/mount-abu/holiday/mount-abu-guru-shikhar.webp",
+      "/destinationImage/image/mount-abu/holiday/mount-abu.webp",
+      "/destinationImage/image/mount-abu/holiday/mount-abu-2.webp",
+      "/destinationImage/image/mount-abu/holiday/mount-abu-3.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Munsiyari",
+    "slug": "munsiyari",
+    "attractions": [
+      "Trekking",
+      "glaciers",
+      "Panchachuli peaks"
+    ],
+    "thumb": "/destinationImage/image/munsiyari/tour/munsiyari.webp",
+    "banners": [
+      "/destinationImage/image/munsiyari/holiday/munsiyari.webp",
+      "/destinationImage/image/munsiyari/holiday/munsiyari-2.webp",
+      "/destinationImage/image/munsiyari/holiday/munsiyari-3.webp",
+      "/destinationImage/image/munsiyari/holiday/munsiyari-4.webp",
+      "/destinationImage/image/munsiyari/holiday/munsiyari-5.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Mussoorie",
+    "slug": "mussoorie",
+    "attractions": [
+      "Kempty Falls",
+      "Gun Hill",
+      "Mall Road"
+    ],
+    "thumb": "/destinationImage/image/mussoorie/tour/mussoorie.webp",
+    "banners": [
+      "/destinationImage/image/mussoorie/holiday/mussoorie-kempty-falls.webp",
+      "/destinationImage/image/mussoorie/holiday/mussoorie-gun-hill.webp",
+      "/destinationImage/image/mussoorie/holiday/mussoorie-mall-road.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Nainital",
+    "slug": "nainital",
+    "attractions": [
+      "Naini Lake",
+      "Naina Devi Temple",
+      "Snow View Point"
+    ],
+    "thumb": "/destinationImage/image/nainital/tour/nainital.webp",
+    "banners": [
+      "/destinationImage/image/nainital/holiday/nainital-naini-lake.webp",
+      "/destinationImage/image/nainital/holiday/nainital-naina-devi-temple.webp",
+      "/destinationImage/image/nainital/holiday/nainital-snow-view-point.webp",
+      "/destinationImage/image/nainital/holiday/nainital.webp",
+      "/destinationImage/image/nainital/holiday/nainital-2.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Nubra Valley",
+    "slug": "nubra-valley",
+    "attractions": [
+      "Sand dunes",
+      "double-humped camels",
+      "Diskit Monaste"
+    ],
+    "thumb": "/destinationImage/image/nubra-valley/tour/nubra-valley.webp",
+    "banners": [
+      "/destinationImage/image/nubra-valley/holiday/nubra-valley.webp",
+      "/destinationImage/image/nubra-valley/holiday/nubra-valley-2.webp",
+      "/destinationImage/image/nubra-valley/holiday/nubra-valley-diskit-monaste.webp",
+      "/destinationImage/image/nubra-valley/holiday/nubra-valley-3.webp",
+      "/destinationImage/image/nubra-valley/holiday/nubra-valley-4.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Pahalgam",
+    "slug": "pahalgam",
+    "attractions": [
+      "Betaab Valley",
+      "Aru Valley",
+      "Lidder Ri"
+    ],
+    "thumb": "/destinationImage/image/pahalgam/tour/pahalgam.webp",
+    "banners": [
+      "/destinationImage/image/pahalgam/holiday/pahalgam-betaab-valley.webp",
+      "/destinationImage/image/pahalgam/holiday/pahalgam-aru-valley.webp",
+      "/destinationImage/image/pahalgam/holiday/pahalgam-lidder-ri.webp",
+      "/destinationImage/image/pahalgam/holiday/pahalgam.webp",
+      "/destinationImage/image/pahalgam/holiday/pahalgam-2.webp",
+      "/destinationImage/image/pahalgam/holiday/pahalgam-3.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Palampur",
+    "slug": "palampur",
+    "attractions": [
+      "Tea gardens",
+      "Dhauladhar mountain views"
+    ],
+    "thumb": "/destinationImage/image/palampur/tour/palampur.webp",
+    "banners": [
+      "/destinationImage/image/palampur/holiday/palampur.webp",
+      "/destinationImage/image/palampur/holiday/palampur-2.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Pangong Tso",
+    "slug": "pangong-tso",
+    "attractions": [
+      "Famous blue lake",
+      "mountain scenery",
+      "camping"
+    ],
+    "thumb": "/destinationImage/image/pangong-tso/tour/pangong-tso.webp",
+    "banners": [
+      "/destinationImage/image/pangong-tso/holiday/pangong-tso.webp",
+      "/destinationImage/image/pangong-tso/holiday/pangong-tso-2.webp",
+      "/destinationImage/image/pangong-tso/holiday/pangong-tso-3.webp"
+    ]
+  },
+  {
+    "state": "Punjab",
+    "city": "Pathankot",
+    "slug": "pathankot",
+    "attractions": [
+      "Gateway to Himachal and Jammu",
+      "forts and nature spots"
+    ],
+    "thumb": "/destinationImage/image/pathankot/tour/pathankot.webp",
+    "banners": [
+      "/destinationImage/image/pathankot/holiday/pathankot.webp",
+      "/destinationImage/image/pathankot/holiday/pathankot-2.webp",
+      "/destinationImage/image/pathankot/holiday/pathankot-3.webp"
+    ]
+  },
+  {
+    "state": "Punjab",
+    "city": "Patiala",
+    "slug": "patiala",
+    "attractions": [
+      "Qila Mubarak",
+      "Sheesh Mahal",
+      "Patiala Royal Heritage"
+    ],
+    "thumb": "/destinationImage/image/patiala/tour/patiala.webp",
+    "banners": [
+      "/destinationImage/image/patiala/holiday/patiala-qila-mubarak.webp",
+      "/destinationImage/image/patiala/holiday/patiala-sheesh-mahal.webp",
+      "/destinationImage/image/patiala/holiday/patiala.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Patnitop",
+    "slug": "patnitop",
+    "attractions": [
+      "Hill station",
+      "snow views",
+      "adventure activities"
+    ],
+    "thumb": "/destinationImage/image/patnitop/tour/patnitop.webp",
+    "banners": [
+      "/destinationImage/image/patnitop/holiday/patnitop.webp",
+      "/destinationImage/image/patnitop/holiday/patnitop-2.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Prayagraj",
+    "slug": "prayagraj",
+    "attractions": [
+      "Triveni Sangam",
+      "Allahabad Fort",
+      "Kumbh Mela"
+    ],
+    "thumb": "/destinationImage/image/prayagraj/tour/prayagraj.webp",
+    "banners": [
+      "/destinationImage/image/prayagraj/holiday/prayagraj-triveni-sangam.webp",
+      "/destinationImage/image/prayagraj/holiday/prayagraj-allahabad-fort.webp",
+      "/destinationImage/image/prayagraj/holiday/prayagraj-kumbh-mela.webp",
+      "/destinationImage/image/prayagraj/holiday/prayagraj.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Pushkar",
+    "slug": "pushkar",
+    "attractions": [
+      "Brahma Temple",
+      "Pushkar Lake",
+      "Camel Fair"
+    ],
+    "thumb": "/destinationImage/image/pushkar/tour/pushkar.webp",
+    "banners": [
+      "/destinationImage/image/pushkar/holiday/pushkar-brahma-temple.webp",
+      "/destinationImage/image/pushkar/holiday/pushkar-pushkar-lake.webp",
+      "/destinationImage/image/pushkar/holiday/pushkar-camel-fair.webp",
+      "/destinationImage/image/pushkar/holiday/pushkar.webp",
+      "/destinationImage/image/pushkar/holiday/pushkar-2.webp",
+      "/destinationImage/image/pushkar/holiday/pushkar-3.webp",
+      "/destinationImage/image/pushkar/holiday/pushkar-4.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Ranikhet",
+    "slug": "ranikhet",
+    "attractions": [
+      "Pine forests",
+      "golf course",
+      "Himalayan scenery"
+    ],
+    "thumb": "/destinationImage/image/ranikhet/tour/ranikhet.webp",
+    "banners": [
+      "/destinationImage/image/ranikhet/holiday/ranikhet.webp",
+      "/destinationImage/image/ranikhet/holiday/ranikhet-2.webp",
+      "/destinationImage/image/ranikhet/holiday/ranikhet-3.webp",
+      "/destinationImage/image/ranikhet/holiday/ranikhet-4.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Ranthambore",
+    "slug": "ranthambore",
+    "attractions": [
+      "Ranthambore National Park"
+    ],
+    "thumb": "/destinationImage/image/ranthambore/tour/ranthambore.webp",
+    "banners": [
+      "/destinationImage/image/ranthambore/holiday/ranthambore-ranthambore-national-park.webp",
+      "/destinationImage/image/ranthambore/holiday/ranthambore.webp",
+      "/destinationImage/image/ranthambore/holiday/ranthambore-2.webp",
+      "/destinationImage/image/ranthambore/holiday/ranthambore-3.webp",
+      "/destinationImage/image/ranthambore/holiday/ranthambore-4.webp",
+      "/destinationImage/image/ranthambore/holiday/ranthambore-5.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Rishikesh",
+    "slug": "rishikesh",
+    "attractions": [
+      "Laxman Jhula",
+      "Triveni Ghat",
+      "river rafting",
+      "yoga"
+    ],
+    "thumb": "/destinationImage/image/rishikesh/tour/rishikesh.webp",
+    "banners": [
+      "/destinationImage/image/rishikesh/holiday/rishikesh-laxman-jhula.webp",
+      "/destinationImage/image/rishikesh/holiday/rishikesh-triveni-ghat.webp",
+      "/destinationImage/image/rishikesh/holiday/rishikesh.webp",
+      "/destinationImage/image/rishikesh/holiday/rishikesh-2.webp",
+      "/destinationImage/image/rishikesh/holiday/rishikesh-3.webp",
+      "/destinationImage/image/rishikesh/holiday/rishikesh-4.webp",
+      "/destinationImage/image/rishikesh/holiday/rishikesh-5.webp",
+      "/destinationImage/image/rishikesh/holiday/rishikesh-6.webp",
+      "/destinationImage/image/rishikesh/holiday/rishikesh-7.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Sarnath",
+    "slug": "sarnath",
+    "attractions": [
+      "Dhamek Stupa",
+      "Archaeological Museum"
+    ],
+    "thumb": "/destinationImage/image/sarnath/tour/sarnath.webp",
+    "banners": [
+      "/destinationImage/image/sarnath/holiday/sarnath-dhamek-stupa.webp",
+      "/destinationImage/image/sarnath/holiday/sarnath-archaeological-museum.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Shekhawati",
+    "slug": "shekhawati",
+    "attractions": [
+      "Famous for painted havelis"
+    ],
+    "thumb": "/destinationImage/image/shekhawati/tour/shekhawati.webp",
+    "banners": [
+      "/destinationImage/image/shekhawati/holiday/shekhawati.webp",
+      "/destinationImage/image/shekhawati/holiday/shekhawati-2.webp",
+      "/destinationImage/image/shekhawati/holiday/shekhawati-3.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Shimla",
+    "slug": "shimla",
+    "attractions": [
+      "Mall Road",
+      "The Ridge",
+      "Jakhoo Temple",
+      "Kufri"
+    ],
+    "thumb": "/destinationImage/image/shimla/tour/shimla.webp",
+    "banners": [
+      "/destinationImage/image/shimla/holiday/shimla-mall-road.webp",
+      "/destinationImage/image/shimla/holiday/shimla-the-ridge.webp",
+      "/destinationImage/image/shimla/holiday/shimla-jakhoo-temple.webp",
+      "/destinationImage/image/shimla/holiday/shimla.webp",
+      "/destinationImage/image/shimla/holiday/shimla-2.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Sonamarg",
+    "slug": "sonamarg",
+    "attractions": [
+      "Thajiwas Glacier",
+      "trekking",
+      "scenic landscapes"
+    ],
+    "thumb": "/destinationImage/image/sonamarg/tour/sonamarg.webp",
+    "banners": [
+      "/destinationImage/image/sonamarg/holiday/sonamarg-thajiwas-glacier.webp",
+      "/destinationImage/image/sonamarg/holiday/sonamarg.webp",
+      "/destinationImage/image/sonamarg/holiday/sonamarg-2.webp",
+      "/destinationImage/image/sonamarg/holiday/sonamarg-3.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Spiti Valley",
+    "slug": "spiti-valley",
+    "attractions": [
+      "Key Monastery",
+      "Chandratal Lake",
+      "high-altitude villages"
+    ],
+    "thumb": "/destinationImage/image/spiti-valley/tour/spiti-valley.webp",
+    "banners": [
+      "/destinationImage/image/spiti-valley/holiday/spiti-valley-key-monastery.webp",
+      "/destinationImage/image/spiti-valley/holiday/spiti-valley-chandratal-lake.webp",
+      "/destinationImage/image/spiti-valley/holiday/spiti-valley.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Srinagar",
+    "slug": "srinagar",
+    "attractions": [
+      "Dal Lake",
+      "Mughal Gardens",
+      "Shankaracharya Temple",
+      "houseboats"
+    ],
+    "thumb": "/destinationImage/image/srinagar/tour/srinagar.webp",
+    "banners": [
+      "/destinationImage/image/srinagar/holiday/srinagar-dal-lake.webp",
+      "/destinationImage/image/srinagar/holiday/srinagar-mughal-gardens.webp",
+      "/destinationImage/image/srinagar/holiday/srinagar-shankaracharya-temple.webp",
+      "/destinationImage/image/srinagar/holiday/srinagar.webp",
+      "/destinationImage/image/srinagar/holiday/srinagar-2.webp",
+      "/destinationImage/image/srinagar/holiday/srinagar-3.webp"
+    ]
+  },
+  {
+    "state": "Himachal Pradesh",
+    "city": "Tirthan Valley",
+    "slug": "tirthan-valley",
+    "attractions": [
+      "Great Himalayan National Park",
+      "trekking",
+      "camping"
+    ],
+    "thumb": "/destinationImage/image/tirthan-valley/tour/tirthan-valley.webp",
+    "banners": [
+      "/destinationImage/image/tirthan-valley/holiday/tirthan-valley-great-himalayan-national-park.webp",
+      "/destinationImage/image/tirthan-valley/holiday/tirthan-valley.webp",
+      "/destinationImage/image/tirthan-valley/holiday/tirthan-valley-2.webp",
+      "/destinationImage/image/tirthan-valley/holiday/tirthan-valley-3.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Tso Moriri Lake",
+    "slug": "tso-moriri-lake",
+    "attractions": [
+      "High-altitude lake",
+      "wildlife",
+      "peaceful landscapes"
+    ],
+    "thumb": "/destinationImage/image/tso-moriri-lake/tour/tso-moriri-lake.webp",
+    "banners": [
+      "/destinationImage/image/tso-moriri-lake/holiday/tso-moriri-lake.webp",
+      "/destinationImage/image/tso-moriri-lake/holiday/tso-moriri-lake-2.webp",
+      "/destinationImage/image/tso-moriri-lake/holiday/tso-moriri-lake-3.webp",
+      "/destinationImage/image/tso-moriri-lake/holiday/tso-moriri-lake-4.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Turtuk",
+    "slug": "turtuk",
+    "attractions": [
+      "Ancient Buddhist art and architecture"
+    ],
+    "thumb": "/destinationImage/image/turtuk/tour/turtuk.webp",
+    "banners": [
+      "/destinationImage/image/turtuk/holiday/turtuk.webp",
+      "/destinationImage/image/turtuk/holiday/turtuk-2.webp"
+    ]
+  },
+  {
+    "state": "Rajasthan",
+    "city": "Udaipur",
+    "slug": "udaipur",
+    "attractions": [
+      "City Palace",
+      "Lake Pichola",
+      "Fateh Sagar Lake"
+    ],
+    "thumb": "/destinationImage/image/udaipur/tour/udaipur.webp",
+    "banners": [
+      "/destinationImage/image/udaipur/holiday/udaipur-city-palace.webp",
+      "/destinationImage/image/udaipur/holiday/udaipur-lake-pichola.webp",
+      "/destinationImage/image/udaipur/holiday/udaipur-fateh-sagar-lake.webp",
+      "/destinationImage/image/udaipur/holiday/udaipur.webp"
+    ]
+  },
+  {
+    "state": "Uttarakhand",
+    "city": "Valley of Flowers National Park",
+    "slug": "valley-of-flowers-national-park",
+    "attractions": [
+      "UNESCO World Heritage Site",
+      "alpine flowers"
+    ],
+    "thumb": "/destinationImage/image/valley-of-flowers-national-park/tour/valley-of-flowers-national-park.webp",
+    "banners": [
+      "/destinationImage/image/valley-of-flowers-national-park/holiday/valley-of-flowers-national-park-unesco-world-heritage-site.webp",
+      "/destinationImage/image/valley-of-flowers-national-park/holiday/valley-of-flowers-national-park.webp",
+      "/destinationImage/image/valley-of-flowers-national-park/holiday/valley-of-flowers-national-park-2.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Varanasi",
+    "slug": "varanasi",
+    "attractions": [
+      "Kashi Vishwanath Temple",
+      "Dashashwamedh Ghat",
+      "Ganga Aarti"
+    ],
+    "thumb": "/destinationImage/image/varanasi/tour/varanasi.webp",
+    "banners": [
+      "/destinationImage/image/varanasi/holiday/varanasi-kashi-vishwanath-temple.webp",
+      "/destinationImage/image/varanasi/holiday/varanasi-dashashwamedh-ghat.webp",
+      "/destinationImage/image/varanasi/holiday/varanasi-ganga-aarti.webp",
+      "/destinationImage/image/varanasi/holiday/varanasi.webp",
+      "/destinationImage/image/varanasi/holiday/varanasi-2.webp"
+    ]
+  },
+  {
+    "state": "Uttar Pradesh",
+    "city": "Vrindavan",
+    "slug": "vrindavan",
+    "attractions": [
+      "Prem Mandir",
+      "Banke Bihari Temple",
+      "ISKCON Temple"
+    ],
+    "thumb": "/destinationImage/image/vrindavan/tour/vrindavan.webp",
+    "banners": [
+      "/destinationImage/image/vrindavan/holiday/vrindavan-prem-mandir.webp",
+      "/destinationImage/image/vrindavan/holiday/vrindavan-banke-bihari-temple.webp",
+      "/destinationImage/image/vrindavan/holiday/vrindavan-iskcon-temple.webp",
+      "/destinationImage/image/vrindavan/holiday/vrindavan.webp",
+      "/destinationImage/image/vrindavan/holiday/vrindavan-2.webp",
+      "/destinationImage/image/vrindavan/holiday/vrindavan-3.webp"
+    ]
+  },
+  {
+    "state": "Jammu and Kashmir",
+    "city": "Yusmarg",
+    "slug": "yusmarg",
+    "attractions": [
+      "Meadows",
+      "forests",
+      "peaceful landscapes"
+    ],
+    "thumb": "/destinationImage/image/yusmarg/tour/yusmarg.webp",
+    "banners": [
+      "/destinationImage/image/yusmarg/holiday/yusmarg.webp",
+      "/destinationImage/image/yusmarg/holiday/yusmarg-2.webp",
+      "/destinationImage/image/yusmarg/holiday/yusmarg-3.webp"
+    ]
+  },
+  {
+    "state": "Ladakh",
+    "city": "Zanskar Valley",
+    "slug": "zanskar-valley",
+    "attractions": [
+      "Trekking",
+      "rivers",
+      "remote Himalayan beauty"
+    ],
+    "thumb": "/destinationImage/image/zanskar-valley/tour/zanskar-valley.webp",
+    "banners": [
+      "/destinationImage/image/zanskar-valley/holiday/zanskar-valley.webp",
+      "/destinationImage/image/zanskar-valley/holiday/zanskar-valley-2.webp",
+      "/destinationImage/image/zanskar-valley/holiday/zanskar-valley-3.webp"
+    ]
+  }
+]

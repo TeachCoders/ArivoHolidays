@@ -1,0 +1,444 @@
+{
+  "states": [
+    {
+      "id": 3,
+      "title": "Himachal Pradesh"
+    },
+    {
+      "id": 5,
+      "title": "Uttar Pradesh"
+    },
+    {
+      "id": 6,
+      "title": "Punjab"
+    },
+    {
+      "id": 10,
+      "title": "Delhi  NCR"
+    },
+    {
+      "id": 9,
+      "title": "Ladakh"
+    },
+    {
+      "id": 8,
+      "title": "Jammu and Kashmir"
+    },
+    {
+      "id": 4,
+      "title": "Uttarakhand"
+    },
+    {
+      "id": 16,
+      "title": "Maharashtra"
+    },
+    {
+      "id": 15,
+      "title": "Madhya pradesh"
+    },
+    {
+      "id": 1,
+      "title": "Rajasthan"
+    }
+  ],
+  "cities": [
+    {
+      "id": 93,
+      "title": "Hemis Monastery"
+    },
+    {
+      "id": 50,
+      "title": "Kasauli"
+    },
+    {
+      "id": 53,
+      "title": "Kullu"
+    },
+    {
+      "id": 60,
+      "title": "Mcleod Ganj"
+    },
+    {
+      "id": 58,
+      "title": "Malana"
+    },
+    {
+      "id": 15,
+      "title": "Ranthambore"
+    },
+    {
+      "id": 61,
+      "title": "Amritsar"
+    },
+    {
+      "id": 62,
+      "title": "Ludhiana"
+    },
+    {
+      "id": 74,
+      "title": "Pahalgam"
+    },
+    {
+      "id": 21,
+      "title": "Varanasi"
+    },
+    {
+      "id": 63,
+      "title": "Patiala"
+    },
+    {
+      "id": 72,
+      "title": "Gurugram"
+    },
+    {
+      "id": 1,
+      "title": "Jaipur"
+    },
+    {
+      "id": 29,
+      "title": "Sarnath"
+    },
+    {
+      "id": 106,
+      "title": "mumbai"
+    },
+    {
+      "id": 36,
+      "title": "Kedarnath"
+    },
+    {
+      "id": 66,
+      "title": "Bathinda"
+    },
+    {
+      "id": 69,
+      "title": "Firozpur"
+    },
+    {
+      "id": 35,
+      "title": "Jim Corbett National Park"
+    },
+    {
+      "id": 31,
+      "title": "Rishikesh"
+    },
+    {
+      "id": 64,
+      "title": "Jalandhar"
+    },
+    {
+      "id": 107,
+      "title": "Khajuraho"
+    },
+    {
+      "id": 108,
+      "title": "Orchha"
+    },
+    {
+      "id": 17,
+      "title": "Bharatpur"
+    },
+    {
+      "id": 7,
+      "title": "Udaipur"
+    },
+    {
+      "id": 13,
+      "title": "Bikaner"
+    },
+    {
+      "id": 43,
+      "title": "Kausani"
+    },
+    {
+      "id": 78,
+      "title": "Doda"
+    },
+    {
+      "id": 41,
+      "title": "Almora"
+    },
+    {
+      "id": 94,
+      "title": "Alchi Monastery"
+    },
+    {
+      "id": 67,
+      "title": "Anandpur Sahib"
+    },
+    {
+      "id": 65,
+      "title": "Chandigarh"
+    },
+    {
+      "id": 55,
+      "title": "Chamba"
+    },
+    {
+      "id": 99,
+      "title": "Srinagar"
+    },
+    {
+      "id": 46,
+      "title": "Shimla"
+    },
+    {
+      "id": 49,
+      "title": "Dalhousie"
+    },
+    {
+      "id": 70,
+      "title": "Kapurthala"
+    },
+    {
+      "id": 77,
+      "title": "Katra"
+    },
+    {
+      "id": 101,
+      "title": "Fatehpur Sikri Tours"
+    },
+    {
+      "id": 90,
+      "title": "Zanskar Valley"
+    },
+    {
+      "id": 12,
+      "title": "Mount Abu"
+    },
+    {
+      "id": 91,
+      "title": "Kargil"
+    },
+    {
+      "id": 47,
+      "title": "Manali"
+    },
+    {
+      "id": 80,
+      "title": "Yusmarg"
+    },
+    {
+      "id": 8,
+      "title": "Jodhpur"
+    },
+    {
+      "id": 10,
+      "title": "Ajmer"
+    },
+    {
+      "id": 32,
+      "title": "Mussoorie"
+    },
+    {
+      "id": 59,
+      "title": "Palampur"
+    },
+    {
+      "id": 48,
+      "title": "Dharamshala"
+    },
+    {
+      "id": 16,
+      "title": "Alwar"
+    },
+    {
+      "id": 51,
+      "title": "Spiti Valley"
+    },
+    {
+      "id": 11,
+      "title": "Pushkar"
+    },
+    {
+      "id": 44,
+      "title": "Munsiyari"
+    },
+    {
+      "id": 20,
+      "title": "Agra"
+    },
+    {
+      "id": 24,
+      "title": "Prayagraj"
+    },
+    {
+      "id": 34,
+      "title": "Auli"
+    },
+    {
+      "id": 18,
+      "title": "Kota"
+    },
+    {
+      "id": 30,
+      "title": "Dudhwa National Park"
+    },
+    {
+      "id": 98,
+      "title": "Ayodhya"
+    },
+    {
+      "id": 14,
+      "title": "Chittorgarh"
+    },
+    {
+      "id": 23,
+      "title": "Vrindavan"
+    },
+    {
+      "id": 79,
+      "title": "Patnitop"
+    },
+    {
+      "id": 26,
+      "title": "Jhansi"
+    },
+    {
+      "id": 68,
+      "title": "Pathankot"
+    },
+    {
+      "id": 28,
+      "title": "Kushinagar"
+    },
+    {
+      "id": 38,
+      "title": "Valley of Flowers National Park"
+    },
+    {
+      "id": 22,
+      "title": "Mathura"
+    },
+    {
+      "id": 40,
+      "title": "Chopta"
+    },
+    {
+      "id": 27,
+      "title": "Chitrakoot"
+    },
+    {
+      "id": 45,
+      "title": "Nainital"
+    },
+    {
+      "id": 19,
+      "title": "Shekhawati"
+    },
+    {
+      "id": 87,
+      "title": "Khardung La"
+    },
+    {
+      "id": 82,
+      "title": "Doodhpathri"
+    },
+    {
+      "id": 37,
+      "title": "Badrinath"
+    },
+    {
+      "id": 52,
+      "title": "Kasol"
+    },
+    {
+      "id": 85,
+      "title": "Pangong Tso"
+    },
+    {
+      "id": 57,
+      "title": "Bir Billing"
+    },
+    {
+      "id": 25,
+      "title": "Lucknow"
+    },
+    {
+      "id": 33,
+      "title": "Haridwar"
+    },
+    {
+      "id": 97,
+      "title": "bundi"
+    },
+    {
+      "id": 76,
+      "title": "Jammu"
+    },
+    {
+      "id": 75,
+      "title": "Sonamarg"
+    },
+    {
+      "id": 73,
+      "title": "Gulmarg"
+    },
+    {
+      "id": 83,
+      "title": "Aharbal Waterfall"
+    },
+    {
+      "id": 81,
+      "title": "Aru Valley"
+    },
+    {
+      "id": 9,
+      "title": "Jaisalmer"
+    },
+    {
+      "id": 95,
+      "title": "Turtuk"
+    },
+    {
+      "id": 86,
+      "title": "Nubra Valley"
+    },
+    {
+      "id": 88,
+      "title": "Tso Moriri Lake"
+    },
+    {
+      "id": 89,
+      "title": "Magnetic Hill"
+    },
+    {
+      "id": 92,
+      "title": "Lamayuru Monastery"
+    },
+    {
+      "id": 84,
+      "title": "Leh"
+    },
+    {
+      "id": 39,
+      "title": "Hemkund Sahib"
+    },
+    {
+      "id": 42,
+      "title": "Ranikhet"
+    },
+    {
+      "id": 56,
+      "title": "Tirthan Valley"
+    },
+    {
+      "id": 54,
+      "title": "Kinnaur"
+    },
+    {
+      "id": 96,
+      "title": "Delhi"
+    }
+  ],
+  "countries": [
+    {
+      "id": 4,
+      "title": "India Tour"
+    },
+    {
+      "id": 7,
+      "title": "Nelpa"
+    }
+  ]
+}

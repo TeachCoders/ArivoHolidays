@@ -1,0 +1,1 @@
+-- Country table does not exist yet, skipping column removal

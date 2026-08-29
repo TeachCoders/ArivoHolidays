@@ -1,0 +1,52 @@
+# ── Environment ──
+# Never commit secrets. Copy .env.example to .env and fill in real values.
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ── Node ──
+node_modules/
+
+# ── Prisma generated client ──
+/generated/prisma
+
+# ── Runtime uploads (public/) ──
+# Uploaded media, documents (passports, payment slips) and generated PDFs.
+# These are runtime data — not source code. Never commit them.
+/public/
+
+# ── Logs ──
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Backups / archives ──
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ── Design / content docs ──
+*.psd
+*.docx
+*.docx#
+*.~lock.*#
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── Test / scratch artifacts ──
+/response.json
+/test-*.json
+
+# ── DB backups ──
+/backups/
+
+# ── Editor ──
+.idea/
+.vscode/
+*.swp

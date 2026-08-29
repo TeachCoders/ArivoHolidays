@@ -1,0 +1,916 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Users {
+  id                  Int                @id @default(autoincrement())
+  name                String
+  email               String
+  mobile              String?
+  profileImage        String?
+  bannerImage         String?
+  hasPassword         String
+  isActive            Boolean            @default(true)
+  failedLoginAttempts Int                @default(0)
+  lockedUntil         DateTime?
+  managerId           Int?
+  teamId              Int?
+  role                String             @default("team_member")
+  chatAvailable     Boolean            @default(false)
+  lastChatActiveAt  DateTime?
+  assignedBookings  TourBooking[]      @relation("TourAssignments")
+  assignedLeads     Traveller[]        @relation("AssignedLeads")
+  chatAssignments   ChatConversation[] @relation("ChatAssignments")
+  manager           Users?             @relation("UserTeam", fields: [managerId], references: [id])
+  subordinates      Users[]            @relation("UserTeam")
+  team              Teams?             @relation(fields: [teamId], references: [id])
+
+  @@map("users")
+}
+
+model Teams {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @map("updateAt")
+  users       Users[]
+}
+
+model Traveller {
+  id                 Int                @id @default(autoincrement())
+  travellerId        String             @unique
+  name               String
+  email              String?
+  phone              String          @unique
+  country            String
+  countryId          String
+  pageReference      String             @default("/booking")
+  source             String?            @default("website")
+  defaultPassword    String?
+  createdAt          DateTime           @default(now())
+  assignedToUserId   Int?
+  assignedAt         DateTime?
+  cancellationReason String?
+  cancelledAt        DateTime?
+  completedAt        DateTime?
+  paymentReceivedAt  DateTime?
+  status             String             @default("PENDING")
+  bookingStatus      String             @default("pending")
+  paymentStatus      String             @default("none")
+  travelDate         DateTime?
+  destination        String?
+  groupSize          Int?
+  budgetRange        String?
+  selectedJourney    String?
+  selectedJourneyId  Int?
+  workingStartedAt   DateTime?
+  vendorId           Int?
+  followupNotes      FollowupNote[]
+  invoices           Invoice[]
+  payments           Payment[]
+  tourBookings       TourBooking[]
+  assignedTo         Users?             @relation("AssignedLeads", fields: [assignedToUserId], references: [id])
+  vendor             Vendor?            @relation("VendorAssignments", fields: [vendorId], references: [id])
+  document           TravellerDocument?
+  requirement        TravellerRequirementConfirmation?
+  vehicleBookings    VehicleBooking[]
+  vendorAssignments  VendorAssignment[]
+  chatConversation   ChatConversation?
+
+  @@index([assignedToUserId])
+  @@index([vendorId])
+  @@index([bookingStatus])
+  @@index([travelDate])
+  @@index([status])
+  @@index([phone])
+}
+
+model ChatConversation {
+  id               Int            @id @default(autoincrement())
+  token            String         @unique
+  touristName      String
+  phone            String
+  travellerId      Int?           @unique
+  traveller        Traveller?     @relation(fields: [travellerId], references: [id])
+  status           String         @default("ACTIVE")
+  lastChannel      String         @default("web")
+  lastMessageAt    DateTime?
+  assignedToUserId Int?
+  assignedTo       Users?         @relation("ChatAssignments", fields: [assignedToUserId], references: [id])
+  botState         String         @default("AWAITING_NAME")
+  needsData        Json?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  messages         ChatMessage[]
+
+  @@index([phone])
+  @@index([status])
+  @@index([assignedToUserId])
+  @@map("chat_conversations")
+}
+
+model ChatMessage {
+  id             Int             @id @default(autoincrement())
+  conversationId Int
+  conversation   ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  channel        String          @default("web")
+  direction      String
+  body           String
+  buttons        Json?           // quick-reply buttons: [{ label, value }] (bot messages)
+  source         String          @default("bot") // bot | partner | tourist
+  createdAt      DateTime        @default(now())
+
+  @@index([conversationId])
+  @@index([conversationId, id])
+  @@map("chat_messages")
+}
+
+model ChatFaq {
+  id           Int      @id @default(autoincrement())
+  question     String
+  keywords     String[]
+  answer       String
+  linkType     String?  // travelExperience | journey | country | state | city | season | tourPackage | blog | custom
+  linkEntityId Int?
+  linkTitle    String?  // display label shown for the 🔗 link line
+  linkUrl      String?  // site page URL the bot shares with the tourist
+  isActive     Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  answeredFrom ChatUnanswered[]
+  @@map("chat_faqs")
+}
+
+/// Questions the bot could not answer (FAQ miss or junk at a flow step).
+/// Superadmin reviews these and adds an answer → new FAQ → bot gets trained.
+model ChatUnanswered {
+  id             Int       @id @default(autoincrement())
+  question       String    @unique // normalized (lowercase/trimmed) key for grouping
+  raw            String    // original text the tourist typed
+  count          Int       @default(1)
+  status         String    @default("open") // open | answered | ignored
+  source         String    @default("no_faq") // no_faq | flow_rejected
+  destination    String?
+  conversationId Int?
+  answeredFaqId  Int?
+  answeredFaq    ChatFaq?  @relation(fields: [answeredFaqId], references: [id])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([status])
+  @@index([answeredFaqId])
+  @@map("chat_unanswered")
+}
+
+// express-session store table (connect-pg-simple) — kept in schema so `db push`
+// keeps it in sync instead of dropping it. Type changes it may apply are no-ops.
+model Session {
+  sid    String   @id
+  sess   Json
+  expire DateTime @db.Timestamp(6)
+  @@index([expire], map: "IDX_session_expire")
+  @@map("session")
+}
+
+model FollowupNote {
+  id          Int       @id @default(autoincrement())
+  travellerId Int
+  note        String
+  createdAt   DateTime  @default(now())
+  createdBy   String
+  channel     String
+  traveller   Traveller @relation(fields: [travellerId], references: [id])
+
+  @@index([travellerId])
+}
+
+model TourBooking {
+  id                   Int           @id @default(autoincrement())
+  travellerId          Int
+  noOfPersons          Int?
+  noOfChildren         Int?
+  hotelCategory        String?
+  travelStartDate      DateTime?
+  travelEndDate        DateTime?
+  travellerMessage     String?
+  paymentScreenshotUrl String?
+  transactionId        String?
+  assignedToUserId     Int?
+  cancellationReason   String?
+  status               BookingStatus @default(UPCOMING)
+  assignedTo           Users?        @relation("TourAssignments", fields: [assignedToUserId], references: [id])
+  traveller            Traveller     @relation(fields: [travellerId], references: [id])
+
+  @@index([travellerId])
+  @@index([assignedToUserId])
+}
+
+model VehicleBooking {
+  id                   Int           @id @default(autoincrement())
+  travellerId          Int
+  vehicleName          String?
+  serviceType          String?
+  travellerMessage     String?
+  paymentScreenshotUrl String?
+  transactionId        String?
+  transactionDetail    String?
+  createdAt            DateTime      @default(now())
+  cancellationReason   String?
+  status               BookingStatus @default(UPCOMING)
+  traveller            Traveller     @relation(fields: [travellerId], references: [id])
+
+  @@index([travellerId])
+}
+
+model Payment {
+  id                   Int           @id @default(autoincrement())
+  travellerId          Int
+  amount               Float?
+  paymentType          String?       @default("ADVANCE")
+  transactionId        String?
+  transactionDetail    String?
+  paymentScreenshotUrl String?
+  paymentDate          DateTime?
+  cancellationReason   String?
+  status               BookingStatus @default(UPCOMING)
+  approvedAt           DateTime?
+  approvedBy           Int?
+  traveller            Traveller     @relation(fields: [travellerId], references: [id])
+
+  @@index([travellerId])
+  @@index([status])
+}
+
+model TravellerDocument {
+  id          Int       @id @default(autoincrement())
+  travellerId Int       @unique
+  passportUrl String?
+  govtIdUrl   String?
+  traveller   Traveller @relation(fields: [travellerId], references: [id])
+}
+
+model TravellerRequirementConfirmation {
+  id             Int       @id @default(autoincrement())
+  travellerId    Int       @unique
+  serviceType    String?
+  cityNames      String?
+  tourTypes      String[]
+  startDate      DateTime?
+  endDate        DateTime?
+  adults         Int       @default(0)
+  children       Int       @default(0)
+  budget         Float     @default(0)
+  needGuide      Boolean   @default(false)
+  needActivities Boolean   @default(false)
+  pickupLocation    String?
+  dropLocation      String?
+  travelTime        String?
+  vehiclePreference String?
+  specialRequirements String?
+  isEmailSent    Boolean   @default(false)
+  isWhatsappSent Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  traveller      Traveller @relation(fields: [travellerId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id             Int           @id @default(autoincrement())
+  travellerId    Int
+  version        Int           @default(1)
+  status         String        @default("DRAFT")
+  isEmailSent    Boolean       @default(false)
+  isWhatsappSent Boolean       @default(false)
+  quotationNo    String?
+  validTill      String?
+  packageName    String?
+  destination    String?
+  duration       String?
+  travelDate     String?
+  adults         Int           @default(1)
+  children       Int           @default(0)
+  discount       Float         @default(0)
+  includes       String[]
+  excludes       String[]
+  notes          String?
+  advanceAmount  Float         @default(0)
+  balanceTerms   String?
+  itinerary      Json?
+  bannerImageUrl Json?
+  subtotal       Float         @default(0)
+  gst            Float         @default(0)
+  serviceCharges Float         @default(0)
+  grandTotal     Float         @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  traveller      Traveller     @relation(fields: [travellerId], references: [id])
+  items          InvoiceItem[]
+
+  @@index([travellerId])
+  @@index([status])
+}
+
+model InvoiceItem {
+  id                 Int      @id @default(autoincrement())
+  invoiceId          Int
+  vendorId           Int?
+  ServcieQty         Int
+  ServiceName        service  @default(Hotel)
+  TotalPrice         Float
+  UnitPrice          Float
+  location           String
+  customActivityName String?
+  hotelName          String?
+  hotelType          String?
+  carName            String?
+  carOwnerName       String?
+  carType            String?
+  guideName          String?
+  guideLanguage      String?
+  startDate          DateTime?
+  endDate            DateTime?
+  invoice            Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  vendor             Vendor?  @relation(fields: [vendorId], references: [id], onDelete: SetNull)
+
+  @@index([invoiceId])
+  @@index([vendorId])
+}
+
+model VendorGroup {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  description String?
+  isActive    Boolean    @default(true)
+  type        VendorType @default(ALL)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  vendors     Vendor[]
+}
+
+model Vendor {
+  id                   Int               @id @default(autoincrement())
+  vendorGroupId        Int?
+  vendorGroup          VendorGroup?      @relation(fields: [vendorGroupId], references: [id], onDelete: SetNull)
+  vendarName           String?
+  vendarEmail          String            @unique
+  vendarPassword       String
+  vendarMobile         String
+  vendarIsActive       Boolean           @default(true)
+  failedLoginAttempts  Int               @default(0)
+  lockedUntil          DateTime?
+  vendarProfileImage String?
+  vendarBannerImage  String?
+  vendarCompanyName  String
+  vndarGstNumber     String?
+  vendarWebsite      String?
+  vendarAddress      String?
+  vendarServiceType  VendorType        @default(ALL)
+  vendarWorkingAreas String[]
+  engagementModel    EngagementModel   @default(SERVICE)
+  defaultCommission  Float?
+  bankAccountName    String?
+  bankAccountNumber  String?
+  bankIfscCode       String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  assignedLeads      Traveller[]       @relation("VendorAssignments")
+  payments           VendorPayment[]
+  vendorAssignments  VendorAssignment[] @relation("VendorAssignmentList")
+  invoiceItems       InvoiceItem[]
+}
+
+model VendorAssignment {
+  id                Int              @id @default(autoincrement())
+  travellerId       Int
+  vendorId          Int
+  services          String[]
+  packageType       String           @default("INDIVIDUAL")
+  commissionRate    Float?
+  totalAmount       Float            @default(0)
+  serviceWiseAmount  Json?
+  serviceWiseDetails Json?
+  status            String           @default("UPCOMING")
+  assignedDate      DateTime         @default(now())
+  notes             String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  traveller         Traveller        @relation(fields: [travellerId], references: [id])
+  vendor            Vendor           @relation("VendorAssignmentList", fields: [vendorId], references: [id])
+  payments          VendorPayment[]
+
+  @@index([travellerId])
+  @@index([vendorId])
+}
+
+enum BookingStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum service {
+  Hotel
+  Car
+  Guide
+  Activity
+}
+
+enum VendorType {
+  TOUR_OPERATOR
+  CAB_OPERATOR
+  HOTEL
+  TRANSPORT_VENDOR
+  HOTEL_VENDOR
+  ACTIVITY_VENDOR
+  GUIDE_VENDOR
+  ALL
+}
+
+enum EngagementModel {
+  COMMISSION
+  SERVICE
+}
+
+enum PaymentType {
+  COMMISSION
+  SERVICE_FEE
+  FULL_PACKAGE
+}
+
+enum PaymentMethod {
+  UPI
+  BANK_TRANSFER
+  CASH
+  CHEQUE
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+}
+
+model VendorPayment {
+  id              Int                 @id @default(autoincrement())
+  vendorId        Int
+  assignmentId    Int?
+  invoiceNo       String              @unique
+  amount          Float
+  paidAmount      Float               @default(0)
+  pendingAmount   Float
+  paymentType     PaymentType
+  paymentMethod   PaymentMethod
+  paymentStatus   PaymentStatus       @default(PENDING)
+  paymentDate     DateTime?
+  dueDate         DateTime?
+  remarks         String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  vendor          Vendor              @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  assignment      VendorAssignment?   @relation(fields: [assignmentId], references: [id])
+  installments    PaymentInstallment[]
+
+  @@index([vendorId])
+  @@index([assignmentId])
+}
+
+model PaymentInstallment {
+  id              Int           @id @default(autoincrement())
+  paymentId       Int
+  amount          Float
+  paymentMethod   PaymentMethod
+  transactionId   String?
+  paymentSlip     String?
+  paymentDate     DateTime      @default(now())
+  remarks         String?
+  createdAt       DateTime      @default(now())
+  payment         VendorPayment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id         Int      @id @default(autoincrement())
+  userId     Int?
+  targetRole String?
+  type       String
+  title      String
+  message    String
+  link       String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  @@map("notifications")
+
+  @@index([userId, targetRole, read])
+}
+
+model TourPackage {
+  id               Int      @id @default(autoincrement())
+  name             String
+  slug             String   @unique
+  destination      String
+  duration         String
+  durationDays     Int      @default(0)
+  pricePerPerson   Float    @default(0)
+  discountPrice    Float?
+  bannerImageUrl   Json?
+  shortDescription String?
+  description      String?
+  itinerary        Json     @default("[]")
+  hotelDetails     Json     @default("[]")
+  carDetails       Json     @default("[]")
+  guideDetails     Json     @default("[]")
+  includes         String[]
+  excludes         String[]
+  purchaseCount    Int      @default(0)
+  isActive         Boolean  @default(true)
+  isBestSelling    Boolean  @default(false)
+  displayOrder     Int      @default(0)
+  createdById      Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+enum BannerEntityType {
+  Country
+  State
+  City
+  Journey
+  Month
+  TravelExperience
+}
+
+enum FaqEntityType {
+  Country
+  State
+  City
+  Journey
+  Month
+  TravelExperience
+}
+
+model Banner {
+  id         Int      @id @default(autoincrement())
+  images      String[]
+  bannerTitle String
+  bannerTag   String
+  entityType String
+  entityId   Int
+  @@index([entityType, entityId])
+}
+
+model Country {
+  id              Int     @id @default(autoincrement())
+  title           String
+  slug            String  @unique
+  seoDescription String
+  overView       String?
+  seoKeyword         String?
+  canonical       String?
+  seoTitle        String?
+  h1Title         String?
+  thumbImg        String?
+  moreDescription String?
+  capital         String?
+  currency        String?
+  language        String?
+  timezone        String?
+  bestTimeToVisit String?
+  dialCode        String?
+  isActive        Boolean   @default(true)
+  showOnSite      Boolean   @default(true)
+  activeSnapshot  Json?
+  displayOrder    Int       @default(0)
+  states          State[]
+  @@map("country")
+}
+
+model State {
+  id          Int     @id @default(autoincrement())
+  title       String
+  slug        String  @unique
+  seoDescription String
+  overView   String?
+  seoKeyword     String?
+  canonical   String?
+  seoTitle    String?
+  h1Title     String?
+  thumbImg    String?
+  moreDescription String?
+  capital     String?
+  language    String?
+  famousFor   String?
+  area        String?
+  countryId   Int
+  country     Country @relation(fields: [countryId], references: [id])
+  isActive    Boolean @default(true)
+  showOnSite  Boolean @default(true)
+  activeSnapshot Json?
+  displayOrder Int     @default(0)
+  cities      City[]
+}
+
+model City {
+  id          Int       @id @default(autoincrement())
+  title       String
+  slug        String    @unique
+  seoDescription String
+  overView   String?
+  seoKeyword     String?
+  canonical   String?
+  seoTitle    String?
+  h1Title     String?
+  thumbImg    String?
+  moreDescription String?
+  famousFor   String?
+  attractions String?
+  weather     String?
+  stateId     Int
+  state       State     @relation(fields: [stateId], references: [id])
+  isActive    Boolean   @default(true)
+  showOnSite  Boolean   @default(true)
+  activeSnapshot Json?
+  displayOrder Int      @default(0)
+  journeys    Journey[]
+}
+
+model Month {
+  id          Int     @id @default(autoincrement())
+  title       String
+  slug        String  @unique
+  season      String?
+  seoDescription String
+  overView   String?
+  seoKeyword     String?
+  canonical   String?
+  seoTitle    String?
+  h1Title     String?
+  thumbImg    String?
+  moreDescription String?
+  weather     String?
+  bestFor     String?
+  festivals   String?
+  isActive    Boolean   @default(true)
+  activeSnapshot Json?
+  displayOrder Int      @default(0)
+  journeys    Journey[]
+}
+
+model TravelExperience {
+  id          Int     @id @default(autoincrement())
+  title       String
+  slug        String  @unique
+  seoDescription String
+  overView   String?
+  seoKeyword     String?
+  canonical   String?
+  seoTitle    String?
+  h1Title     String?
+  thumbImg    String?
+  moreDescription String?
+  type        String?
+  idealFor    String?
+  duration    String?
+  budgetRange String?
+  highlights  String?
+  isActive    Boolean   @default(true)
+  activeSnapshot Json?
+  displayOrder Int      @default(0)
+  journeys    Journey[]
+}
+
+model Faq {
+  id         Int    @id @default(autoincrement())
+  ques       String
+  ans        String
+  entityType String
+  entityId   Int
+  @@index([entityType, entityId])
+}
+
+model Journey {
+  id            Int             @id @default(autoincrement())
+  title         String
+  slug          String          @unique
+  seoDescription String
+  overView     String?
+  seoKeyword       String?
+  canonical     String?
+  seoTitle      String?
+  h1Title       String?
+  thumbImg      String?
+  moreDescription String?
+  destination   String?
+  duration      String?
+  noDays        Int
+  pricePerPerson Float         @default(0)
+  discountPrice Float?
+  highlights    String[]
+  hotelDetails  Json?
+  carDetails    Json?
+  guideDetails  Json?
+  isActive      Boolean       @default(true)
+  isBestSelling Boolean       @default(false)
+  displayOrder  Int           @default(0)
+  purchaseCount Int           @default(0)
+  createdById   Int?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  cities        City[]
+  cityOrder     Int[]         @default([])
+  travelExperienceOrder Int[] @default([])
+  months        Month[]
+  travelExperiences TravelExperience[]
+  days          JourneyDay[]
+  inclusion     Inclusion[]
+  exclusion     Exclusion[]
+  whyChooseUs   WhyChoose[]
+  bookingPolicy BookingPolicy[]
+}
+
+model JourneyDay {
+  id          Int      @id @default(autoincrement())
+  day         String
+  description String
+  image       String
+  journeyId   Int
+  journey     Journey  @relation(fields: [journeyId], references: [id])
+}
+
+model WhyChoose {
+  id          Int      @id @default(autoincrement())
+  choseUsList String[]
+  journeyId   Int
+  journey     Journey  @relation(fields: [journeyId], references: [id])
+}
+
+model Inclusion {
+  id            Int      @id @default(autoincrement())
+  inclusionList String[]
+  journeyId     Int
+  journey       Journey  @relation(fields: [journeyId], references: [id])
+}
+
+model Exclusion {
+  id            Int      @id @default(autoincrement())
+  inclusionList String[]
+  journeyId     Int
+  journey       Journey  @relation(fields: [journeyId], references: [id])
+}
+
+model BookingPolicy {
+  id            Int      @id @default(autoincrement())
+  inclusionList String[]
+  journeyId     Int
+  journey       Journey  @relation(fields: [journeyId], references: [id])
+}
+
+model CmsPage {
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  title           String
+  seoDescription String
+  moreDescription String?
+  seoTitle        String?
+  h1Title         String?
+  seoKeyword         String?
+  canonical       String?
+  thumbImg        String?
+  isActive        Boolean  @default(true)
+  displayOrder    Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model BlogPost {
+  id              Int      @id @default(autoincrement())
+  title           String
+  slug            String   @unique
+  seoDescription String
+  moreDescription String?
+  author          String?
+  category        String?
+  tags            String?
+  publishedAt     String?
+  thumbImg        String?
+  seoTitle        String?
+  h1Title         String?
+  seoKeyword         String?
+  canonical       String?
+  isActive        Boolean  @default(true)
+  displayOrder    Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model BlogCategory {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  displayOrder Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Media {
+  id           Int      @id @default(autoincrement())
+  filename     String
+  url          String   @unique
+  folder       String?
+  originalName String?
+  label        String?
+  altText      String?
+  caption      String?
+  category     String?
+  isPinned     Boolean  @default(false)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([folder])
+  @@index([category])
+}
+
+model UserSession {
+  id             String         @id @default(uuid())
+  visitorId      String?
+  userId         Int?
+  ipAddress      String?
+  country        String?
+  userAgent      String?
+  deviceType     String?
+  startedAt      DateTime       @default(now())
+  endedAt        DateTime?
+  totalTimeSpent Int            @default(0) // in seconds
+  activityLogs   ActivityLog[]
+  searchIntents  SearchIntent[]
+  replayEvents   ReplayEvent[]
+
+  @@index([visitorId])
+  @@index([startedAt])
+  @@map("user_sessions")
+}
+
+model ActivityLog {
+  id            Int          @id @default(autoincrement())
+  sessionId     String
+  eventName     String       // PAGE_VIEW, SECTION_DWELL, RAGE_CLICK, DEAD_CLICK, SEARCH_REFINE
+  pagePath      String
+  sectionId     String?
+  dwellTimeMs   Int?
+  element       String?
+  metadata      Json?        // Flexible payload (x, y coords, component details)
+  createdAt     DateTime     @default(now())
+
+  session       UserSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([eventName])
+  @@map("activity_logs")
+}
+
+model SearchIntent {
+  id            Int          @id @default(autoincrement())
+  sessionId     String
+  searchQuery   String?
+  destination   String?
+  dateModified  Boolean      @default(false)
+  filtersApplied Json?
+  createdAt     DateTime     @default(now())
+
+  session       UserSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([destination])
+  @@map("search_intents")
+}
+
+model ReplayEvent {
+  id        Int      @id @default(autoincrement())
+  sessionId String
+  events    Json     // rrweb event batch (array of DOM snapshot events)
+  createdAt DateTime @default(now())
+
+  session   UserSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+  @@map("replay_events")
+}
+
+model AnalyticsSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@map("analytics_settings")
+}
