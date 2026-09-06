@@ -217,7 +217,17 @@ app.use((req, res, next) => {
   });
 });
 
-app.use(express.static("public"));
+app.use(
+  express.static("public", {
+    maxAge: process.env.NODE_ENV === "production" ? "30d" : 0,
+    immutable: process.env.NODE_ENV === "production",
+    setHeaders: (res, filePath) => {
+      if (/\.(webp|jpg|jpeg|png|gif|svg|avif|ico)$/i.test(filePath)) {
+        res.setHeader("Cache-Control", "public, max-age=2592000, immutable");
+      }
+    },
+  })
+);
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
