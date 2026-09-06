@@ -24,7 +24,7 @@ Final stack decided:
 1. **Supabase** — `supabase-setup.md` follow karo (free: DB + Storage + keys). Database connection string me `?sslmode=require`.
 2. **BigRock VPS** — India Budget ya NVMe 4 profile, 4GB RAM, Ubuntu 24.04 OS select. 24-mahina (2-saal) term.
 3. **Domain** `arivoholidays.com` — **Hostinger** se (3-saal term; spelling pakka karo: `holida**a**ys`). Purchase ke foran **auto-renewal OFF** karo (`hPanel → Profile → Billing → Subscriptions`).
-4. **Branded email** (optional, ₹0) — niche "Branded email (Zoho)" section.
+4. **Branded email** (optional, ₹0) — niche "Branded email (Brevo)" section.
 
 VPS milte hi niche se shuru karo.
 
@@ -48,8 +48,8 @@ nano /opt/arivo/app/Backend/.env
 #   → DATABASE_URL (Supabase) / SESSION_SECRET / CSRF_SECRET /
 #     BASE_URL=https://api.arivoholidays.com / CORS_ORIGIN=https://arivoholidays.com /
 #     SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / STORAGE_BACKEND=supabase /
-#     EMAIL_ID+EMAIL_PASSWORD (+ SMTP_HOST/SMTP_PORT) / OWNER_EMAIL / CHAT_PARTNER_NUMBER
-#       (branded send ke liye Brevo hybrid — "Branded email" section dekho)
+#       EMAIL_ID+EMAIL_PASSWORD (+ SMTP_HOST/SMTP_PORT) / OWNER_EMAIL / CHAT_PARTNER_NUMBER
+#       (branded send ke liye Brevo — "Branded email" section dekho)
 nano /opt/arivo/app/frontend/.env
 #   → NEXT_PUBLIC_API_BASE_URL=https://api.arivoholidays.com /
 #     API_BASE_URL=https://api.arivoholidays.com /
@@ -82,24 +82,18 @@ Security note: root password login band karo (setup me SSH key hi kafi), UFW 22/
 
 ---
 
-## Branded email (Zoho Mail + Brevo — ₹0 hybrid)
+## Branded email (Brevo — ₹0)
 
-Winner: **B** — receive `leads@arivoholidays.com` ka web-only inbox Zoho ke free plan se,
-aur **app ka branded send Brevo** (free SMTP) se. Samajh: inbox = Zoho, sending = Brevo.
+App branded send: **`leads@arivoholidays.com`** (Brevo free SMTP, 300 emails/day).
+Zoho/Wasto mailbox nahi — **sirf sending Brevo se** (app ke emails OTP/quotes/payments).
+Milo reply-only ho, inbox nahi — kaam me koi farak nahi padta.
 
-### Part 1 — Zoho (receive)
-1. **Zoho Mail** → signup (owner: `teachcoders@gmail.com`) → **"Create domain based email account"**
-   → plan page par **Mail Lite tab → Forever Free Plan** (₹75/399 waise mat chuno).
-2. "Add domain" → **`arivoholidays.com`** → region **India**.
-3. Zoho jo records dikhaye wo **Hostinger DNS** me add karo (MX `mx.zoho.in`, TXT
-   `zoho-verification=...`, SPF `v=spf1 include:zoho.in ~all`).
-4. Mailbox banao: `leads@arivoholidays.com`.
-
-### Part 2 — Brevo (app sending, ₹0, 300 emails/day)
-1. **brevo.com** → signup → **Sender Identity** → add domain `arivoholidays.com`
-   → wo **TXT `brevo-code=...` (SPF/DKIM)** records do → **Hostinger DNS** me add.
-2. SMTP/API se **SMTP key** banao (`smtp-key`) — bas `EMAIL_PASSWORD` me wahi.
-3. `Backend/.env` me:
+1. **brevo.com** → signup (free) → **Sender Identity → Add domain** → `arivoholidays.com`
+   → Bhargya TXT records: `brevo-code=...` + SPF `v=spf1 include:relay.brevo.com ~all` + DKIM
+2. Wo records **Hostinger DNS** me add karo (ye 3-4 TXT + SPF).
+3. Brevo me **Verify** dabao → domain verified (30 min lag sakta hai).
+4. **SMTP & API → SMTP key** banao (ythir $ start hoti hai).
+5. `Backend/.env` me:
    ```
    EMAIL_ID=leads@arivoholidays.com
    EMAIL_PASSWORD=<brevo-smtp-key>
@@ -107,11 +101,10 @@ aur **app ka branded send Brevo** (free SMTP) se. Samajh: inbox = Zoho, sending 
    SMTP_PORT=587
    BRAND_NAME=Arivo Holidays
    ```
-4. Test: ek OTP/quotation email bhejo (1–3 sec).
+6. Backend restart + test email (1–3 sec) → From: "Arivo Holiday" <leads@arivoholidays.com>
 
-> DNS records-ke dono (Zoho MX + Brevo TXT) **ek hi Hostinger panel** me — sab add karna.
-> Sending speed same rahega (SMTP 1–3s). Brevo free: 300 emails/day (bundle ke liye kafi).
-> Paise nahi chahiye — Zoho mailbox par attention free tab tak bi premium nahi mangta.
+> Brevo **VPS se independent** hai — abhi (local) bhi chalega, VPS deploy par same values.
+> Free tier: 300 emails/day — bundle/OTP ke liye kaafi. Zoho/paid mailbox zaroori nahi.
 
 ---
 
