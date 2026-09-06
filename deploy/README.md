@@ -84,7 +84,7 @@ Security note: root password login band karo (setup me SSH key hi kafi), UFW 22/
 
 ## Branded email (Zoho Mail + Brevo — ₹0 hybrid)
 
-Winner: **B** — receive `info@arivoholidays.com` ka web-only inbox Zoho ke free plan se,
+Winner: **B** — receive `leads@arivoholidays.com` ka web-only inbox Zoho ke free plan se,
 aur **app ka branded send Brevo** (free SMTP) se. Samajh: inbox = Zoho, sending = Brevo.
 
 ### Part 1 — Zoho (receive)
@@ -93,7 +93,7 @@ aur **app ka branded send Brevo** (free SMTP) se. Samajh: inbox = Zoho, sending 
 2. "Add domain" → **`arivoholidays.com`** → region **India**.
 3. Zoho jo records dikhaye wo **Hostinger DNS** me add karo (MX `mx.zoho.in`, TXT
    `zoho-verification=...`, SPF `v=spf1 include:zoho.in ~all`).
-4. Mailbox banao: `info@arivoholidays.com`.
+4. Mailbox banao: `leads@arivoholidays.com`.
 
 ### Part 2 — Brevo (app sending, ₹0, 300 emails/day)
 1. **brevo.com** → signup → **Sender Identity** → add domain `arivoholidays.com`
@@ -101,7 +101,7 @@ aur **app ka branded send Brevo** (free SMTP) se. Samajh: inbox = Zoho, sending 
 2. SMTP/API se **SMTP key** banao (`smtp-key`) — bas `EMAIL_PASSWORD` me wahi.
 3. `Backend/.env` me:
    ```
-   EMAIL_ID=info@arivoholidays.com
+   EMAIL_ID=leads@arivoholidays.com
    EMAIL_PASSWORD=<brevo-smtp-key>
    SMTP_HOST=smtp-relay.brevo.com
    SMTP_PORT=587
