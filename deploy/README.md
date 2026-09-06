@@ -8,12 +8,14 @@ Final stack decided:
 | **Images/PDF (public)** | Supabase Storage (FREE 1GB bucket) | ₹0 |
 | **Private docs** (passports/payment slips) | VPS disk + backup | — |
 | **VPS (app)** | BigRock 4GB VPS (2-saal) | ~₹9,884 |
-| **Domain** | BigRock `arivoholidays.in` | ~₹299/sal |
+| **Domain** | Hostinger `arivoholidays.com` (3-saal, ₹1/1st yr deal) | ~₹3,600 |
+| **Branded email** | Zoho Mail free (custom domain) | ₹0 |
 | **Code** | Aapki git repo | git me |
 
 > **Bahut zaroori rule:** images ka URL **Supabase public bucket** se aata hai (permanent,
-> sab jagah khulne wala). Passports/payment slips **kabhi** public bucket me nahi —
-> wo VPS par protected + backup.
+> sab jagah khulne wala), lekin site par **apne domain ke niche** dikhta hai
+> (`arivoholidays.com/content/...` → nginx / Next rewrite → Supabase CDN).
+> Passports/payment slips **kabhi** public bucket me nahi — wo VPS par protected + backup.
 
 ---
 
@@ -21,7 +23,8 @@ Final stack decided:
 
 1. **Supabase** — `supabase-setup.md` follow karo (free: DB + Storage + keys). Database connection string me `?sslmode=require`.
 2. **BigRock VPS** — India Budget ya NVMe 4 profile, 4GB RAM, Ubuntu 24.04 OS select. 24-mahina (2-saal) term.
-3. **Domain** `arivoholidays.in` (BigRock se).
+3. **Domain** `arivoholidays.com` — **Hostinger** se (3-saal term; spelling pakka karo: `holida**a**ys`). Purchase ke foran **auto-renewal OFF** karo (`hPanel → Profile → Billing → Subscriptions`).
+4. **Branded email** (optional, ₹0) — niche "Branded email (Zoho)" section.
 
 VPS milte hi niche se shuru karo.
 
@@ -45,7 +48,8 @@ nano /opt/arivo/app/Backend/.env
 #   → DATABASE_URL (Supabase) / SESSION_SECRET / CSRF_SECRET /
 #     BASE_URL=https://api.arivoholidays.com / CORS_ORIGIN=https://arivoholidays.com /
 #     SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / STORAGE_BACKEND=supabase /
-#     EMAIL_ID+EMAIL_PASSWORD (Gmail app password) / OWNER_EMAIL / CHAT_PARTNER_NUMBER
+#     EMAIL_ID+EMAIL_PASSWORD (+ SMTP_HOST/SMTP_PORT) / OWNER_EMAIL / CHAT_PARTNER_NUMBER
+#       (branded send ke liye Brevo hybrid — "Branded email" section dekho)
 nano /opt/arivo/app/frontend/.env
 #   → NEXT_PUBLIC_API_BASE_URL=https://api.arivoholidays.com /
 #     API_BASE_URL=https://api.arivoholidays.com /
@@ -75,6 +79,39 @@ curl https://api.arivoholidays.com/health   # health check
 ```
 
 Security note: root password login band karo (setup me SSH key hi kafi), UFW 22/80/443.
+
+---
+
+## Branded email (Zoho Mail + Brevo — ₹0 hybrid)
+
+Winner: **B** — receive `info@arivoholidays.com` ka web-only inbox Zoho ke free plan se,
+aur **app ka branded send Brevo** (free SMTP) se. Samajh: inbox = Zoho, sending = Brevo.
+
+### Part 1 — Zoho (receive)
+1. **Zoho Mail** → signup (owner: `teachcoders@gmail.com`) → **"Create domain based email account"**
+   → plan page par **Mail Lite tab → Forever Free Plan** (₹75/399 waise mat chuno).
+2. "Add domain" → **`arivoholidays.com`** → region **India**.
+3. Zoho jo records dikhaye wo **Hostinger DNS** me add karo (MX `mx.zoho.in`, TXT
+   `zoho-verification=...`, SPF `v=spf1 include:zoho.in ~all`).
+4. Mailbox banao: `info@arivoholidays.com`.
+
+### Part 2 — Brevo (app sending, ₹0, 300 emails/day)
+1. **brevo.com** → signup → **Sender Identity** → add domain `arivoholidays.com`
+   → wo **TXT `brevo-code=...` (SPF/DKIM)** records do → **Hostinger DNS** me add.
+2. SMTP/API se **SMTP key** banao (`smtp-key`) — bas `EMAIL_PASSWORD` me wahi.
+3. `Backend/.env` me:
+   ```
+   EMAIL_ID=info@arivoholidays.com
+   EMAIL_PASSWORD=<brevo-smtp-key>
+   SMTP_HOST=smtp-relay.brevo.com
+   SMTP_PORT=587
+   BRAND_NAME=Arivo Holidays
+   ```
+4. Test: ek OTP/quotation email bhejo (1–3 sec).
+
+> DNS records-ke dono (Zoho MX + Brevo TXT) **ek hi Hostinger panel** me — sab add karna.
+> Sending speed same rahega (SMTP 1–3s). Brevo free: 300 emails/day (bundle ke liye kafi).
+> Paise nahi chahiye — Zoho mailbox par attention free tab tak bi premium nahi mangta.
 
 ---
 
@@ -155,7 +192,7 @@ Ye karega:
 - `prisma migrate deploy` (Supabase par tables banate)
 - Frontend production build
 - PM2 start (backend :5000 + frontend :3000)
-- Nginx conf generate
+- Nginx conf generate (banner: `/content/...`, tour folders → **Supabase CDN** proxy bhi committed he)
 - Certbot SSL (domain ready ho to)
 
 ## Step 3b — First boot extras
@@ -172,7 +209,7 @@ seed command chalao (agar repo me seed script hai) — README ke "seeds" section
 
 ## Step 4 — DNS
 
-BigRock se domain DNS:
+Hostinger se domain DNS:
 - `A  arivoholidays.com  -> <SERVER_IP>`
 - `A  api.arivoholidays.com  -> <SERVER_IP>`
 - `CNAME  www  -> arivoholidays.com` (optional)
@@ -182,13 +219,13 @@ Cloudflare free (optional): nameservers change karke CDN + HTTPS bhi mil jata ha
 ## Step 5 — Backups
 
 ```bash
-ssh root@<SERVER_IP> "bash /opt/arivo/deploy/backup.sh"
+ssh root@<SERVER_IP> "bash /opt/arivo/app/deploy/backup.sh"
 ```
 
 Cron add karo (root `crontab -e`):
 
 ```
-0 3 * * * root bash /opt/arivo/deploy/backup.sh >> /var/log/arivo-backup.log 2>&1
+0 3 * * * root bash /opt/arivo/app/deploy/backup.sh >> /var/log/arivo-backup.log 2>&1
 ```
 
 Backup = Supabase DB dump (pg_dump, TLS) + VPS disk `Backend/public` ka tar.

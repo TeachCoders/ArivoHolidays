@@ -3,6 +3,27 @@ import nodemailer from 'nodemailer';
 import { generateTravellerEmailHTML, generateCancellationEmailHTML, generatePaymentConfirmationEmailHTML, generateBookingConfirmationEmailHTML, generatePartnerLeadEmailHTML } from '../templates/travellerEmailTemplate.js';
 import { logger } from "./logger.js";
 
+// SMTP transporter — env se configurable. By default Gmail SMTP;
+// branded (Zoho/Brevo ina any) ke liye SMTP_HOST + SMTP_PORT set karo.
+const createTransporter = () =>
+  process.env.SMTP_HOST
+    ? nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT || 587),
+        secure: process.env.SMTP_PORT === "465",
+        auth: {
+          user: process.env.EMAIL_ID,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      })
+    : nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_ID,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
 /**
  * Sends a welcome/confirmation email to the traveller
  * @param {string} toEmail - The recipient's email address
@@ -17,13 +38,7 @@ export const sendTravellerEmail = async (toEmail, travellerId, name, travelInfo)
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_ID,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+    const transporter = createTransporter();
 
     // Template function call kiya (Clean Code)
     const htmlContent = generateTravellerEmailHTML(name, travellerId, travelInfo);
@@ -54,13 +69,7 @@ export const sendCancellationEmail = async (toEmail, travellerId, name, agentNam
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_ID,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+    const transporter = createTransporter();
 
     const htmlContent = generateCancellationEmailHTML(name, travellerId, agentName);
 
@@ -94,13 +103,7 @@ export const sendPaymentConfirmationEmail = async (toEmail, travellerId, name, p
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_ID,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+    const transporter = createTransporter();
 
     const htmlContent = generatePaymentConfirmationEmailHTML(name, travellerId, password);
 
@@ -131,13 +134,7 @@ export const sendBookingConfirmationEmail = async (toEmail, travellerId, name, p
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_ID,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+    const transporter = createTransporter();
 
     const htmlContent = generateBookingConfirmationEmailHTML(name, travellerId, password, invoiceNo, totalInvoiced, totalPaid, dueAmount, slabLabel, requiredAmount);
 
@@ -172,13 +169,7 @@ export const sendEmail = async (toEmail, subject, htmlContent, pdfAttachment = n
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_ID,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+    const transporter = createTransporter();
 
     const mailOptions = {
       from: `"${process.env.BRAND_NAME || 'Arivo Holiday'}" <${process.env.EMAIL_ID}>`,
