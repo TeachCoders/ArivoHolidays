@@ -9,7 +9,7 @@ Final stack decided:
 | **Private docs** (passports/payment slips) | VPS disk + backup | — |
 | **VPS (app)** | BigRock 4GB VPS (2-saal) | ~₹9,884 |
 | **Domain** | Hostinger `arivoholidays.com` (3-saal, ₹1/1st yr deal) | ~₹3,600 |
-| **Branded email** | Zoho Mail free (custom domain) | ₹0 |
+| **Branded email** | Brevo SMTP free (app send, 300 emails/day) | ₹0 |
 | **Code** | Aapki git repo | git me |
 
 > **Bahut zaroori rule:** images ka URL **Supabase public bucket** se aata hai (permanent,
