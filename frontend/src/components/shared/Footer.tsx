@@ -12,7 +12,6 @@ import { stripTourSuffix, pickPriorityLinks } from "@/lib/utils";
 
 const QUICK_LINKS = [
   { label: "Home", href: "/" },
-  { label: "My Trips / Traveller Portal 🧳", href: "/my-trips" },
   { label: "Destinations", href: "/tour-packages" },
   { label: "Tour Packages", href: "/tour-packages" },
   { label: "Experiences", href: "/travel-experiences" },

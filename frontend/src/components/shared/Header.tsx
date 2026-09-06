@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, PhoneCall, User } from "lucide-react";
+import { Menu, X, ChevronDown, PhoneCall } from "lucide-react";
 import { useGetStates } from "@/feature/state/api/useState";
 import { useGetJourneys } from "@/feature/journey/api/useJourney";
 import { useGetTravelExperiences } from "@/feature/travelExperience/api/useTravelExperience";
@@ -347,13 +347,6 @@ export const Header: React.FC = () => {
           )}
 
           <div className="hidden lg:flex items-center gap-3">
-            <Link
-              href="/my-trips"
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-full transition-all cursor-pointer"
-            >
-              <User className="w-3.5 h-3.5 text-[#D4561A]" />
-              <span>My Trips</span>
-            </Link>
             <QuoteModal>
               <button
                 type="button"
@@ -390,14 +383,6 @@ export const Header: React.FC = () => {
             }`}
         >
           <div className="border-t border-[#ececec] bg-white/95 backdrop-blur-md px-4 pt-3 pb-6 space-y-1">
-            <Link
-              href="/my-trips"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center gap-2 px-4 py-3 mb-2 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-[#D4561A] to-[#B34310] shadow-sm"
-            >
-              <User className="w-4 h-4" />
-              <span>My Trips / Traveller Portal 🧳</span>
-            </Link>
             {navLinks.map((link) =>
               link.children ? (
                 <div key={link.href}>
