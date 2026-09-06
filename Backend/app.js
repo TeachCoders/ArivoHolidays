@@ -77,7 +77,7 @@ if (isProduction) {
 }
 
 const PgStore = connectPgSimple(session);
-export const sessionPool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+export const sessionPool = new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 5 });
 sessionPool.on("error", (err) => {
   logger.error("Session pool idle client error", { message: err.message });
 });
