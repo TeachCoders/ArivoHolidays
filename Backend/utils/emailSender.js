@@ -4,7 +4,9 @@ import { generateTravellerEmailHTML, generateCancellationEmailHTML, generatePaym
 import { logger } from "./logger.js";
 
 // SMTP transporter — env se configurable. By default Gmail SMTP;
-// branded (Zoho/Brevo ina any) ke liye SMTP_HOST + SMTP_PORT set karo.
+// branded (Brevo/Resend ina) ke liye SMTP_HOST + SMTP_PORT set karo.
+// SMTP_USER optional: Brevo jaisi services SMTP login (aaa@smtp-brevo.com)
+// EMAIL_ID se alag rakhti hain (login auth ke liye, from liye nahi).
 const createTransporter = () =>
   process.env.SMTP_HOST
     ? nodemailer.createTransport({
@@ -12,7 +14,7 @@ const createTransporter = () =>
         port: Number(process.env.SMTP_PORT || 587),
         secure: process.env.SMTP_PORT === "465",
         auth: {
-          user: process.env.EMAIL_ID,
+          user: process.env.SMTP_USER || process.env.EMAIL_ID,
           pass: process.env.EMAIL_PASSWORD,
         },
       })
