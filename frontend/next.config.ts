@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   },
   serverExternalPackages: ["isomorphic-dompurify"],
   images: {
-    unoptimized: process.env.NODE_ENV === "development",
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
