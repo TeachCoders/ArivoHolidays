@@ -52,4 +52,32 @@ async function deleteBanner(entityType, entityId) {
   return prisma.banner.deleteMany({ where: { entityType, entityId } });
 }
 
-export { generateSlug, upsertBanner, getBanner, deleteBanner };
+async function upsertFaqs(entityType, entityId, faqs) {
+  if (!Array.isArray(faqs)) return [];
+  await prisma.faq.deleteMany({ where: { entityType, entityId } });
+  if (faqs.length === 0) return [];
+  const data = faqs
+    .filter((f) => f && f.ques && f.ans)
+    .map((f) => ({
+      ques: f.ques,
+      ans: f.ans,
+      entityType,
+      entityId,
+    }));
+  if (data.length === 0) return [];
+  await prisma.faq.createMany({ data });
+  return prisma.faq.findMany({ where: { entityType, entityId } });
+}
+
+async function getFaqs(entityType, entityId) {
+  return prisma.faq.findMany({
+    where: { entityType, entityId },
+    select: { id: true, ques: true, ans: true },
+  });
+}
+
+async function deleteFaqs(entityType, entityId) {
+  return prisma.faq.deleteMany({ where: { entityType, entityId } });
+}
+
+export { generateSlug, upsertBanner, getBanner, deleteBanner, upsertFaqs, getFaqs, deleteFaqs };

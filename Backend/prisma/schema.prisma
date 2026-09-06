@@ -51,6 +51,9 @@ model Traveller {
   phone              String          @unique
   country            String
   countryId          String
+  ipAddress          String?
+  location           String?
+  travellerMessage   String?
   pageReference      String             @default("/booking")
   source             String?            @default("website")
   defaultPassword    String?
@@ -849,6 +852,7 @@ model UserSession {
   country        String?
   userAgent      String?
   deviceType     String?
+  referrer       String?
   startedAt      DateTime       @default(now())
   endedAt        DateTime?
   totalTimeSpent Int            @default(0) // in seconds
@@ -913,4 +917,54 @@ model AnalyticsSetting {
   updatedAt DateTime @updatedAt
 
   @@map("analytics_settings")
+}
+
+model AdLandingPage {
+  id               Int      @id @default(autoincrement())
+  title            String
+  slug             String   @unique
+  theme            String?          // e.g. "wildlife", "honeymoon"
+  seoTitle         String?
+  seoDescription   String
+  h1Title          String?
+  bannerImages     String[]
+  whyChooseImages  String[]         @default([])
+  heroHeading      String?
+  heroSubheading   String?
+  ctaText          String?          @default("Enquire Now")
+  ctaFormEnabled   Boolean          @default(true)
+
+  // product selection — kisi ek type ko link karo
+  linkedJourneyIds        Int[]     @default([])
+  linkedTourPackageIds    Int[]     @default([])
+  linkedDestinationType   String?   // Country | State | City | TravelExperience
+  linkedDestinationIds    Int[]     @default([])
+
+  sectionsOrder        Json?            // dynamic section layout order banane ke liye
+  customCardOverrides  Json?            // landing page specific card overrides { [id]: { name, image, description, highlights } }
+  customFaqs           Json?            // landing page specific FAQs [{ question, answer }]
+  displayOrder         Int              @default(0)
+  isActive         Boolean          @default(true)
+  utmSource        String?
+  utmCampaign      String?
+  createdById      Int?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([slug])
+  @@index([isActive])
+  @@map("ad_landing_pages")
+}
+
+model GuestGallery {
+  id           Int      @id @default(autoincrement())
+  imageUrl     String
+  caption      String?
+  location     String?
+  isActive     Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("guest_gallery")
 }

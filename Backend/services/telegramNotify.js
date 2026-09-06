@@ -48,22 +48,31 @@ export async function sendTelegramMessage(text) {
 }
 
 /**
- * Alert for a brand-new chat lead.
+ * Alert for a brand-new lead (website or chat).
  * @param {object} lead - Traveller record
  * @param {object|null} partner - assigned Users record (or null)
  */
 export async function notifyNewChatTelegram(lead, partner = null) {
   const brand = process.env.BRAND_NAME || "Arivo Holiday";
   const siteUrl = process.env.SITE_URL || "";
+  const isChat = lead.source === "chat";
+  const titleEmoji = isChat ? "💬" : "🔔";
+  const titleText = isChat ? "NEW CHAT LEAD" : "NEW WEBSITE LEAD";
+
   let text =
-    `🟢 <b>New chat lead — ${brand}</b>\n` +
-    `👤 ${lead.name}\n` +
-    `📞 ${lead.phone}\n` +
-    `📍 ${lead.country || "Unknown"}\n` +
-    (lead.destination ? `🗺 ${lead.destination}\n` : "") +
-    (partner ? `🤝 Assigned to: ${partner.name}\n` : "") +
-    `🆔 ${lead.travellerId}\n`;
-  if (siteUrl) text += `🔗 ${siteUrl}/dashboard/chat`;
+    `${titleEmoji} <b>${titleText} — ${brand}</b>\n\n` +
+    `👤 <b>Name:</b> ${lead.name || "Guest"}\n` +
+    (lead.email ? `📧 <b>Email:</b> ${lead.email}\n` : "") +
+    `📞 <b>Phone:</b> ${lead.phone || "N/A"}\n` +
+    `📍 <b>Country:</b> ${lead.country || "India"}\n` +
+    `🌐 <b>Form Page URL:</b> ${lead.pageReference || "Website Direct"}\n` +
+    (lead.destination ? `🗺 <b>Destination:</b> ${lead.destination}\n` : "") +
+    (lead.travellerMessage ? `💬 <b>Message:</b> ${lead.travellerMessage}\n` : "") +
+    (partner ? `🤝 <b>Assigned to:</b> ${partner.name}\n` : "") +
+    `🆔 <b>Lead ID:</b> ${lead.travellerId}\n`;
+
+  const dashboardLink = isChat ? "/dashboard/chat" : "/dashboard/my-leads";
+  if (siteUrl) text += `\n🔗 <a href="${siteUrl}${dashboardLink}">View in Admin Dashboard</a>`;
 
   return sendTelegramMessage(text);
 }
@@ -77,11 +86,55 @@ export async function notifyNewChatMessageTelegram(conversation, messageText) {
   const brand = process.env.BRAND_NAME || "Arivo Holiday";
   const siteUrl = process.env.SITE_URL || "";
   let text =
-    `💬 <b>New chat message — ${brand}</b>\n` +
-    `👤 ${conversation.touristName || "Tourist"}\n` +
-    `📞 ${conversation.phone || ""}\n` +
-    `💬 ${String(messageText || "").slice(0, 300)}\n`;
-  if (siteUrl) text += `🔗 ${siteUrl}/dashboard/chat`;
+    `💬 <b>New Chat Message — ${brand}</b>\n\n` +
+    `👤 <b>From:</b> ${conversation.touristName || "Tourist"}\n` +
+    `📞 <b>Phone:</b> ${conversation.phone || "N/A"}\n` +
+    `💬 <b>Message:</b> ${String(messageText || "").slice(0, 300)}\n`;
+  if (siteUrl) text += `\n🔗 <a href="${siteUrl}/dashboard/chat">Open Chat Dashboard</a>`;
+
+  return sendTelegramMessage(text);
+}
+
+/**
+ * Alert for customer payment receipt upload (Anti-Fraud Founder Shield).
+ * @param {object} traveller
+ * @param {object} payment
+ */
+export async function notifyPaymentReceiptUploadedTelegram(traveller, payment) {
+  const brand = process.env.BRAND_NAME || "Arivo Holiday";
+  const siteUrl = process.env.SITE_URL || "";
+  let text =
+    `💳 <b>PAYMENT RECEIPT UPLOADED — ${brand}</b>\n\n` +
+    `👤 <b>Customer Name:</b> ${traveller.name || "Guest"}\n` +
+    `📞 <b>Phone:</b> ${traveller.phone || "N/A"}\n` +
+    `🆔 <b>Lead ID:</b> ${traveller.travellerId}\n` +
+    `💵 <b>Amount Paid:</b> ₹${payment.amount || "N/A"}\n` +
+    `🧾 <b>Transaction UTR:</b> ${payment.transactionId || "N/A"}\n` +
+    (payment.paymentScreenshotUrl ? `🖼 <b>Proof Image:</b> ${siteUrl}${payment.paymentScreenshotUrl}\n` : "");
+
+  if (siteUrl) text += `\n🔗 <a href="${siteUrl}/dashboard/sales-team/leads">View & Approve in Dashboard</a>`;
+
+  return sendTelegramMessage(text);
+}
+
+/**
+ * Alert for lead cancellation audit (Anti-Fraud Founder Shield).
+ * @param {object} traveller
+ * @param {string} cancellationReason
+ * @param {string} notes
+ */
+export async function notifyLeadCancelledTelegram(traveller, cancellationReason, notes) {
+  const brand = process.env.BRAND_NAME || "Arivo Holiday";
+  const siteUrl = process.env.SITE_URL || "";
+  let text =
+    `⚠️ <b>LEAD CANCELLED (RE-AUDIT REQUIRED) — ${brand}</b>\n\n` +
+    `👤 <b>Customer Name:</b> ${traveller.name || "Guest"}\n` +
+    `📞 <b>Phone:</b> ${traveller.phone || "N/A"}\n` +
+    `🆔 <b>Lead ID:</b> ${traveller.travellerId}\n` +
+    `❌ <b>Reason:</b> ${cancellationReason || "Not specified"}\n` +
+    (notes ? `📝 <b>Call Notes:</b> ${notes}\n` : "");
+
+  if (siteUrl) text += `\n🔗 <a href="${siteUrl}/dashboard/sales-team/leads">Audit Lead in Dashboard</a>`;
 
   return sendTelegramMessage(text);
 }

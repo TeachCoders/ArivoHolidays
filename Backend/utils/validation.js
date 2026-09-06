@@ -29,7 +29,7 @@ const strictPhoneRefine = (val) => {
 
 export const leadSchema = z.object({
   name: z.string().trim().min(2, "Name is required").max(100, "Name is too long"),
-  email: z.string().trim().email("A valid email is required").max(150, "Email is too long"),
+  email: z.string().trim().email("A valid email is required").max(150, "Email is too long").optional().or(z.literal("")),
   phone: z
     .string()
     .trim()
@@ -37,9 +37,12 @@ export const leadSchema = z.object({
     .refine(strictPhoneRefine, "Please enter a genuine mobile number"),
   country: z.string().trim().max(100).optional().default(""),
   countryId: z.string().trim().max(50).optional().default(""),
+  ipAddress: z.string().trim().max(64).optional(),
+  location: z.string().trim().max(120).optional(),
   pageReference: z.string().trim().max(255).optional().default("/booking"),
   defaultPassword: z.string().max(255).optional(),
   travelDate: z.string().optional().refine(isMissingOrValidDate, "Invalid travel date"),
+  travellerMessage: z.string().max(2000).optional(),
 });
 
 export const tourBookingSchema = z.object({
@@ -54,6 +57,8 @@ export const tourBookingSchema = z.object({
     .optional(),
   country: z.string().trim().max(100).optional(),
   countryId: z.string().trim().max(50).optional(),
+  ipAddress: z.string().trim().max(64).optional(),
+  location: z.string().trim().max(120).optional(),
   pageReference: z.string().trim().max(255).optional(),
   defaultPassword: z.string().max(255).optional(),
   noOfPersons: z.coerce.number().int().nonnegative().optional(),
@@ -79,6 +84,8 @@ export const vehicleBookingSchema = z.object({
     .optional(),
   country: z.string().trim().max(100).optional(),
   countryId: z.string().trim().max(50).optional(),
+  ipAddress: z.string().trim().max(64).optional(),
+  location: z.string().trim().max(120).optional(),
   pageReference: z.string().trim().max(255).optional(),
   defaultPassword: z.string().max(255).optional(),
   vehicleName: z.string().max(150).optional(),

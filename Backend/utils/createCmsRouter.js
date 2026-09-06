@@ -2,7 +2,7 @@ import express from "express";
 import { z } from "zod";
 import { prisma } from "../utils/prismaConnection.js";
 import { requireSalesOrAdmin, requireTeamOrAdmin } from "../middleware/requireSalesOrAdmin.js";
-import { generateSlug, upsertBanner, getBanner, deleteBanner } from "../utils/cmsHelpers.js";
+import { generateSlug, upsertBanner, getBanner, deleteBanner, upsertFaqs, getFaqs, deleteFaqs } from "../utils/cmsHelpers.js";
 import { sendWebhook } from "../services/webhookService.js";
 import { isPublicRequest } from "../utils/authHelpers.js";
 import { logger } from "./logger.js";
@@ -42,7 +42,7 @@ function createCmsRouter({ modelName, entityType, schema, searchFields, parentFi
   // PATCH /:id/toggle-active
   // Deactivate cascades downward (parent -> children -> linked journeys) and snapshots each child's
   // active state so that reactivating the parent restores children to their previous state.
-  router.patch("/:id/toggle-active", requireTeamOrAdmin(["it"]), async (req, res) => {
+  router.patch("/:id/toggle-active", requireSalesOrAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) return res.status(400).json({ success: false, message: `Invalid ${modelName} ID` });
@@ -113,7 +113,7 @@ function createCmsRouter({ modelName, entityType, schema, searchFields, parentFi
 
   // POST /order
   // Bulk-set top ordering: ids in array order get displayOrder 1..N, all others reset to 0.
-  router.post("/order", requireTeamOrAdmin(["it"]), async (req, res) => {
+  router.post("/order", requireSalesOrAdmin, async (req, res) => {
     try {
       const raw = req.body?.ids;
       const ids = Array.isArray(raw) ? raw.map(Number).filter((x) => Number.isInteger(x) && x > 0) : [];
@@ -323,8 +323,9 @@ function createCmsRouter({ modelName, entityType, schema, searchFields, parentFi
       if (isPublic && item.isActive === false) return res.status(404).json({ success: false, message: `${modelName} not found` });
 
       const banner = await getBanner(entityType, item.id);
+      const faqs = await getFaqs(entityType, item.id);
 
-      return res.status(200).json({ success: true, data: { ...item, banner } });
+      return res.status(200).json({ success: true, data: { ...item, banner, faqs } });
     } catch (err) {
       logger.error(`Error fetching ${modelName} by slug:`, { error: err.message, stack: err.stack });
       return res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -346,15 +347,16 @@ function createCmsRouter({ modelName, entityType, schema, searchFields, parentFi
       if (isPublic && item.isActive === false) return res.status(404).json({ success: false, message: `${modelName} not found` });
 
       const banner = await getBanner(entityType, id);
+      const faqs = await getFaqs(entityType, id);
 
-      return res.status(200).json({ success: true, data: { ...item, banner } });
+      return res.status(200).json({ success: true, data: { ...item, banner, faqs } });
     } catch (err) {
       logger.error(`Error fetching ${modelName}:`, { error: err.message, stack: err.stack });
       return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
   });
 
-  router.post("/", requireTeamOrAdmin(["it"]), async (req, res) => {
+  router.post("/", requireSalesOrAdmin, async (req, res) => {
     try {
       const parsed = schema.safeParse(req.body);
       if (!parsed.success) {
@@ -375,13 +377,16 @@ function createCmsRouter({ modelName, entityType, schema, searchFields, parentFi
       const item = await prisma[modelName].create({ data: { ...rest, slug } });
       const banner = await upsertBanner(entityType, item.id, bannerData);
       
+      const faqsInput = Array.isArray(req.body.faqs) ? req.body.faqs : [];
+      const faqs = await upsertFaqs(entityType, item.id, faqsInput);
+
       // Trigger Webhook Notification
-      sendWebhook(`${modelName.toUpperCase()}_CREATED`, { ...item, banner });
+      sendWebhook(`${modelName.toUpperCase()}_CREATED`, { ...item, banner, faqs });
 
       return res.status(201).json({
         success: true,
         message: `${modelName} created successfully`,
-        data: { ...item, banner },
+        data: { ...item, banner, faqs },
       });
     } catch (err) {
       if (err.code === "P2002") {
@@ -392,7 +397,7 @@ function createCmsRouter({ modelName, entityType, schema, searchFields, parentFi
     }
   });
 
-  router.put("/:id", requireTeamOrAdmin(["it"]), async (req, res) => {
+  router.put("/:id", requireSalesOrAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) return res.status(400).json({ success: false, message: `Invalid ${modelName} ID` });
@@ -423,10 +428,18 @@ function createCmsRouter({ modelName, entityType, schema, searchFields, parentFi
 
       const banner = await upsertBanner(entityType, id, bannerData);
 
+      const faqsInput = Array.isArray(req.body.faqs) ? req.body.faqs : null;
+      let faqs = undefined;
+      if (faqsInput !== null) {
+        faqs = await upsertFaqs(entityType, id, faqsInput);
+      } else {
+        faqs = await getFaqs(entityType, id);
+      }
+
       return res.status(200).json({
         success: true,
         message: `${modelName} updated successfully`,
-        data: { ...item, banner },
+        data: { ...item, banner, faqs },
       });
     } catch (err) {
       if (err.code === "P2002") {
@@ -437,7 +450,7 @@ function createCmsRouter({ modelName, entityType, schema, searchFields, parentFi
     }
   });
 
-  router.delete("/:id", requireTeamOrAdmin(["it"]), async (req, res) => {
+  router.delete("/:id", requireSalesOrAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) return res.status(400).json({ success: false, message: `Invalid ${modelName} ID` });
@@ -457,6 +470,7 @@ function createCmsRouter({ modelName, entityType, schema, searchFields, parentFi
       }
 
       await deleteBanner(entityType, id);
+      await deleteFaqs(entityType, id);
       await prisma[modelName].delete({ where: { id } });
 
       return res.status(200).json({ success: true, message: `${modelName} deleted successfully` });

@@ -6,7 +6,7 @@
  * Private/loopback addresses are skipped (no public lookup possible).
  */
 
-const GEO_API = "http://ip-api.com/json/{ip}?fields=status,countryCode,country,query";
+const GEO_API = "http://ip-api.com/json/{ip}?fields=status,countryCode,country,regionName,city,query";
 const REQUEST_TIMEOUT_MS = 4000;
 const CACHE_TTL_MS = 60 * 60 * 1000;
 
@@ -24,9 +24,9 @@ function isPrivateIp(ip) {
 }
 
 /**
- * Resolves the country for a client IP.
+ * Resolves the country/location for a client IP.
  * @param {string} ip
- * @returns {Promise<{countryCode: string, countryName: string, ip: string} | null>}
+ * @returns {Promise<{countryCode: string, countryName: string, location: string, ip: string} | null>}
  */
 export async function resolveCountry(ip) {
   const cleaned = String(ip || "").replace(/^::ffff:/, "").trim();
@@ -47,6 +47,7 @@ export async function resolveCountry(ip) {
         ? {
             countryCode: data.countryCode || "",
             countryName: data.country || "",
+            location: [data.city, data.regionName].filter(Boolean).join(", "),
             ip: data.query || cleaned,
           }
         : null;

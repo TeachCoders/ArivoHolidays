@@ -24,6 +24,7 @@ import tourPackageRouter from "./router/tourPackageRouter.js";
 import notificationRouter from "./router/notification.js";
 import chatRouter from "./router/chat.js";
 import { uploadImage, isValidUploadFolder } from "./utils/uploadImage.js";
+import { isSupabaseStorageEnabled, isPublicFolder, uploadToSupabaseStorage } from "./utils/supabaseStorage.js";
 import { requireSalesOrAdmin } from "./middleware/requireSalesOrAdmin.js";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
@@ -44,6 +45,8 @@ import mediaRouter from "./router/media.js";
 import { prisma } from "./utils/prismaConnection.js";
 import { logger, requestLogger } from "./utils/logger.js";
 import analyticsRouter from "./router/analytics.js";
+import adLandingPageRouter from "./router/adLandingPage.js";
+import guestGalleryRouter from "./router/guestGallery.js";
 import { scheduleAnalyticsRetention } from "./utils/analyticsRetention.js";
 import * as Sentry from "@sentry/node";
 
@@ -165,7 +168,13 @@ app.get("/auth/csrf-token", (req, res) => {
   });
 });
 
-const CSRF_EXEMPT_PATHS = ["/auth/login", "/auth/logout", "/auth/csrf-token"];
+const CSRF_EXEMPT_PATHS = [
+  "/auth/login",
+  "/auth/logout",
+  "/auth/csrf-token",
+  "/traveller-lead/public/portal-login",
+  "/traveller-lead/public/portal-receipt",
+];
 
 app.use((req, res, next) => {
   if (!["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) return next();
@@ -263,6 +272,8 @@ app.use("/journey", journeyRouter);
 app.use("/media", mediaRouter);
 app.use("/dashboard", dashboardRouter);
 app.use("/analytics", analyticsRouter);
+app.use("/ad-landing-pages", adLandingPageRouter);
+app.use("/guest-gallery", guestGalleryRouter);
 scheduleAnalyticsRetention();
 
 const upload = uploadImage("content");
@@ -281,7 +292,7 @@ app.post(
     try {
       if (!req.file) return res.status(400).json({ success: false, message: "No file uploaded" });
       const relativePath = path.relative(path.join(process.cwd(), "public"), req.file.path);
-      const url = `/${relativePath.replace(/\\/g, "/")}`;
+      const url = req.file.publicUrl || `/${relativePath.replace(/\\/g, "/")}`;
 
       const folder = req.body?.folder || "content";
       const filename = req.file.filename;
@@ -305,7 +316,7 @@ app.post(
   }
 );
 
-app.post("/media/replace", requireSalesOrAdmin, upload.single("file"), (req, res) => {
+app.post("/media/replace", requireSalesOrAdmin, upload.single("file"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: "No file uploaded" });
 
@@ -330,7 +341,17 @@ app.post("/media/replace", requireSalesOrAdmin, upload.single("file"), (req, res
     fs.copyFileSync(req.file.path, targetPath);
     cleanup();
 
-    return res.json({ success: true, url: `/${relPath.replace(/\\/g, "/")}` });
+    let url = `/${relPath.replace(/\\/g, "/")}`;
+    if (isSupabaseStorageEnabled() && isPublicFolder(path.dirname(relPath))) {
+      const publicUrl = await uploadToSupabaseStorage({
+        key: relPath.replace(/\\/g, "/"),
+        buffer: fs.readFileSync(targetPath),
+        contentType: req.file.mimetype,
+      });
+      if (publicUrl) url = publicUrl;
+    }
+
+    return res.json({ success: true, url });
   } catch (error) {
     console.error("Media replace error:", error);
     return res.status(500).json({ success: false, message: "Failed to replace file" });

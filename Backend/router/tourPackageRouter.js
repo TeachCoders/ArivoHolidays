@@ -234,7 +234,7 @@ router.post("/:id/banner", requireTeamOrAdmin(["sales", "it"]), bannerUpload.sin
     const id = parseInt(req.params.id);
     if (isNaN(id)) return res.status(400).json({ success: false, message: "Invalid package ID" });
     const folder = req.body?.folder || "tour-packages";
-    const url = `/${folder}/${req.file.filename}`;
+    const url = req.file.publicUrl || `/${folder}/${req.file.filename}`;
 
     // Insert into banner URLs array at given index (default: append to end)
     const pkg = await prisma.tourPackage.findUnique({ where: { id } });

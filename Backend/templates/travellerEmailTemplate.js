@@ -1,11 +1,74 @@
 /**
+ * Renders ONLY the official account-holder name (safe for all emails).
+ * Full remittance details are NOT shown here — use bankDetailsBlock() on
+ * finalised invoices/quotation only. Returns "" if not configured.
+ */
+const bankHolderBlock = () => {
+  const holder = process.env.BANK_ACCOUNT_HOLDER;
+  const brandName = process.env.BRAND_NAME || "Arivo Holiday";
+  if (!holder) return "";
+
+  return `
+  <div class="bank-box" style="margin-top:12px;border:1px solid #99f6e4;border-left:5px solid #0d9488;border-radius:12px;background-color:#f0fdfa;padding:16px;">
+    <h4 style="margin:0 0 6px 0;color:#115e59;font-size:13.5px;font-weight:800;text-transform:uppercase;">🏦 Official Payment Account</h4>
+    <p style="margin:0;font-size:15px;line-height:1.6;color:#065f46;">
+      Pay ONLY to Account Holder name: <strong style="color:#0f172a;">"${holder.toUpperCase()}"</strong>
+    </p>
+    <p style="margin:8px 0 0 0;font-size:12.5px;line-height:1.6;color:#065f46;">
+      ℹ️ ${brandName} is a <strong>sister company</strong> of ${holder} — payments for your ${brandName} booking go into the official ${holder} account on its behalf.
+    </p>
+    <p style="margin:8px 0 0 0;font-size:12.5px;color:#065f46;">
+      Full bank remittance details are shared separately by our team / on your portal. Please do not pay to any other account name.
+    </p>
+  </div>`;
+};
+
+/**
+ * Renders the FULL bank-transfer details (account no., SWIFT, IFSC…) from env.
+ * Use ONLY on finalised quotation/invoice emails & PDFs — NOT in welcome emails.
+ * Reads BANK_ACCOUNT_* from env. Returns "" if not configured.
+ */
+const bankDetailsBlock = () => {
+  const holder = process.env.BANK_ACCOUNT_HOLDER;
+  const brandName = process.env.BRAND_NAME || "Arivo Holiday";
+  if (!holder || !process.env.BANK_ACCOUNT_NUMBER) return "";
+
+  const bankRows = [
+    ["Beneficiary Name", holder],
+    ["Account Number", process.env.BANK_ACCOUNT_NUMBER],
+    ["Account Type", process.env.BANK_ACCOUNT_TYPE],
+    ["Bank Name", process.env.BANK_NAME],
+    ["Branch Address", process.env.BANK_BRANCH_ADDRESS],
+    ["SWIFT / BIC Code", process.env.BANK_SWIFT],
+    ["IFSC Code", process.env.BANK_IFSC],
+  ].filter(([, v]) => v);
+
+  return `
+  <div class="bank-box" style="margin-top:14px;border:1px solid #99f6e4;border-left:5px solid #0d9488;border-radius:12px;background-color:#f0fdfa;padding:16px;">
+    <h4 style="margin:0 0 10px 0;color:#115e59;font-size:13.5px;font-weight:800;text-transform:uppercase;">🏦 Official Bank Transfer Details — Pay ONLY to this account</h4>
+    <p style="margin:0 0 10px 0;font-size:12.5px;line-height:1.6;color:#065f46;">
+      ℹ️ ${brandName} is a <strong>sister company</strong> of ${holder} — this official account accepts your ${brandName} payment on its behalf.
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;border:1px solid #99f6e4;border-radius:10px;background-color:#ffffff;overflow:hidden;">
+      ${bankRows.map(([key, value]) => `
+      <tr>
+        <td style="padding:9px 12px;font-size:12.5px;color:#334155;font-weight:600;border-bottom:1px solid #e2e8f0;width:38%;background-color:#f0fdfa;">${key}</td>
+        <td style="padding:9px 12px;font-size:13px;color:#0f172a;font-weight:700;border-bottom:1px solid #f1f5f9;font-family:Consolas,Monaco,monospace;word-break:break-all;">${value}</td>
+      </tr>`).join("")}
+    </table>
+    <p style="margin:10px 0 0 0;font-size:12.5px;line-height:1.65;color:#065f46;">
+      💡 Please write your <strong>Traveller ID</strong> in the payment remark and share the transfer receipt (UTR No.) on your portal so we can confirm your payment instantly.
+      <br>🌐 International wire transfers usually take <strong>2–5 working days</strong> to reflect.
+    </p>
+  </div>`;
+};
+
+/**
  * RULE 1: WELCOME EMAIL (Simple English, Direct Touch + Document Vault Matched Perfectly)
  * Triggered when a new lead fills the form.
  */
 export const generateTravellerEmailHTML = (name, travellerId, travelInfo, ownerEmail, ownerMobile) => {
   const brandName = process.env.BRAND_NAME || "Arivo Holiday";
-  const finalEmail = ownerEmail || process.env.OWNER_EMAIL || "arushka@holidays.com";
-  const finalMobile = ownerMobile || process.env.OWNER_MOBILE || "+91 91367 39178";
 
   return `
   <!DOCTYPE html>
@@ -44,7 +107,6 @@ export const generateTravellerEmailHTML = (name, travellerId, travelInfo, ownerE
       .info-table td.label { font-weight: 600; color: #475569; width: 35%; border-right: 1px solid #e2e8f0; }
       .info-table td.value { font-weight: 500; color: #0f172a; }
       
-      .contact-card { background-color: #0f172a; color: #ffffff; padding: 30px; border-radius: 12px; margin-top: 30px; text-align: center; }
       .footer { background-color: #f1f5f9; padding: 25px 40px; text-align: center; font-size: 12px; color: #64748b; }
     </style>
   </head>
@@ -75,43 +137,6 @@ export const generateTravellerEmailHTML = (name, travellerId, travelInfo, ownerE
   }).join('')}
             </tbody>
           </table>
-
-          <!-- 👑 Section 2: TRAVELLER ID IMPORTANCE & DIRECT TOUCH -->
-          <div class="management-box">
-            <h4>📌 PLEASE SAVE OR REMEMBER YOUR TRAVELLER ID</h4>
-            <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: #0369a1; font-weight: 500;">
-              Please write down or take a screenshot of your <strong>Traveller ID: ${travellerId}</strong>. This unique ID is highly important for all your future steps, so please keep it completely safe.
-            </p>
-            <p style="margin-top: 12px; font-size: 14px; line-height: 1.7; color: #075985;">
-              🤝 <strong>Always In Direct Touch:</strong> This specific <strong>Traveller ID</strong> ensures you are hamesha in direct touch with our <strong>Senior Manager Desk</strong>. It acts as your permanent live hotline to our corporate office.<br><br>
-              📱 <strong>Instant Problem & Complaint Solution:</strong> If you face any slow updates, rudeness, or need urgent travel support during your trip, you can file a complaint or ask for help directly. Our <strong>Senior Managers</strong> will instantly track your ID and solve your problem under senior team protection!
-            </p>
-          </div>
-
-      
-
-          <!-- 🛡️ Section 4: Simple & Caring Payment Guidance -->
-          <div class="trust-shield-box">
-            <h4>⚠️ ANTI-FRAUD NOTICE FROM SENIOR MANAGEMENT</h4>
-            <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: #78350f; font-weight: 500;">
-              To protect your money, our <strong>Senior Management Desk</strong> requests you to strictly follow these security rules:
-            </p>
-            <p style="margin-top: 12px; font-size: 14px; line-height: 1.7; color: #92400e;">
-              ⭐️ <strong>Pay ONLY to Company Name:</strong> Always verify that the official Bank Account or UPI ID says exactly: <span style="background-color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #78350f;">"${brandName.toUpperCase()}"</span>.<br><br>
-              ❌ <strong>NEVER Share via WhatsApp:</strong> Never send your secret <strong>Password</strong>, payment slips, or ID cards to any agent's personal WhatsApp. Only upload them safely inside your official <strong>Traveller ID</strong> dashboard.<br><br>
-              ❌ <strong style="color: #b91c1c;">NEVER Pay to Personal Accounts:</strong> Do not send money to any agent's personal phone number or personal account. If you do, our <strong>Senior Managers</strong> cannot verify your tour, and hotel bookings will fail!
-            </p>
-          </div>
-          
-          <!-- Contact & Complaint Box -->
-          <div class="contact-card">
-            <h4 style="margin:0 0 8px 0; color:#f59e0b; font-size: 16px;">We are always here to protect you! 💖</h4>
-            <p style="margin: 0 0 15px 0; font-size: 13.5px; color: #cbd5e1;">If you have any complaints, want to report an agent, or need urgent support, please contact our <strong>Senior Manager Desk</strong> directly:</p>
-            <div style="font-size:14.5px; color:#cbd5e1; line-height: 1.6;">
-              📞 <strong>Senior Manager</strong> Helpline: <strong>${finalMobile}</strong><br>
-              ✉️ Direct <strong>Senior Management</strong> Email: <strong>${finalEmail}</strong>
-            </div>
-          </div>
         </div>
         
         <div class="footer">
@@ -130,6 +155,7 @@ export const generateTravellerEmailHTML = (name, travellerId, travelInfo, ownerE
  */
 export const generateCancellationEmailHTML = (name, travellerId, agentName, ownerEmail, ownerMobile) => {
   const brandName = process.env.BRAND_NAME || "Arivo Holiday";
+  const bankHolder = process.env.BANK_ACCOUNT_HOLDER || brandName;
   const finalEmail = ownerEmail || process.env.OWNER_EMAIL || "arushka@holidays.com";
   const finalMobile = ownerMobile || process.env.OWNER_MOBILE || "+91 91367 39178";
 
@@ -181,7 +207,7 @@ export const generateCancellationEmailHTML = (name, travellerId, agentName, owne
               Did you pay any advance booking token to the agent's personal account? If yes, please use your <strong>Traveller ID: ${travellerId}</strong> and contact our <strong>Senior Manager Desk</strong> immediately!
             </p>
             <p style="margin-top: 12px; font-size: 13.5px; line-height: 1.6; color: #92400e;">
-              <strong>Why our management checks:</strong> Since your <strong>Traveller ID</strong> is closed in our system, your private <strong>Password</strong> will get locked, and no hotels can be booked. Your funds are only safe inside the official corporate name of <strong>"${brandName.toUpperCase()}"</strong>.
+              <strong>Why our management checks:</strong> Since your <strong>Traveller ID</strong> is closed in our system, your private <strong>Password</strong> will get locked, and no hotels can be booked. Your funds are only safe inside the official corporate account of <strong>"${bankHolder.toUpperCase()}"</strong>.
             </p>
           </div>
 
@@ -336,9 +362,13 @@ export const generatePaymentConfirmationEmailHTML = (name, travellerId, password
  */
 export const generateInvoiceEmailHTML = (name, invoiceNo, packageDetails, subtotal, gst, discount, grandTotal, ownerEmail, ownerMobile, includeGreeting = true) => {
   const brandName = process.env.BRAND_NAME || "Arivo Holiday";
+  const bankHolder = process.env.BANK_ACCOUNT_HOLDER || brandName;
+  const bankHtml = bankDetailsBlock();
   const finalEmail = ownerEmail || process.env.OWNER_EMAIL || "arushka@holidays.com";
   const finalMobile = ownerMobile || process.env.OWNER_MOBILE || "+91 91367 39178";
   const portalUrl = process.env.BOOKING_PORTAL_URL || "https://booking.arivoholidays.com";
+  const waNumber = process.env.CHAT_PARTNER_NUMBER || finalMobile.replace(/\D/g, "");
+  const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi! I would like to confirm Quotation ${invoiceNo || ""} (Arivo Holiday).`)}`;
 
   const traveller = packageDetails.travellerInfo || {};
   const formatDate = (d) => d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "";
@@ -568,7 +598,10 @@ export const generateInvoiceEmailHTML = (name, invoiceNo, packageDetails, subtot
     ? `<div style="margin-bottom:26px;border:1px solid #fde68a;border-radius:10px;padding:16px;background-color:#fffbeb;">
         <h4 style="margin:0 0 8px 0;color:#78350f;font-size:12px;text-transform:uppercase;font-weight:800;">📝 Notes</h4>
         <div style="font-size:12.5px;color:#475569;line-height:1.8;">
-          ${packageDetails.notes.split("\n").filter(Boolean).map((l) => `<div>• ${l}</div>`).join("")}
+          ${packageDetails.notes.split("\n").filter(Boolean).map((l) => {
+            const clean = l.replace(/^[•\-\*\s]+/, "").trim();
+            return clean ? `<div>• ${clean}</div>` : "";
+          }).join("")}
         </div>
       </div>`
     : "";
@@ -649,12 +682,14 @@ export const generateInvoiceEmailHTML = (name, invoiceNo, packageDetails, subtot
           ${inclExclHtml}
           ${notesHtml}
           ${paymentHtml}
+          ${bankHtml}
           ${cancellationHtml}
 
           <!-- Single primary CTA -->
           <div style="text-align:center;margin:30px 0 8px 0;">
-            <a href="${portalUrl}" class="cta-btn">View & Confirm on Portal →</a>
-            <p style="font-size:12px;color:#94a3b8;margin-top:12px;">Track this quotation, ask questions, or approve it directly from your traveller portal.</p>
+            <a href="${waLink}" class="cta-btn">Confirm This Quotation on WhatsApp 💬</a>
+            <p style="font-size:12px;color:#94a3b8;margin-top:12px;">Or simply reply to this email at <strong>${finalEmail}</strong> saying “I confirm booking” — no sign-up, no password needed.</p>
+            <p style="font-size:12px;color:#94a3b8;margin-top:6px;">Prefer online tracking? <a href="${portalUrl}" style="color:#6366f1;font-weight:700;text-decoration:underline;">View on traveller portal</a> (optional).</p>
           </div>
 
           <!-- Contact -->
@@ -750,7 +785,7 @@ export const generateRequirementsEmailHTML = (name, travellerId, requirements, o
             </tbody>
           </table>
 
-            <p style="font-size: 14px; color: #64748b; margin-top: 20px; text-align: center;">
+          <p style="font-size: 14px; color: #64748b; margin-top: 20px; text-align: center;">
             If anything needs to be changed, please let your travel agent know.
           </p>
 
@@ -778,6 +813,7 @@ export const generateRequirementsEmailHTML = (name, travellerId, requirements, o
  */
 export const generateBookingConfirmationEmailHTML = (name, travellerId, password, invoiceNo, totalInvoiced, totalPaid, dueAmount, slabLabel, requiredAmount) => {
   const brandName = process.env.BRAND_NAME || "Arivo Holiday";
+  const bankHolder = process.env.BANK_ACCOUNT_HOLDER || brandName;
   const finalEmail = process.env.OWNER_EMAIL || "arushka@holidays.com";
   const finalMobile = process.env.OWNER_MOBILE || "+91 91367 39178";
   const portalUrl = process.env.BOOKING_PORTAL_URL || "https://booking.arivoholidays.com";
@@ -857,16 +893,17 @@ export const generateBookingConfirmationEmailHTML = (name, travellerId, password
               Your booking is confirmed, but there is still a <strong>due amount of ₹${Number(due).toLocaleString()}</strong> remaining. Kindly complete your payment before your travel date to avoid any inconvenience.
             </p>
             <p style="margin-top: 10px; font-size: 14px; line-height: 1.7; color: #075985;">
-              ⭐️ <strong>Pay ONLY to Company Name:</strong> Ensure the official Bank Account or UPI ID says: <span style="background-color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #0369a1;">"${brandName.toUpperCase()}"</span>.<br>
+              ⭐️ <strong>Pay ONLY to the Official Company Account:</strong> Transfer the due amount ONLY to the bank account in the name of: <span style="background-color: #ffffff; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #0369a1;">"${bankHolder.toUpperCase()}"</span>. Bank details are below.<br>
               ❌ <strong>NEVER Pay to Personal Accounts</strong> — Report immediately to our Senior Management Desk.
             </p>
+            ${bankHolderBlock()}
           </div>
           ` : `
           <div class="payment-box">
             <h4>💰 PAYMENT STATUS: FULLY PAID ✅</h4>
             <p style="margin: 0; font-size: 14px; line-height: 1.7; color: #0369a1;">You have completed all payments for your tour package. No dues are pending.</p>
             <p style="margin-top: 10px; font-size: 14px; line-height: 1.7; color: #075985;">
-              ⭐️ <strong>Always pay only to Company Name:</strong> "${brandName.toUpperCase()}" — Never pay to personal accounts.
+              ⭐️ <strong>Always pay only to the Official Company Account:</strong> "${bankHolder.toUpperCase()}" — Never pay to personal accounts.
             </p>
           </div>
           `}
@@ -907,7 +944,7 @@ export const generateBookingConfirmationEmailHTML = (name, travellerId, password
               ${due > 0 ? `<tr style="background-color:#fef2f2;"><td style="padding:8px;font-size:13px;color:#ef4444;font-weight:600;">Remaining Balance Due</td><td style="padding:8px;font-size:14px;color:#ef4444;font-weight:800;">₹${due.toLocaleString()}</td></tr>` : '<tr style="background-color:#f0fdf4;"><td style="padding:8px;font-size:13px;color:#10b981;font-weight:600;">Payment Status</td><td style="padding:8px;font-size:14px;color:#10b981;font-weight:800;">✅ Fully Paid</td></tr>'}
             </table>
             <p style="margin-top:10px;font-size:13px;color:#0369a1;">
-              ⚠️ Remaining balance must be paid <strong>before your travel date</strong>. Pay ONLY to official company account: <strong>"${brandName.toUpperCase()}"</strong>
+              ⚠️ Remaining balance must be paid <strong>before your travel date</strong>. Pay ONLY to official company account: <strong>"${bankHolder.toUpperCase()}"</strong>
             </p>
           </div>
 
@@ -953,7 +990,7 @@ export const generateBookingConfirmationEmailHTML = (name, travellerId, password
             <p style="margin: 0; font-size: 14px; line-height: 1.7; color: #78350f;">
               🔐 <strong>Keep your password safe.</strong> Do not share it with anyone, including our agents.<br><br>
               ❌ <strong>NEVER share</strong> your password on WhatsApp or any social media.<br><br>
-              🏦 <strong>Pay ONLY to Company Name:</strong> ${brandName.toUpperCase()} — Never pay to any personal account.<br><br>
+              🏦 <strong>Pay ONLY to the Official Company Account:</strong> ${bankHolder.toUpperCase()} — Never pay to any personal account.<br><br>
               🌐 <strong>Always login</strong> through our official portal only: <strong>${portalUrl}</strong>
             </p>
           </div>

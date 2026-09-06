@@ -2,6 +2,7 @@ import { Router } from "express";
 import { prisma } from "../utils/prismaConnection.js";
 import { requireSalesOrAdmin } from "../middleware/requireSalesOrAdmin.js";
 import { deleteMediaFile } from "../utils/uploadImage.js";
+import { deleteSupabaseObject } from "../utils/supabaseStorage.js";
 import { handlePrismaError } from "../utils/handlePrismaError.js";
 import { logger } from "../utils/logger.js";
 
@@ -103,9 +104,13 @@ router.delete("/:id", requireSalesOrAdmin, async (req, res) => {
     const media = await prisma.media.findUnique({ where: { id } });
     if (!media) return res.status(404).json({ success: false, message: "Media not found" });
 
-    const relPath = toRelativePath(media.url);
-    if (relPath) {
-      deleteMediaFile(relPath);
+    if (media.url?.includes("/storage/v1/object/public/")) {
+      await deleteSupabaseObject(media.url);
+    } else {
+      const relPath = toRelativePath(media.url);
+      if (relPath) {
+        deleteMediaFile(relPath);
+      }
     }
 
     await prisma.media.delete({ where: { id } });

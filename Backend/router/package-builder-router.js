@@ -11,40 +11,54 @@ import { logger } from "../utils/logger.js";
 
 const router = express.Router();
 
+const validServices = ["Hotel", "Car", "Guide", "Activity"];
+
 const invoiceItemSchema = z.object({
-  location: z.string().trim().optional(),
-  ServiceName: z.string().trim().optional(),
-  hotelName: z.string().trim().optional(),
-  hotelType: z.string().trim().optional(),
-  carName: z.string().trim().optional(),
-  carType: z.string().trim().optional(),
-  guideName: z.string().trim().optional(),
-  guideLanguage: z.string().trim().optional(),
-  ServcieQty: z.coerce.number().int().min(0).optional().default(1),
-  UnitPrice: z.coerce.number().min(0).optional().default(0),
-  TotalPrice: z.coerce.number().min(0).optional().default(0),
+  location: z.string().trim().nullish(),
+  ServiceName: z.string().trim().nullish(),
+  hotelName: z.string().trim().nullish(),
+  hotelType: z.string().trim().nullish(),
+  carName: z.string().trim().nullish(),
+  carOwnerName: z.string().trim().nullish(),
+  carType: z.string().trim().nullish(),
+  guideName: z.string().trim().nullish(),
+  guideLanguage: z.string().trim().nullish(),
+  ServcieQty: z.coerce.number().min(0).nullish().default(1),
+  UnitPrice: z.coerce.number().min(0).nullish().default(0),
+  TotalPrice: z.coerce.number().min(0).nullish().default(0),
+  vendorId: z.any().nullish(),
+  startDate: z.any().nullish(),
+  endDate: z.any().nullish(),
 });
+
 const createInvoiceSchema = z.object({
-  invoiceNo: z.string().trim().min(1, "Invoice number is required").max(100),
-  packageName: z.string().trim().max(255).optional(),
-  destination: z.string().trim().max(255).optional(),
-  travelDate: z.string().optional(),
-  duration: z.string().trim().max(100).optional(),
-  items: z.array(invoiceItemSchema).optional().default([]),
-  includes: z.array(z.string()).optional().default([]),
-  excludes: z.array(z.string()).optional().default([]),
-  notes: z.string().max(5000).optional(),
-  cancellationPolicy: z.string().max(5000).optional(),
-  advanceAmount: z.coerce.number().min(0).optional().default(0),
-  balanceTerms: z.string().max(2000).optional(),
-  validTill: z.string().optional(),
-  subtotal: z.coerce.number().min(0).optional().default(0),
-  gst: z.coerce.number().min(0).optional().default(0),
-  discount: z.coerce.number().min(0).optional().default(0),
-  grandTotal: z.coerce.number().min(0).optional().default(0),
-  itinerary: z.string().max(10000).optional(),
-  gstRate: z.coerce.number().min(0).max(100).optional().default(18),
-  travellerInfo: z.any().optional(),
+  packageId: z.any().nullish(),
+  invoiceNo: z.string().trim().max(100).nullish(),
+  quotationNo: z.string().trim().max(100).nullish(),
+  packageName: z.string().trim().max(255).nullish(),
+  destination: z.string().trim().max(255).nullish(),
+  travelDate: z.any().nullish(),
+  duration: z.string().trim().max(100).nullish(),
+  adults: z.any().nullish(),
+  children: z.any().nullish(),
+  items: z.array(invoiceItemSchema).nullish().default([]),
+  includes: z.array(z.string()).nullish().default([]),
+  excludes: z.array(z.string()).nullish().default([]),
+  notes: z.any().nullish(),
+  cancellationPolicy: z.any().nullish(),
+  advanceAmount: z.coerce.number().min(0).nullish().default(0),
+  balanceTerms: z.any().nullish(),
+  validTill: z.any().nullish(),
+  subtotal: z.coerce.number().min(0).nullish().default(0),
+  gst: z.coerce.number().min(0).nullish().default(0),
+  discount: z.coerce.number().min(0).nullish().default(0),
+  serviceCharges: z.coerce.number().min(0).nullish().default(0),
+  grandTotal: z.coerce.number().min(0).nullish().default(0),
+  itinerary: z.any().nullish(),
+  gstRate: z.coerce.number().min(0).max(100).nullish().default(18),
+  travellerInfo: z.any().nullish(),
+  bannerImageUrl: z.any().nullish(),
+  status: z.string().nullish(),
 });
 
 // Get all invoices for a specific lead
@@ -92,7 +106,7 @@ router.post("/lead/:travellerId", requireSalesOrAdmin, async (req, res) => {
       status: status || "SAVED",
       isEmailSent: false,
       isWhatsappSent: false,
-      quotationNo: quotationNo || null,
+      quotationNo: quotationNo || invoiceNo || null,
       validTill: validTill || null,
       packageName: packageName || null,
       destination: destination || null,
@@ -109,23 +123,26 @@ router.post("/lead/:travellerId", requireSalesOrAdmin, async (req, res) => {
       itinerary: itinerary || null,
       bannerImageUrl: bannerImageUrl || [],
       items: {
-        create: (items || []).map(item => ({
-          location: item.location,
-          ServiceName: item.ServiceName,
-          ServcieQty: Number(item.ServcieQty || 0),
-          UnitPrice: Number(item.UnitPrice || 0),
-          TotalPrice: Number(item.TotalPrice || 0),
-          vendorId: item.vendorId || null,
-          hotelName: item.hotelName || null,
-          hotelType: item.hotelType || null,
-          carName: item.carName || null,
-          carOwnerName: item.carOwnerName || null,
-          carType: item.carType || null,
-          guideName: item.guideName || null,
-          guideLanguage: item.guideLanguage || null,
-          startDate: item.startDate ? new Date(item.startDate) : null,
-          endDate: item.endDate ? new Date(item.endDate) : null,
-        }))
+        create: (items || []).map(item => {
+          const serviceName = (item.ServiceName && validServices.includes(item.ServiceName)) ? item.ServiceName : "Hotel";
+          return {
+            location: item.location || "General",
+            ServiceName: serviceName,
+            ServcieQty: Number(item.ServcieQty || 0),
+            UnitPrice: Number(item.UnitPrice || 0),
+            TotalPrice: Number(item.TotalPrice || 0),
+            vendorId: item.vendorId ? Number(item.vendorId) : null,
+            hotelName: item.hotelName || null,
+            hotelType: item.hotelType || null,
+            carName: item.carName || null,
+            carOwnerName: item.carOwnerName || null,
+            carType: item.carType || null,
+            guideName: item.guideName || null,
+            guideLanguage: item.guideLanguage || null,
+            startDate: item.startDate ? new Date(item.startDate) : null,
+            endDate: item.endDate ? new Date(item.endDate) : null,
+          };
+        })
       }
     };
 
@@ -208,35 +225,35 @@ router.post("/lead/:travellerId/send-invoice", requireSalesOrAdmin, async (req, 
     }
 
     const packageDetails = { packageName, destination, travelDate, duration, items, includes, excludes, notes, cancellationPolicy, advanceAmount, balanceTerms, validTill, itinerary, bannerImageUrl, gstRate, travellerInfo };
-    
+
     const htmlContent = generateInvoiceEmailHTML(
-      traveller.name, 
-      invoiceNo || "N/A", 
-      packageDetails, 
-      subtotal || 0, 
-      gst || 0, 
-      discount || 0, 
-      grandTotal || 0, 
-      null, 
+      traveller.name,
+      invoiceNo || "N/A",
+      packageDetails,
+      subtotal || 0,
+      gst || 0,
+      discount || 0,
+      grandTotal || 0,
+      null,
       null,
       true
     );
 
     const pdfHtmlContent = generateInvoiceEmailHTML(
-      traveller.name, 
-      invoiceNo || "N/A", 
-      packageDetails, 
-      subtotal || 0, 
-      gst || 0, 
-      discount || 0, 
-      grandTotal || 0, 
-      null, 
+      traveller.name,
+      invoiceNo || "N/A",
+      packageDetails,
+      subtotal || 0,
+      gst || 0,
+      discount || 0,
+      grandTotal || 0,
+      null,
       null,
       false
     );
 
     const pdfBuffer = await generatePdfFromHtml(pdfHtmlContent, { format: 'A4', margin: { top: '10px', right: '10px', bottom: '10px', left: '10px' } });
-    
+
     const cleanName = (str) => (str || "").replace(/[^a-zA-Z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "").substring(0, 50);
     const filename = `quotation-${cleanName(traveller.name)}-${cleanName(packageName)}-${Date.now()}.pdf`;
 

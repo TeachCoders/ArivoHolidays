@@ -35,7 +35,14 @@ const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=Hi!%20I%20need%20he
 
 const WHATSAPP_HANDOFF = `Chat directly with our travel expert on WhatsApp:\n${WHATSAPP_LINK}`;
 
-const FALLBACK_REPLY = `Thank you! For any further questions, feel free to contact us on WhatsApp:\n${WHATSAPP_LINK}`;
+const FALLBACK_REPLY = {
+  text: `Got it! Our travel expert has been notified and will assist you shortly. 📲\n\nIn the meantime, what would you like to explore?`,
+  buttons: [
+    { label: "🏰 Top Destinations", value: "ENGAGEMENT_destinations" },
+    { label: "📦 Popular Tour Packages", value: "ENGAGEMENT_packages" },
+    { label: "💬 Connect on WhatsApp", value: "ENGAGEMENT_whatsapp" },
+  ]
+};
 
 // Gentle re-asks used when the tourist's reply doesn't fit the current step.
 function getMonthButtons() {
@@ -93,20 +100,20 @@ const GROUP_SIZE_BUTTONS = [
 
 const FLOW_REASKS = {
   AWAITING_TRAVEL_DATE: {
-    text: "To get started, when are you planning to travel? Please select your travel month below:",
+    text: "To get started on your dream trip, when are you planning to travel? Please select your travel month below:",
     buttons: getMonthButtons(),
   },
   AWAITING_GROUP_SIZE: {
-    text: "How many people will be travelling in your group?",
+    text: "Awesome! How many travelers will be joining this trip?",
     buttons: GROUP_SIZE_BUTTONS,
   },
   AWAITING_BUDGET: {
-    text: "What style of accommodation do you prefer for your stay?",
+    text: "What style of stay or hotel category do you prefer for your holiday?",
     buttons: [
       { label: "🏨 3-Star Comfort", value: "BUDGET_3-Star Comfort" },
       { label: "🏨 4-Star Premium", value: "BUDGET_4-Star Premium" },
       { label: "👑 5-Star Luxury", value: "BUDGET_5-Star Luxury" },
-      { label: "🤔 Flexible / Not sure", value: "BUDGET_Flexible" },
+      { label: "🤔 Flexible / Open to suggestions", value: "BUDGET_Flexible" },
     ]
   },
   AWAITING_EXPLORE_MODE: {
@@ -117,11 +124,11 @@ const FLOW_REASKS = {
     ]
   },
   AWAITING_DESTINATION:
-    "Where would you like to travel? Please select a destination below.",
+    "Which destination are you excited to visit? Select an option or type a place name:",
   AWAITING_TRIP_TYPE:
-    "What type of trip are you interested in? Please select from the options below.",
+    "What type of holiday experience do you prefer? Select from below:",
   AWAITING_JOURNEY:
-    "Which package caught your eye? Please select from the options below.",
+    "Here are our top recommended packages for you! Pick one to view full itinerary:",
 };
 
 // Words/abbreviations that hint at a travel date answer.
@@ -150,8 +157,8 @@ export async function isAnyoneOnline() {
 /** Welcome sequence shown right after a chat lead is created. */
 export function buildWelcomeMessages(name) {
   return [
-    `Welcome to ${BRAND()}, ${name}! 🌍`,
-    `I'm your AI travel assistant. Let me help you plan your perfect trip!`,
+    `Namaste ${name}! 🙏 Welcome to ${BRAND()}.`,
+    `I'm Maya, your personal travel specialist. Let's design your perfect holiday together! ✨`,
   ];
 }
 

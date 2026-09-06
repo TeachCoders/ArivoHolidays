@@ -8,6 +8,7 @@ import { leadSchema } from "../utils/validation.js";
 import { sendCancellationEmail, sendPaymentConfirmationEmail, sendEmail } from "../utils/emailSender.js";
 import { generateRequirementsEmailHTML } from "../templates/travellerEmailTemplate.js";
 import { createLead } from "../services/leadService.js";
+import { clientIpFromReq } from "../services/geoService.js";
 import { handlePrismaError } from "../utils/handlePrismaError.js";
 import { logger } from "../utils/logger.js";
 
@@ -176,6 +177,9 @@ router.post("/", leadLimiter, async (req, res) => {
     phone,
     country,
     countryId,
+    ipAddress,
+    location,
+    travellerMessage,
     pageReference,
     defaultPassword,
     travelDate,
@@ -187,6 +191,9 @@ router.post("/", leadLimiter, async (req, res) => {
       phone,
       country,
       countryId,
+      ipAddress: ipAddress || clientIpFromReq(req) || null,
+      location,
+      travellerMessage,
       pageReference,
       defaultPassword,
       travelDate,
@@ -821,6 +828,20 @@ router.post("/:leadId/requirements", requireSalesOrAdmin, async (req, res) => {
       specialRequirements,
     } = req.body;
 
+    const traveller = await prisma.traveller.findUnique({
+      where: { id: Number(leadId) },
+      select: { id: true, defaultPassword: true },
+    });
+
+    let password = traveller?.defaultPassword;
+    if (traveller && !password) {
+      password = crypto.randomBytes(3).toString("hex").toUpperCase();
+      await prisma.traveller.update({
+        where: { id: Number(leadId) },
+        data: { defaultPassword: password },
+      });
+    }
+
     const requirement = await prisma.travellerRequirementConfirmation.upsert({
       where: { travellerId: Number(leadId) },
       update: {
@@ -864,14 +885,13 @@ router.post("/:leadId/requirements", requireSalesOrAdmin, async (req, res) => {
       },
     });
 
-    res.json({ success: true, data: requirement });
+    res.json({ success: true, data: requirement, password });
   } catch (error) {
     logger.error("Error saving requirements:", { error: error.message, stack: error.stack });
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
-// GET - Requirements preview HTML page (sharable via WhatsApp/email)
 router.get("/:leadId/requirements-preview", requireSalesOrAdmin, async (req, res) => {
   try {
     const { leadId } = req.params;
@@ -959,10 +979,17 @@ router.post("/:leadId/requirements/send-email", requireSalesOrAdmin, async (req,
 
     const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
     const requirementsUrl = `${baseUrl}/traveller-lead/${leadId}/requirements-preview`;
-    const htmlContent = generateRequirementsEmailHTML(traveller.name, traveller.travellerId, traveller.requirement, undefined, undefined, requirementsUrl);
+    const htmlContent = generateRequirementsEmailHTML(
+      traveller.name,
+      traveller.travellerId,
+      traveller.requirement,
+      undefined,
+      undefined,
+      requirementsUrl
+    );
     await sendEmail(
       traveller.email,
-      `📋 Your Travel Requirements - ${traveller.travellerId} | ${process.env.BRAND_NAME || 'Arivo Holiday'}`,
+      `📋 Your Travel Quotation & Requirements - ${traveller.travellerId} | ${process.env.BRAND_NAME || 'Arivo Holiday'}`,
       htmlContent
     );
 
@@ -971,7 +998,7 @@ router.post("/:leadId/requirements/send-email", requireSalesOrAdmin, async (req,
       data: { isEmailSent: true }
     });
 
-    res.json({ success: true, message: "Requirements email sent successfully" });
+    res.json({ success: true, message: "Requirements & Quotation email sent successfully" });
   } catch (error) {
     logger.error("Error sending requirements email:", { error: error.message, stack: error.stack });
     res.status(500).json({ success: false, message: error.message });
@@ -1040,6 +1067,118 @@ router.delete("/:leadId", requireSalesOrAdmin, async (req, res) => {
     return res.json({ success: true, message: "Lead deleted successfully." });
   } catch (error) {
     logger.error("Error deleting lead:", { error: error.message, stack: error.stack });
+    return res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// ── Public Traveller Portal Endpoints (Zero Paid Third-Party Services) ──
+
+// POST /public/portal-login — Login with phone / email + travellerId or password
+router.post("/public/portal-login", async (req, res) => {
+  try {
+    const { identifier, password } = req.body;
+    if (!identifier) {
+      return res.status(400).json({ success: false, message: "Phone or Traveller ID is required" });
+    }
+
+    const cleanId = String(identifier).trim();
+    const traveller = await prisma.traveller.findFirst({
+      where: {
+        OR: [
+          { travellerId: { equals: cleanId, mode: "insensitive" } },
+          { phone: cleanId },
+          { email: { equals: cleanId, mode: "insensitive" } },
+        ],
+      },
+      include: {
+        invoices: { orderBy: { createdAt: "desc" }, take: 1 },
+        payments: { orderBy: { createdAt: "desc" } },
+        assignedTo: { select: { name: true, email: true, mobile: true } },
+      },
+    });
+
+    if (!traveller) {
+      return res.status(404).json({ success: false, message: "Traveller record not found for this Phone/ID" });
+    }
+
+    // Check password if provided, else fallback to travellerId match
+    if (password && traveller.defaultPassword && password !== traveller.defaultPassword && password !== traveller.travellerId) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    return res.json({
+      success: true,
+      data: traveller,
+    });
+  } catch (error) {
+    logger.error("Error in traveller portal login:", { error: error.message, stack: error.stack });
+    return res.status(500).json({ success: false, message: "Server error logging into Traveller Portal" });
+  }
+});
+
+// POST /public/portal-receipt — Traveller uploads payment receipt screenshot & UTR
+router.post("/public/portal-receipt", async (req, res) => {
+  try {
+    const { travellerId, amount, transactionId, paymentScreenshotUrl, paymentDate } = req.body;
+    if (!travellerId || !amount) {
+      return res.status(400).json({ success: false, message: "Traveller ID and Amount are required" });
+    }
+
+    const cleanId = String(travellerId).trim();
+    const isNumeric = /^\d+$/.test(cleanId);
+    const whereClause = isNumeric ? { id: Number(cleanId) } : { travellerId: cleanId };
+
+    const traveller = await prisma.traveller.findUnique({
+      where: whereClause,
+      include: { assignedTo: true },
+    });
+
+    if (!traveller) {
+      return res.status(404).json({ success: false, message: "Traveller record not found" });
+    }
+
+    // Create payment entry
+    const newPayment = await prisma.payment.create({
+      data: {
+        travellerId: traveller.id,
+        amount: Number(amount),
+        transactionId: transactionId || null,
+        paymentScreenshotUrl: paymentScreenshotUrl || null,
+        paymentDate: paymentDate ? new Date(paymentDate) : new Date(),
+        status: "UPCOMING",
+      },
+    });
+
+    // 🔔 Notify Founder via Telegram Bot
+    try {
+      const { notifyPaymentReceiptUploadedTelegram } = await import("../services/telegramNotify.js");
+      await notifyPaymentReceiptUploadedTelegram(traveller, newPayment);
+    } catch (tgErr) {
+      logger.error("Telegram notification error:", { message: tgErr.message });
+    }
+
+    // 🔔 Create In-App Notification for Superadmin
+    try {
+      await prisma.notification.create({
+        data: {
+          type: "PAYMENT_APPROVAL",
+          targetRole: "all",
+          title: "Payment Receipt Uploaded by Customer",
+          message: `${traveller.name} (${traveller.travellerId}) uploaded ₹${amount} payment receipt. Please review and approve.`,
+          link: "/dashboard/sales-team/leads",
+        },
+      });
+    } catch (notifErr) {
+      logger.error("Failed to create payment notification:", { message: notifErr.message });
+    }
+
+    return res.json({
+      success: true,
+      message: "Payment receipt uploaded successfully! Founder & Sales Team have been notified.",
+      data: newPayment,
+    });
+  } catch (error) {
+    logger.error("Error uploading portal receipt:", { error: error.message, stack: error.stack });
     return res.status(500).json({ success: false, message: error.message });
   }
 });

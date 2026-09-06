@@ -441,7 +441,7 @@ router.get("/:id", async (req, res) => {
       },
     });
     if (!item) return res.status(404).json({ success: false, message: "Journey not found" });
-    if (isPublic && item.isActive === false) return res.status(404).json({ success: false, message: "Journey not found" });
+    if (isPublic && item.isActive === false && req.query.includeInactive !== "true") return res.status(404).json({ success: false, message: "Journey not found" });
 
     const banner = await getBanner("Journey", id);
 

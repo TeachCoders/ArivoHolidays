@@ -6,6 +6,9 @@ import { sendTravellerEmail } from "../utils/emailSender.js";
 import { requireSalesOrAdmin } from "../middleware/requireSalesOrAdmin.js";
 import { logger } from "../utils/logger.js";
 
+import { createLead } from "../services/leadService.js";
+import { clientIpFromReq } from "../services/geoService.js";
+
 const router = express.Router();
 
 // Create a new VehicleBooking (creates traveller lead if needed)
@@ -24,6 +27,8 @@ router.post("/", async (req, res) => {
       phone,
       country,
       countryId,
+      ipAddress,
+      location,
       pageReference,
       defaultPassword,
       vehicleName,
@@ -46,47 +51,25 @@ router.post("/", async (req, res) => {
         return res.status(404).json({ success: false, message: "Traveller not found" });
       }
     } else {
-      // Create a new traveller lead first
+      // Create a new traveller lead first via leadService (triggers Telegram, WhatsApp, Email, & Webhook)
       if (!name || !email) {
         return res
           .status(400)
           .json({ success: false, message: "Missing required traveller fields (name, email)" });
       }
-      const visibleTravellerId = `TRV-${Date.now()}`;
-      const existingTraveller = phone ? await prisma.traveller.findFirst({
-        where: { phone, createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
-        orderBy: { createdAt: "desc" },
-      }) : null;
-
-      if (existingTraveller) {
-        targetTraveller = existingTraveller;
-        travellerInternalId = existingTraveller.id;
-        
-        // Bump the lead to the top and ensure it shows in the website form tab
-        await prisma.traveller.update({
-          where: { id: travellerInternalId },
-          data: {
-            source: "website",
-            createdAt: new Date(),
-          }
-        });
-      } else {
-        const newTraveller = await prisma.traveller.create({
-          data: {
-            travellerId: visibleTravellerId,
-            name,
-            email,
-            phone,
-            country,
-            countryId,
-            source: "website",
-            pageReference: pageReference ?? "/booking",
-            defaultPassword,
-          },
-        });
-        targetTraveller = newTraveller;
-        travellerInternalId = newTraveller.id;
-      }
+      targetTraveller = await createLead({
+        name,
+        email,
+        phone,
+        country,
+        countryId,
+        ipAddress: ipAddress || clientIpFromReq(req) || null,
+        location,
+        pageReference: pageReference || "/booking",
+        defaultPassword,
+        source: "website",
+      });
+      travellerInternalId = targetTraveller.id;
     }
 
     // Build VehicleBooking data
@@ -110,6 +93,9 @@ router.post("/", async (req, res) => {
         registeredPhone: targetTraveller.phone || "Not Specified",
         originCountry: targetTraveller.country || "Not Specified",
         message: data.travellerMessage || `Thank you for reaching out to ${process.env.BRAND_NAME || 'Arivo Holiday'}. One of our verified fleet experts will contact you shortly via Call or WhatsApp to finalize your vehicle deployment.`,
+        filledFrom: targetTraveller.location || targetTraveller.country || "",
+        ipAddress: targetTraveller.ipAddress || "Unavailable",
+        pageReference: targetTraveller.pageReference || "Website",
       };
 
       // Email trigger bina API response block kiye background me execute hoga
