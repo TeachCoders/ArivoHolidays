@@ -27,9 +27,10 @@ const nextConfig: NextConfig = {
     ];
   },
   async headers() {
+    const apiOrigin = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/^https?:\/\//, "") || "api.arivoholidays.com";
     return [
       {
-        source: "/(.*)",
+        source: "/:path*",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
@@ -39,6 +40,12 @@ const nextConfig: NextConfig = {
           ...(process.env.NODE_ENV === "production"
             ? [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }]
             : []),
+        ],
+      },
+      {
+        source: "/",
+        headers: [
+          { key: "Link", value: `<https://${apiOrigin}>; rel=preconnect` },
         ],
       },
     ];

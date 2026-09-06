@@ -501,6 +501,7 @@ export const ChatWidget: React.FC = () => {
         <div className="relative bg-white rounded-2xl shadow-xl border border-zinc-200 px-4 py-3 max-w-[220px] mb-3 animate-in fade-in slide-in-from-bottom-2">
           <button
             onClick={(e) => { e.stopPropagation(); setShowTooltip(false); }}
+            aria-label="Dismiss chat tip"
             className="absolute top-1.5 right-1.5 text-zinc-400 hover:text-zinc-600"
           >
             <X className="w-3.5 h-3.5" />

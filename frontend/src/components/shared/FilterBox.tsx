@@ -43,7 +43,7 @@ export default function FilterBox({ selects, search, search2, direction = "row",
           }}
           disabled={s.disabled}
         >
-          <SelectTrigger className="bg-white h-10 border-slate-200 hover:border-slate-300 focus:border-brand-500 focus:ring-brand-500/20 shadow-sm transition-all text-sm font-medium text-slate-700 w-full">
+          <SelectTrigger aria-label={typeof s.placeholder === "string" ? s.placeholder : String(s.placeholder)} className="bg-white h-10 border-slate-200 hover:border-slate-300 focus:border-brand-500 focus:ring-brand-500/20 shadow-sm transition-all text-sm font-medium text-slate-700 w-full">
             <SelectValue placeholder={s.placeholder} />
           </SelectTrigger>
           <SelectContent>

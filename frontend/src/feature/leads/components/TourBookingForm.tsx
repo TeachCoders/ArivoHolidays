@@ -109,7 +109,7 @@ export default function TourBookingForm({ embedded = false, hideHeader = false, 
           <Field hideLabel label="Email Address" name="email" type="email" value={data.email} onChange={handleChange} placeholder="Email Address *" required />
 
           <Select value={data.countryId} onValueChange={onCountryCodeChange}>
-            <SelectTrigger className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 h-11 text-slate-800 text-sm focus:border-[#2E8B8B] focus:ring-1 focus:ring-[#2E8B8B]/30 font-medium shadow-none">
+              <SelectTrigger aria-label="Select country" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 h-11 text-slate-800 text-sm focus:border-[#2E8B8B] focus:ring-1 focus:ring-[#2E8B8B]/30 font-medium shadow-none">
               <SelectValue placeholder="Select Country" />
             </SelectTrigger>
             <SelectContent className="bg-white rounded-xl shadow-xl border border-slate-200 max-h-60 z-50">
@@ -126,7 +126,7 @@ export default function TourBookingForm({ embedded = false, hideHeader = false, 
 
           <div className="flex gap-2">
             <Select value={data.countryId} onValueChange={onCountryCodeChange}>
-              <SelectTrigger className="w-[110px] sm:w-[130px] shrink-0 bg-white border border-slate-200 rounded-xl px-3 py-2.5 h-11 text-slate-800 text-sm focus:border-[#2E8B8B] focus:ring-1 focus:ring-[#2E8B8B]/30 font-medium shadow-none">
+              <SelectTrigger aria-label="Country dial code" className="w-[110px] sm:w-[130px] shrink-0 bg-white border border-slate-200 rounded-xl px-3 py-2.5 h-11 text-slate-800 text-sm focus:border-[#2E8B8B] focus:ring-1 focus:ring-[#2E8B8B]/30 font-medium shadow-none">
                 <SelectValue>
                   {getCountryFlagEmoji(data.countryId || "IN")} {selectedDialCode}
                 </SelectValue>
@@ -154,7 +154,7 @@ export default function TourBookingForm({ embedded = false, hideHeader = false, 
               value={data.noOfPersons}
               onValueChange={(val) => setData((prev) => ({ ...prev, noOfPersons: val }))}
             >
-              <SelectTrigger className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 h-11 text-slate-800 text-sm focus:border-[#2E8B8B] focus:ring-1 focus:ring-[#2E8B8B]/30 font-medium shadow-none">
+              <SelectTrigger aria-label="Number of persons" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 h-11 text-slate-800 text-sm focus:border-[#2E8B8B] focus:ring-1 focus:ring-[#2E8B8B]/30 font-medium shadow-none">
                 <SelectValue placeholder="No. of Persons" />
               </SelectTrigger>
               <SelectContent className="bg-white rounded-xl shadow-xl border border-slate-200 z-50">
@@ -175,7 +175,7 @@ export default function TourBookingForm({ embedded = false, hideHeader = false, 
               value={data.noOfChildren}
               onValueChange={(val) => setData((prev) => ({ ...prev, noOfChildren: val }))}
             >
-              <SelectTrigger className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 h-11 text-slate-800 text-sm focus:border-[#2E8B8B] focus:ring-1 focus:ring-[#2E8B8B]/30 font-medium shadow-none">
+              <SelectTrigger aria-label="Number of children" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 h-11 text-slate-800 text-sm focus:border-[#2E8B8B] focus:ring-1 focus:ring-[#2E8B8B]/30 font-medium shadow-none">
                 <SelectValue placeholder="No. of Children" />
               </SelectTrigger>
               <SelectContent className="bg-white rounded-xl shadow-xl border border-slate-200 z-50">
@@ -193,7 +193,7 @@ export default function TourBookingForm({ embedded = false, hideHeader = false, 
             value={data.hotelCategory}
             onValueChange={(val) => setData((prev) => ({ ...prev, hotelCategory: val }))}
           >
-            <SelectTrigger className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 h-11 text-slate-800 text-sm focus:border-[#2E8B8B] focus:ring-1 focus:ring-[#2E8B8B]/30 font-medium shadow-none">
+            <SelectTrigger aria-label="Hotel category" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 h-11 text-slate-800 text-sm focus:border-[#2E8B8B] focus:ring-1 focus:ring-[#2E8B8B]/30 font-medium shadow-none">
               <SelectValue placeholder="Select Hotel Category" />
             </SelectTrigger>
             <SelectContent className="bg-white rounded-xl shadow-xl border border-slate-200 z-50">
@@ -250,7 +250,7 @@ export default function TourBookingForm({ embedded = false, hideHeader = false, 
             <div>
               <label className="block text-[11px] font-bold uppercase tracking-widest text-brand-primary mb-1.5">Country</label>
               <Select value={data.countryId} onValueChange={onCountryCodeChange}>
-                <SelectTrigger className="w-full bg-white border border-brand-neutral-border rounded-lg px-4 py-2 text-brand-neutral-dark text-sm focus:border-indigo-500 focus:ring-1 focus:ring-brand-primary/30 font-medium shadow-none">
+                <SelectTrigger aria-label="Select country" className="w-full bg-white border border-brand-neutral-border rounded-lg px-4 py-2 text-brand-neutral-dark text-sm focus:border-indigo-500 focus:ring-1 focus:ring-brand-primary/30 font-medium shadow-none">
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
                 <SelectContent className="bg-white rounded-xl shadow-xl border border-slate-200 max-h-60 z-50">
@@ -272,7 +272,7 @@ export default function TourBookingForm({ embedded = false, hideHeader = false, 
               </label>
               <div className="flex gap-2">
                 <Select value={data.countryId} onValueChange={onCountryCodeChange}>
-                  <SelectTrigger className="w-[120px] shrink-0 bg-white border border-brand-neutral-border rounded-lg px-2 py-2 text-brand-neutral-dark text-sm focus:border-indigo-500 focus:ring-1 focus:ring-brand-primary/30 font-medium shadow-none">
+                  <SelectTrigger aria-label="Mobile number country dial code" className="w-[120px] shrink-0 bg-white border border-brand-neutral-border rounded-lg px-2 py-2 text-brand-neutral-dark text-sm focus:border-indigo-500 focus:ring-1 focus:ring-brand-primary/30 font-medium shadow-none">
                     <SelectValue>
                       {getCountryFlagEmoji(data.countryId || "IN")} {selectedDialCode}
                     </SelectValue>
@@ -303,7 +303,7 @@ export default function TourBookingForm({ embedded = false, hideHeader = false, 
                   value={data.noOfPersons}
                   onValueChange={(val) => setData((prev) => ({ ...prev, noOfPersons: val }))}
                 >
-                  <SelectTrigger className="w-full bg-white border border-brand-neutral-border rounded-lg px-4 py-2 text-brand-neutral-dark text-sm focus:border-indigo-500 focus:ring-1 focus:ring-brand-primary/30 font-medium">
+                  <SelectTrigger aria-label="Number of persons" className="w-full bg-white border border-brand-neutral-border rounded-lg px-4 py-2 text-brand-neutral-dark text-sm focus:border-indigo-500 focus:ring-1 focus:ring-brand-primary/30 font-medium">
                     <SelectValue placeholder="Select Persons" />
                   </SelectTrigger>
                   <SelectContent className="bg-white rounded-xl shadow-xl border border-slate-200 z-50">
@@ -327,7 +327,7 @@ export default function TourBookingForm({ embedded = false, hideHeader = false, 
                   value={data.noOfChildren}
                   onValueChange={(val) => setData((prev) => ({ ...prev, noOfChildren: val }))}
                 >
-                  <SelectTrigger className="w-full bg-white border border-brand-neutral-border rounded-lg px-4 py-2 text-brand-neutral-dark text-sm focus:border-indigo-500 focus:ring-1 focus:ring-brand-primary/30 font-medium">
+                  <SelectTrigger aria-label="Number of children" className="w-full bg-white border border-brand-neutral-border rounded-lg px-4 py-2 text-brand-neutral-dark text-sm focus:border-indigo-500 focus:ring-1 focus:ring-brand-primary/30 font-medium">
                     <SelectValue placeholder="Select Children" />
                   </SelectTrigger>
                   <SelectContent className="bg-white rounded-xl shadow-xl border border-slate-200 z-50">
@@ -348,7 +348,7 @@ export default function TourBookingForm({ embedded = false, hideHeader = false, 
                 value={data.hotelCategory}
                 onValueChange={(val) => setData((prev) => ({ ...prev, hotelCategory: val }))}
               >
-                <SelectTrigger className="w-full bg-white border border-brand-neutral-border rounded-lg px-4 py-2 text-brand-neutral-dark text-sm focus:border-indigo-500 focus:ring-1 focus:ring-brand-primary/30 font-medium">
+                <SelectTrigger aria-label="Hotel category" className="w-full bg-white border border-brand-neutral-border rounded-lg px-4 py-2 text-brand-neutral-dark text-sm focus:border-indigo-500 focus:ring-1 focus:ring-brand-primary/30 font-medium">
                   <SelectValue placeholder="Select hotel category" />
                 </SelectTrigger>
                 <SelectContent className="bg-white rounded-xl shadow-xl border border-slate-200 z-50">

@@ -25,7 +25,7 @@ export function SelectDropDown({
 }: SelectDropDownProps) {
   return (
     <Select value={selectedValue} onValueChange={onChangeHandler} >
-      <SelectTrigger className="w-full bg-white px-5 py-5 text-sm rounded">
+      <SelectTrigger aria-label={placeholderText} className="w-full bg-white px-5 py-5 text-sm rounded">
         <SelectValue placeholder={placeholderText} />
       </SelectTrigger>
 
