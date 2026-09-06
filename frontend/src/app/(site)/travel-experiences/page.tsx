@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Travel Experiences",
     description:
-      "Hand-picked travel experiences across India — honeymoons, heritage, culinary, yoga, nature & more. Book your perfect trip with Arivo Holiday.",
+      "Hand-picked travel experiences across India — honeymoons, heritage, culinary, yoga, nature & more. Book your perfect trip with Arivo Holidays.",
     alternates: { canonical: "/travel-experiences" },
   };
 }
@@ -154,7 +154,7 @@ export default async function TravelExperiencesPage() {
 
   const defaultFaqs = [
     {
-      question: "What are Travel Experiences at Arivo Holidays?",
+      question: "What are Travel Experiences at Arivo Holidayss?",
       answer: "Travel Experiences are theme-based tour packages categorized by your trip style — such as Honeymoon, Heritage & Culture, Wellness & Yoga, Wildlife Safaris, and Pilgrimage Tours across India."
     },
     {

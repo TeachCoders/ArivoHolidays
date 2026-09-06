@@ -7,7 +7,7 @@ import { startChat, sendChatMessage, pollChatMessages, fetchGeo, closeConversati
 import { COUNTRIES, getCountryByCode } from "@/feature/leads/data/countries";
 import { LinkedText } from "@/feature/chat/components/LinkedText";
 
-const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holiday";
+const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holidays";
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_CHAT_PARTNER_NUMBER ||
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ||

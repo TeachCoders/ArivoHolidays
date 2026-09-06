@@ -215,7 +215,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       };
     }
     default:
-      return { title: "Page Not Found | Arivo Holiday" };
+      return { title: "Page Not Found | Arivo Holidays" };
   }
 }
 

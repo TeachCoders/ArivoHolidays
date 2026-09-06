@@ -19,20 +19,20 @@ const nunito = Nunito_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Arivo Holiday | Customized Holiday Tour Packages & Cab Rentals",
-    template: "%s | Arivo Holiday",
+    default: "Arivo Holidays | Customized Holiday Tour Packages & Cab Rentals",
+    template: "%s | Arivo Holidays",
   },
   description: "Book customized holiday tour packages, luxury stays, verified cabs, and local tour guides across Kashmir, Kerala, Himachal, Rajasthan & international destinations.",
   openGraph: {
     type: "website",
-    siteName: "Arivo Holiday",
+    siteName: "Arivo Holidays",
     locale: "en_IN",
     url: SITE_URL,
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Arivo Holiday" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Arivo Holidays" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Arivo Holiday",
+    title: "Arivo Holidays",
     description: "Customized holiday tour packages & cab rentals across India.",
     images: ["/og-image.png"],
   },

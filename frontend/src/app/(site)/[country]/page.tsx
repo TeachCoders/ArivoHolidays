@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const page = await fetchBySlug<CmsPage>("/cms/by-slug", slug);
-  if (!page) return { title: "Page Not Found | Arivo Holiday" };
+  if (!page) return { title: "Page Not Found | Arivo Holidays" };
   const seoDescription = stripHtml(page.seoDescription || page.moreDescription || "").slice(0, 160);
   const title = page.seoTitle || page.title;
   const canonical = page.canonical || `/${page.slug}`;

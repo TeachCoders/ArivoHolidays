@@ -15,10 +15,10 @@ export const revalidate = 60;
 export async function generateMetadata(): Promise<Metadata> {
   const cmsPage = await fetchBySlug<CmsPage>("/cms/by-slug", "guest-gallery");
 
-  const title = cmsPage?.seoTitle || cmsPage?.title || "Guest Photo Gallery | Arivo Holiday";
+  const title = cmsPage?.seoTitle || cmsPage?.title || "Guest Photo Gallery | Arivo Holidays";
   const description =
     stripHtml(cmsPage?.seoDescription || cmsPage?.moreDescription || "").slice(0, 160) ||
-    "Explore real moments captured by our travelers during their journeys across India. Authentic travel memories with Arivo Holiday.";
+    "Explore real moments captured by our travelers during their journeys across India. Authentic travel memories with Arivo Holidays.";
   const canonical = cmsPage?.canonical || "/guest-gallery";
 
   return {

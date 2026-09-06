@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const season = await fetchBySlug<Season>("/season/by-slug", slug);
 
-  if (!season) return { title: "Page Not Found | Arivo Holiday" };
+  if (!season) return { title: "Page Not Found | Arivo Holidays" };
 
   const title = season.seoTitle || season.title;
   const seoDescription = stripHtml(season.seoDescription || season.overView || "").slice(0, 160) || undefined;

@@ -31,10 +31,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const cmsPage = await fetchBySlug<CmsPage>("/cms/by-slug", "contact-us");
 
   const title =
-    cmsPage?.seoTitle || cmsPage?.title || "Contact Us | Arivo Holiday - Get in Touch for Custom Tours";
+    cmsPage?.seoTitle || cmsPage?.title || "Contact Us | Arivo Holidays - Get in Touch for Custom Tours";
   const description =
     stripHtml(cmsPage?.seoDescription || cmsPage?.moreDescription || "").slice(0, 160) ||
-    "Contact Arivo Holiday for custom India tour packages, cab rentals, and 24/7 travel assistance. Reach us via phone, email, or visit our head office in New Delhi.";
+    "Contact Arivo Holidays for custom India tour packages, cab rentals, and 24/7 travel assistance. Reach us via phone, email, or visit our head office in New Delhi.";
   const canonical = cmsPage?.canonical || "/contact-us";
 
   return {
@@ -64,7 +64,7 @@ export default async function ContactUsPage() {
   const contactOrganizationSchema = {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
-    name: "Arivo Holiday",
+    name: "Arivo Holidays",
     url: "http://localhost:3000",
     logo: "http://localhost:3000/logo.png",
     telephone: CLEAN_PHONE,
@@ -157,7 +157,7 @@ export default async function ContactUsPage() {
                 </div>
                 <div>
                   <h3 className="text-xl font-extrabold text-slate-900 font-heading">Why Plan With Us?</h3>
-                  <p className="text-xs font-semibold text-[#2E8B8B]">Arivo Holiday Travel Promise</p>
+                  <p className="text-xs font-semibold text-[#2E8B8B]">Arivo Holidays Travel Promise</p>
                 </div>
               </div>
 
@@ -367,7 +367,7 @@ export default async function ContactUsPage() {
                 <span>Can I customize an itinerary according to my budget?</span>
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed pl-6">
-                Yes, absolutely! Every package listed on Arivo Holiday can be tailored to suit your specific dates, preferred hotel category (Standard, Deluxe, Luxury), vehicle type, and budget.
+                Yes, absolutely! Every package listed on Arivo Holidays can be tailored to suit your specific dates, preferred hotel category (Standard, Deluxe, Luxury), vehicle type, and budget.
               </p>
             </div>
 

@@ -145,7 +145,7 @@ export default function CarRequirementsForm({ leadId, lead }: Props) {
             </button>
             <WhatsAppShareBtn
               phone={lead?.phone}
-              message={`Dear ${lead?.name || "Guest"}, your car booking requirements are noted! 🚗 Pickup: ${formData.pickupLocation || "—"}, Drop: ${formData.dropLocation || "—"}, Date: ${formData.travelDate ? formatDateDisplay(formData.travelDate) : "—"}, Vehicle: ${formData.vehiclePreference || "—"}. We'll share the quotation soon! - ${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holiday"}${waFooter}`}
+              message={`Dear ${lead?.name || "Guest"}, your car booking requirements are noted! 🚗 Pickup: ${formData.pickupLocation || "—"}, Drop: ${formData.dropLocation || "—"}, Date: ${formData.travelDate ? formatDateDisplay(formData.travelDate) : "—"}, Vehicle: ${formData.vehiclePreference || "—"}. We'll share the quotation soon! - ${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holidays"}${waFooter}`}
               disabled={isWhatsappSent}
               onClick={() => markReqSent({ leadId })}
               label={isWhatsappSent ? "WhatsApp Sent ✓" : "WhatsApp"}
@@ -227,7 +227,7 @@ export default function CarRequirementsForm({ leadId, lead }: Props) {
               </span>
               <WhatsAppShareBtn
                 phone={lead?.phone}
-                message={`Dear ${lead?.name || "Guest"}, your car booking requirements are noted! 🚗 Pickup: ${formData.pickupLocation || "—"}, Drop: ${formData.dropLocation || "—"}, Date: ${formData.travelDate ? format(new Date(formData.travelDate), "dd MMM yyyy") : "—"}, Vehicle: ${formData.vehiclePreference || "—"}. We'll share the quotation soon! - ${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holiday"}${waFooter}`}
+                message={`Dear ${lead?.name || "Guest"}, your car booking requirements are noted! 🚗 Pickup: ${formData.pickupLocation || "—"}, Drop: ${formData.dropLocation || "—"}, Date: ${formData.travelDate ? format(new Date(formData.travelDate), "dd MMM yyyy") : "—"}, Vehicle: ${formData.vehiclePreference || "—"}. We'll share the quotation soon! - ${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holidays"}${waFooter}`}
                 label="Share on WhatsApp"
               />
             </div>

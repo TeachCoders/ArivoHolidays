@@ -4,7 +4,7 @@ import { MessageCircle } from "lucide-react";
 
 export default function WhatsAppWidget() {
   const whatsappNumber = "919876543210"; // Official WhatsApp
-  const message = "Hi Arivo Holidays, I want to inquire about a custom holiday tour package.";
+  const message = "Hi Arivo Holidayss, I want to inquire about a custom holiday tour package.";
 
   return (
     <a

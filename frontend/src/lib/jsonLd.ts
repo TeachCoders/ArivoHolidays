@@ -10,7 +10,7 @@ function absoluteImage(src?: string): string | undefined {
 export const organizationSchema: Record<string, unknown> = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Arivo Holiday",
+  name: "Arivo Holidays",
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
   telephone: "+919136739178",
@@ -24,7 +24,7 @@ export const organizationSchema: Record<string, unknown> = {
 export const websiteSchema: Record<string, unknown> = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Arivo Holiday",
+  name: "Arivo Holidays",
   url: SITE_URL,
   description: "Customized holiday tour packages, luxury stays, verified cabs, and local tour guides across India.",
   inLanguage: "en",
@@ -66,10 +66,10 @@ export function articleSchema(post: ArticleInput): Record<string, unknown> {
     dateModified: post.dateModified || undefined,
     author: post.author
       ? { "@type": "Organization", name: post.author }
-      : { "@type": "Organization", name: "Arivo Holiday" },
+      : { "@type": "Organization", name: "Arivo Holidays" },
     publisher: {
       "@type": "Organization",
-      name: "Arivo Holiday",
+      name: "Arivo Holidays",
       logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png` },
     },
     mainEntityOfPage: {

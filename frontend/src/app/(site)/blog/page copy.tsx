@@ -10,7 +10,7 @@ import { API_BASE } from "@/lib/apiClient";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Travel Blog | Arivo Holiday",
+  title: "Travel Blog | Arivo Holidays",
   description:
     "Travel guides, itineraries and tips for India tours — destinations, honeymoon, heritage and more.",
   alternates: { canonical: "/blog" },

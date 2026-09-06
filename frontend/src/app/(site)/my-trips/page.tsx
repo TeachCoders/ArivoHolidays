@@ -146,7 +146,7 @@ export default function TravellerPortalPage() {
               <ShieldCheck size={16} /> Official Traveller Portal
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1C1C1C]">
-              Arivo Holidays <span className="text-[#2E8B8B]">Trip Portal</span>
+              Arivo Holidayss <span className="text-[#2E8B8B]">Trip Portal</span>
             </h1>
           </div>
 
@@ -374,7 +374,7 @@ export default function TravellerPortalPage() {
                 </div>
                 <h3 className="text-xl font-bold text-[#1C1C1C]">Upload Advance Payment Receipt</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  If you have transferred advance booking amount to freeze your hotels & cabs, upload the receipt/screenshot here. This directly registers your payment into Arivo Holidays official audit ledger!
+                  If you have transferred advance booking amount to freeze your hotels & cabs, upload the receipt/screenshot here. This directly registers your payment into Arivo Holidayss official audit ledger!
                 </p>
               </div>
 

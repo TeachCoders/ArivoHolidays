@@ -20,7 +20,7 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const pkg = await fetchPackageBySlug(slug);
-  if (!pkg) return { title: "Package Not Found | Arivo Holiday" };
+  if (!pkg) return { title: "Package Not Found | Arivo Holidays" };
   const title = pkg.name;
   const description = stripHtml(pkg.shortDescription || pkg.description || "").slice(0, 160);
   const canonical = `/packages/${pkg.slug}`;

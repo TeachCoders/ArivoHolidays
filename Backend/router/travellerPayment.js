@@ -274,7 +274,7 @@ router.patch("/:id/status", requireSalesOrAdmin, async (req, res) => {
 
       // WhatsApp message log (agent sends manually or via WhatsApp API)
       const portalUrl = process.env.BOOKING_PORTAL_URL || "https://booking.arivoholidays.com";
-      const brandName = process.env.BRAND_NAME || "Arivo Holiday";
+      const brandName = process.env.BRAND_NAME || "Arivo Holidays";
       logger.info(`📱 WhatsApp for ${traveller.name} (${traveller.phone}):
 🎉 Dear ${traveller.name}, aapka ₹${totalPaid.toLocaleString()} ka payment receive ho gaya!
 🆔 Traveller ID: ${traveller.travellerId}

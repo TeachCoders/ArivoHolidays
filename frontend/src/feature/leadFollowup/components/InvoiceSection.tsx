@@ -554,7 +554,7 @@ export default function packagesection({
     lines.push(`*TOUR QUOTATION: ${packageName || destination || "Custom Package"}`);
     lines.push(`_Dear ${clientName || "Guest"},_`);
     lines.push("");
-    lines.push(`Greetings from ${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holiday"}!`);
+    lines.push(`Greetings from ${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holidays"}!`);
     lines.push("As per our discussion, we've curated a special itinerary just for you:");
     lines.push("");
 
@@ -609,7 +609,7 @@ export default function packagesection({
     lines.push("");
     lines.push("Looking forward to hosting you! Feel free to call for any changes.");
     lines.push("");
-    lines.push(`*${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holiday"}*`);
+    lines.push(`*${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holidays"}*`);
     lines.push("_Premium Travel Experiences_");
 
     return lines.join("\n");
@@ -1207,7 +1207,7 @@ export default function packagesection({
             <div>
               <img
                 src="/logo-with-name.png"
-                alt="Arivo Holidays"
+                alt="Arivo Holidayss"
                 className="h-14 w-auto object-contain mb-2"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';
@@ -1469,7 +1469,7 @@ export default function packagesection({
           )}
 
           <div className="mt-10 pt-6 border-t border-brand-neutral-border text-center">
-            <p className="text-sm font-bold text-brand-neutral">Thank You for Choosing {process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holiday"}</p>
+            <p className="text-sm font-bold text-brand-neutral">Thank You for Choosing {process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holidays"}</p>
             <p className="text-xs text-slate-400 mt-1">Premium Travel Experiences</p>
           </div>
         </div>

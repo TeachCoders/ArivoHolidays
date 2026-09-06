@@ -16,7 +16,7 @@ function toReply(r) {
   return null;
 }
 
-const BRAND = () => process.env.BRAND_NAME || "Arivo Holiday";
+const BRAND = () => process.env.BRAND_NAME || "Arivo Holidays";
 
 const HUMAN_INTENT_KEYWORDS = [
   "agent", "human", "real person", "expert", "call me", "call us", "call on",

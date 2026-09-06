@@ -95,7 +95,7 @@ export const Footer: React.FC = () => {
             </div>
           </div>
           <p className="text-xs text-[#777]">
-            &copy; {new Date().getFullYear()} Arivo Holiday. All rights reserved.
+            &copy; {new Date().getFullYear()} Arivo Holidays. All rights reserved.
           </p>
         </div>
       </footer>
@@ -205,7 +205,7 @@ export const Footer: React.FC = () => {
 
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#999]">
           <p className="relative text-[#999] hover:text-white transition-colors duration-200">
-            &copy; {new Date().getFullYear()} Arivo Holiday. All rights reserved.
+            &copy; {new Date().getFullYear()} Arivo Holidays. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <Link href="/about-us" className="hover:text-white transition-colors">

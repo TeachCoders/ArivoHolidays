@@ -229,7 +229,7 @@ export const Header: React.FC = () => {
           <Link href="/" className="flex items-center gap-2 group shrink-0">
             <img
               src="/logo-with-name.png"
-              alt="Arivo Holiday"
+              alt="Arivo Holidays"
               className="h-[68px] sm:h-[72px] md:h-[76px] w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
             />
           </Link>

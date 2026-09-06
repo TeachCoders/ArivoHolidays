@@ -10,9 +10,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Thank You | Arivo Holiday - Inquiry Received",
+  title: "Thank You | Arivo Holidays - Inquiry Received",
   description:
-    "Thank you for contacting Arivo Holiday. Your travel inquiry has been received and our destination specialists will contact you shortly.",
+    "Thank you for contacting Arivo Holidays. Your travel inquiry has been received and our destination specialists will contact you shortly.",
 };
 
 const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+91 98765 43210";
@@ -36,7 +36,7 @@ export default async function ThankYouPage() {
                 <span>Submission Successful</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
-                Thank You for Choosing Arivo Holiday!
+                Thank You for Choosing Arivo Holidays!
               </h1>
               <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
                 Your travel inquiry has been received. Our destination specialists are working on your custom plan and will connect with you shortly.

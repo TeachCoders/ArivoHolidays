@@ -3,7 +3,7 @@ import AnalyticsLayout from '@/components/analytics/AnalyticsLayout';
 import EngagementPanel from '@/components/analytics/EngagementPanel';
 
 export const metadata = {
-  title: 'Engagement | Arivo Holidays',
+  title: 'Engagement | Arivo Holidayss',
 };
 
 export default async function EngagementPage() {

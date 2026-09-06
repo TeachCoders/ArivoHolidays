@@ -142,7 +142,7 @@
               </button>
               <WhatsAppShareBtn
                 phone={lead?.phone}
-                  message={`Dear ${lead?.name || "Guest"}, thank you for sharing your travel requirements with us! 🙏 We've noted everything — Cities: ${existing.cityNames || "—"}, Dates: ${existing.startDate ? `${formatDateDisplay(existing.startDate)} → ${formatDateDisplay(existing.endDate)}` : "—"}, Budget: ₹${Number(existing.budget || 0).toLocaleString("en-IN")}. Our team is already working on a customized package for you. We'll share it with you soon! - ${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holiday"}${waFooter}`}
+                  message={`Dear ${lead?.name || "Guest"}, thank you for sharing your travel requirements with us! 🙏 We've noted everything — Cities: ${existing.cityNames || "—"}, Dates: ${existing.startDate ? `${formatDateDisplay(existing.startDate)} → ${formatDateDisplay(existing.endDate)}` : "—"}, Budget: ₹${Number(existing.budget || 0).toLocaleString("en-IN")}. Our team is already working on a customized package for you. We'll share it with you soon! - ${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holidays"}${waFooter}`}
                 disabled={isWhatsappSent}
                 onClick={() => markReqSent({ leadId })}
                 label={isWhatsappSent ? "WhatsApp Sent ✓" : "WhatsApp"}
@@ -233,7 +233,7 @@
                 </span>
                 <WhatsAppShareBtn
                   phone={lead?.phone}
-                  message={`Dear ${lead?.name || "Guest"}, thank you for sharing your travel requirements with us! 🙏 We've noted everything — Cities: ${formData.cityNames || "—"}, Dates: ${formData.startDate ? `${format(new Date(formData.startDate), "dd MMM")} → ${format(new Date(formData.endDate), "dd MMM yyyy")}` : "—"}, Budget: ₹${Number(formData.budget || 0).toLocaleString("en-IN")}. Our team is already working on a customized package for you. We'll share it with you soon! - ${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holiday"}${waFooter}`}
+                  message={`Dear ${lead?.name || "Guest"}, thank you for sharing your travel requirements with us! 🙏 We've noted everything — Cities: ${formData.cityNames || "—"}, Dates: ${formData.startDate ? `${format(new Date(formData.startDate), "dd MMM")} → ${format(new Date(formData.endDate), "dd MMM yyyy")}` : "—"}, Budget: ₹${Number(formData.budget || 0).toLocaleString("en-IN")}. Our team is already working on a customized package for you. We'll share it with you soon! - ${process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holidays"}${waFooter}`}
                   label="Share on WhatsApp"
                 />
               </div>
