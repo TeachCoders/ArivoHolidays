@@ -3,12 +3,11 @@ import nodemailer from 'nodemailer';
 import { generateTravellerEmailHTML, generateCancellationEmailHTML, generatePaymentConfirmationEmailHTML, generateBookingConfirmationEmailHTML, generatePartnerLeadEmailHTML } from '../templates/travellerEmailTemplate.js';
 import { logger } from "./logger.js";
 
-// SMTP transporter — env se configurable. By default Gmail SMTP;
-// branded (Brevo/Resend ina) ke liye SMTP_HOST + SMTP_PORT set karo.
+// SMTP transporter builder — primary: SMTP_HOST relay (Brevo/Resend) branded;
 // SMTP_USER optional: Brevo jaisi services SMTP login (aaa@smtp-brevo.com)
 // EMAIL_ID se alag rakhti hain (login auth ke liye, from liye nahi).
-const createTransporter = () =>
-  process.env.SMTP_HOST
+const buildTransporter = (smtpHost) =>
+  smtpHost
     ? nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT || 587),
@@ -21,10 +20,68 @@ const createTransporter = () =>
     : nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: process.env.EMAIL_ID,
-          pass: process.env.EMAIL_PASSWORD,
+          user: process.env.GMAIL_FALLBACK_USER,
+          pass: process.env.GMAIL_FALLBACK_PASSWORD,
         },
       });
+
+/**
+ * Priority mail send:
+ *   1) SMTP_HOST relay (Brevo/Resend) — branded From (EMAIL_ID).
+ *   2) Agar wo fail ho → Gmail fallback (GMAIL_FALLBACK_USER/PASSWORD).
+ *      Gmail apne From me sirf khud ka address allow karta hai, isliye From override hota hai.
+ *   3) Agar koi config nahi → purana legacy Gmail (EMAIL_ID/EMAIL_PASSWORD) hi default.
+ * Returns: nodemailer info object. Throws error agar saare attempts fail ho jayein.
+ */
+export const sendMailWithFallback = async (mailOptions) => {
+  const fromBrand = `"${process.env.BRAND_NAME || 'Arivo Holidays'}"`;
+  const attempts = [];
+
+  if (process.env.SMTP_HOST) {
+    attempts.push({
+      transporter: buildTransporter(process.env.SMTP_HOST),
+      from: mailOptions.from,
+      label: "SMTP relay",
+    });
+  }
+  if (process.env.GMAIL_FALLBACK_USER && process.env.GMAIL_FALLBACK_PASSWORD) {
+    attempts.push({
+      transporter: buildTransporter(null),
+      from: `${fromBrand} <${process.env.GMAIL_FALLBACK_USER}>`,
+      label: "Gmail fallback",
+    });
+  }
+  if (!attempts.length && process.env.EMAIL_ID && process.env.EMAIL_PASSWORD) {
+    attempts.push({
+      transporter: buildTransporter(null),
+      from: attachmentFriendlyFrom(mailOptions.from),
+      label: "Gmail (legacy)",
+    });
+  }
+  if (!attempts.length) {
+    throw new Error("No SMTP provider configured (SMTP_HOST or GMAIL_FALLBACK_USER/PASSWORD)");
+  }
+
+  let lastError = null;
+  for (const [index, attempt] of attempts.entries()) {
+    try {
+      return await attempt.transporter.sendMail({
+        ...mailOptions,
+        from: attempt.from,
+      });
+    } catch (error) {
+      lastError = error;
+      if (index < attempts.length - 1) {
+        logger.warn(`Email via ${attempt.label} failed — trying next provider:`, { error: error.message });
+      }
+    }
+  }
+  throw lastError;
+};
+
+// Gmail legacy mode ke liye from string ko EMAIL_ID gmail address par hi rakho —
+// helper sirf readability ke liye (same string wapas karta hai).
+const attachmentFriendlyFrom = (from) => from;
 
 /**
  * Sends a welcome/confirmation email to the traveller
@@ -40,7 +97,6 @@ export const sendTravellerEmail = async (toEmail, travellerId, name, travelInfo)
   }
 
   try {
-    const transporter = createTransporter();
 
     // Template function call kiya (Clean Code)
     const htmlContent = generateTravellerEmailHTML(name, travellerId, travelInfo);
@@ -52,7 +108,7 @@ export const sendTravellerEmail = async (toEmail, travellerId, name, travelInfo)
       html: htmlContent,
     };
 
-    const info = await transporter.sendMail(mailOptions);
+    const info = await sendMailWithFallback(mailOptions);
     logger.info(`Email sent successfully to ${toEmail}: ${info.messageId}`);
     return true;
   } catch (error) {
@@ -71,7 +127,6 @@ export const sendCancellationEmail = async (toEmail, travellerId, name, agentNam
   }
 
   try {
-    const transporter = createTransporter();
 
     const htmlContent = generateCancellationEmailHTML(name, travellerId, agentName);
 
@@ -82,7 +137,7 @@ export const sendCancellationEmail = async (toEmail, travellerId, name, agentNam
       html: htmlContent,
     };
 
-    const info = await transporter.sendMail(mailOptions);
+    const info = await sendMailWithFallback(mailOptions);
     logger.info(`Cancellation email sent successfully to ${toEmail}: ${info.messageId}`);
     return true;
   } catch (error) {
@@ -105,7 +160,6 @@ export const sendPaymentConfirmationEmail = async (toEmail, travellerId, name, p
   }
 
   try {
-    const transporter = createTransporter();
 
     const htmlContent = generatePaymentConfirmationEmailHTML(name, travellerId, password);
 
@@ -116,7 +170,7 @@ export const sendPaymentConfirmationEmail = async (toEmail, travellerId, name, p
       html: htmlContent,
     };
 
-    const info = await transporter.sendMail(mailOptions);
+    const info = await sendMailWithFallback(mailOptions);
     logger.info(`Payment confirmation email sent to ${toEmail}: ${info.messageId}`);
     return true;
   } catch (error) {
@@ -136,7 +190,6 @@ export const sendBookingConfirmationEmail = async (toEmail, travellerId, name, p
   }
 
   try {
-    const transporter = createTransporter();
 
     const htmlContent = generateBookingConfirmationEmailHTML(name, travellerId, password, invoiceNo, totalInvoiced, totalPaid, dueAmount, slabLabel, requiredAmount);
 
@@ -147,7 +200,7 @@ export const sendBookingConfirmationEmail = async (toEmail, travellerId, name, p
       html: htmlContent,
     };
 
-    const info = await transporter.sendMail(mailOptions);
+    const info = await sendMailWithFallback(mailOptions);
     logger.info(`Booking confirmation email sent to ${toEmail}: ${info.messageId}`);
     return true;
   } catch (error) {
@@ -171,7 +224,6 @@ export const sendEmail = async (toEmail, subject, htmlContent, pdfAttachment = n
   }
 
   try {
-    const transporter = createTransporter();
 
     const mailOptions = {
       from: `"${process.env.BRAND_NAME || 'Arivo Holidays'}" <${process.env.EMAIL_ID}>`,
@@ -190,7 +242,7 @@ export const sendEmail = async (toEmail, subject, htmlContent, pdfAttachment = n
       ];
     }
 
-    const info = await transporter.sendMail(mailOptions);
+    const info = await sendMailWithFallback(mailOptions);
     logger.info(`Generic email sent to ${toEmail}: ${info.messageId}`);
     return true;
   } catch (error) {
