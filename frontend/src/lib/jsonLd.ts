@@ -1,6 +1,12 @@
 import { SITE_URL } from "./apiClient";
 import { stripHtml } from "./utils";
 
+function absoluteImage(src?: string): string | undefined {
+  if (!src) return undefined;
+  if (/^https?:\/\//.test(src)) return src;
+  return `${SITE_URL}${src.startsWith("/") ? src : `/${src}`}`;
+}
+
 export const organizationSchema: Record<string, unknown> = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -55,7 +61,7 @@ export function articleSchema(post: ArticleInput): Record<string, unknown> {
     "@type": "Article",
     headline: post.title,
     description: post.description ? stripHtml(post.description).slice(0, 160) : undefined,
-    image: post.image || undefined,
+    image: absoluteImage(post.image),
     datePublished: post.datePublished || undefined,
     dateModified: post.dateModified || undefined,
     author: post.author
@@ -103,7 +109,7 @@ export function productSchema(pkg: ProductInput): Record<string, unknown> {
     "@type": "Product",
     name: pkg.name,
     description: pkg.description ? stripHtml(pkg.description).slice(0, 160) : undefined,
-    image: pkg.image || undefined,
+    image: absoluteImage(pkg.image),
     offers: offer,
   };
 }
@@ -150,7 +156,7 @@ export function touristDestinationSchema(dest: TouristDestinationInput): Record<
     "@type": "TouristDestination",
     name: dest.name,
     description: dest.description ? stripHtml(dest.description).slice(0, 160) : undefined,
-    image: dest.image || undefined,
+    image: absoluteImage(dest.image),
     url: `${SITE_URL}${dest.url}`,
   };
 }

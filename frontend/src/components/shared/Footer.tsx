@@ -2,7 +2,8 @@
 
 import React, { useMemo } from "react";
 import Link from "next/link";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Mail, Phone, MapPin, ShieldCheck, CreditCard } from "lucide-react";
 import { useGetStates } from "@/feature/state/api/useState";
 import { useGetTravelExperiences } from "@/feature/travelExperience/api/useTravelExperience";
 import type { State } from "@/feature/state/type";
@@ -11,8 +12,9 @@ import { stripTourSuffix, pickPriorityLinks } from "@/lib/utils";
 
 const QUICK_LINKS = [
   { label: "Home", href: "/" },
-  { label: "Destinations", href: "/destinations" },
-  { label: "Tour Packages", href: "/india/tour-packages" },
+  { label: "My Trips / Traveller Portal 🧳", href: "/my-trips" },
+  { label: "Destinations", href: "/tour-packages" },
+  { label: "Tour Packages", href: "/tour-packages" },
   { label: "Experiences", href: "/travel-experiences" },
   { label: "About Us", href: "/about-us" },
   { label: "Contact Us", href: "/contact-us" },
@@ -20,12 +22,12 @@ const QUICK_LINKS = [
 ];
 
 const TOP_DESTINATIONS = [
-  { label: "Kashmir Holiday Packages", href: "/india/jammu-and-kashmir" },
-  { label: "Himachal Pradesh Tours", href: "/india/himachal-pradesh" },
-  { label: "Kerala Backwaters & Hills", href: "/india" },
-  { label: "Rajasthan Royal Heritage", href: "/india/rajasthan" },
-  { label: "Goa Beach Escapes", href: "/india" },
-  { label: "Uttarakhand Hills & Trekking", href: "/india/uttarakhand" },
+  { label: "Kashmir Holiday Packages", href: "/tour-packages/india/jammu-and-kashmir" },
+  { label: "Himachal Pradesh Tours", href: "/tour-packages/india/himachal-pradesh" },
+  { label: "Kerala Backwaters & Hills", href: "/tour-packages/india" },
+  { label: "Rajasthan Royal Heritage", href: "/tour-packages/india/rajasthan" },
+  { label: "Goa Beach Escapes", href: "/tour-packages/india" },
+  { label: "Uttarakhand Hills & Trekking", href: "/tour-packages/india/uttarakhand" },
 ];
 
 const TRAVEL_THEMES = [
@@ -38,6 +40,9 @@ const TRAVEL_THEMES = [
 ];
 
 export const Footer: React.FC = () => {
+  const pathname = usePathname();
+  const isOfferPage = pathname?.startsWith("/offers/");
+  
   const { states } = useGetStates({ limit: 100, isActive: "true" });
   const { travelExperiences } = useGetTravelExperiences({
     limit: 100,
@@ -50,7 +55,7 @@ export const Footer: React.FC = () => {
         states,
         (s) => s.displayOrder ?? 0,
         (s) => ({
-          href: `/${s.country?.slug ?? "india"}/${s.slug}`,
+          href: `/tour-packages/${s.country?.slug ?? "india"}/${s.slug}`,
           label: stripTourSuffix(s.h1Title || ""),
         })
       ),
@@ -73,6 +78,29 @@ export const Footer: React.FC = () => {
   const footerDestinations =
     destinationLinks.length > 0 ? destinationLinks : TOP_DESTINATIONS;
   const footerThemes = experienceLinks.length > 0 ? experienceLinks : TRAVEL_THEMES;
+
+  if (isOfferPage) {
+    return (
+      <footer className="relative bg-[#1C1C1C] text-[#999] pt-12 pb-8 overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#2E8B8B]/40 to-transparent" />
+        <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 flex flex-col items-center justify-center text-center">
+          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10 mb-8">
+            <div className="flex items-center gap-3 text-white/90">
+              <ShieldCheck className="w-8 h-8 text-[#2E8B8B]" />
+              <span className="font-semibold text-sm tracking-wide uppercase">100% Verified Packages</span>
+            </div>
+            <div className="flex items-center gap-3 text-white/90">
+              <CreditCard className="w-8 h-8 text-[#2E8B8B]" />
+              <span className="font-semibold text-sm tracking-wide uppercase">Secure Payments</span>
+            </div>
+          </div>
+          <p className="text-xs text-[#777]">
+            &copy; {new Date().getFullYear()} Arivo Holiday. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className="relative bg-[#1C1C1C] text-[#999] pt-16 pb-8 overflow-hidden">
@@ -154,10 +182,10 @@ export const Footer: React.FC = () => {
                   <Phone className="w-4 h-4 text-[#2E8B8B]" />
                 </div>
                 <a
-                  href="tel:+919876543210"
-                  className="text-[#a8a8a8] hover:text-white transition-colors"
+                  href={`tel:${(process.env.NEXT_PUBLIC_SALES_PHONE || "+919368739178").replace(/[^0-9+]/g, "")}`}
+                  className="text-[#a8a8a8] hover:text-white transition-colors font-medium"
                 >
-                  +91 98765 43210
+                  {process.env.NEXT_PUBLIC_SALES_PHONE || "+91 93687 39178"}
                 </a>
               </div>
               <div className="flex items-center gap-3">

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { MessageCircle, Phone, X } from "lucide-react";
+import { RequestCallbackModal } from "./RequestCallbackModal";
 
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178";
@@ -52,30 +53,33 @@ export const WhatsAppButton: React.FC = () => {
 
       {showActions && (
         <div className="flex flex-col items-end gap-2.5 animate-in fade-in slide-in-from-bottom-2">
-          <a
-            href={`tel:${SALES_PHONE}`}
-            className="flex items-center gap-2 bg-white rounded-full shadow-lg border border-zinc-200 pl-3.5 pr-5 py-2.5 hover:shadow-xl transition-shadow"
-          >
-            <span className="w-9 h-9 bg-[#D4561A] rounded-full flex items-center justify-center">
-              <Phone className="w-5 h-5 text-white" />
-            </span>
-            <span className="text-sm font-semibold text-zinc-800">
-              Call Salesperson
-            </span>
-          </a>
+          <RequestCallbackModal>
+            <button
+              type="button"
+              className="flex items-center gap-2.5 bg-white rounded-full shadow-lg border border-zinc-200 pl-3 pr-5 py-2 hover:shadow-xl transition-all cursor-pointer hover:scale-105 active:scale-95"
+            >
+              <span className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
+                <Phone className="w-4 h-4" />
+              </span>
+              <span className="text-xs font-bold text-slate-800">
+                Request Callback
+              </span>
+            </button>
+          </RequestCallbackModal>
+
           <a
             href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-              `Hi! I need help with travel planning.\n\nPage: ${pageUrl}`
+              `Hi! I need itinerary & price quote.\n\nPage: ${pageUrl}`
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-white rounded-full shadow-lg border border-zinc-200 pl-3.5 pr-5 py-2.5 hover:shadow-xl transition-shadow"
+            className="flex items-center gap-2.5 bg-white rounded-full shadow-lg border border-zinc-200 pl-3 pr-5 py-2 hover:shadow-xl transition-all hover:scale-105 active:scale-95"
           >
-            <span className="w-9 h-9 bg-[#2E8B8B] rounded-full flex items-center justify-center">
-              <MessageCircle className="w-5 h-5 text-white" />
+            <span className="w-8 h-8 bg-[#25D366] rounded-full flex items-center justify-center text-white">
+              <MessageCircle className="w-4.5 h-4.5" />
             </span>
-            <span className="text-sm font-semibold text-zinc-800">
-              Chat on WhatsApp
+            <span className="text-xs font-bold text-slate-800">
+              Quote on WhatsApp
             </span>
           </a>
         </div>

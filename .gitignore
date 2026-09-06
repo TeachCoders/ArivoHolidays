@@ -1,0 +1,49 @@
+# ── Backups / archives (never commit 800MB+ zips) ──
+*.zip
+*.tar.gz
+*.rar
+*.7z
+back-*.zip
+
+# ── Design / content docs ──
+*.psd
+*.docx
+*.docx#
+*.~lock.*#
+
+# ── Node ──
+node_modules/
+
+# ── Logs / scratch ──
+*.log
+.DS_Store
+Thumbs.db
+
+# ── Editor ──
+.idea/
+.vscode/
+*.swp
+
+# ── Environment ──
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ── Monitoring runtime data ──
+monitoring/
+monitoring/kuma-data/
+
+# ── Next.js ──
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# ── Content / itinerary docs (not source code) ──
+itnearylist/
+Weekend Tour/
+scripts/
+
+# ── Python scripts ──
+*.py

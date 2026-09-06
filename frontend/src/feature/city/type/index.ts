@@ -32,6 +32,7 @@ export interface City {
   showOnSite?: boolean;
   displayOrder?: number;
   banner?: Banner | null;
+  faqs?: { id?: number; ques: string; ans: string }[];
   tourCount?: number;
   _count?: { journeys: number };
 }
@@ -57,6 +58,7 @@ export interface CityPayload {
   bannerTitle?: string;
   bannerTag?: string;
   bannerImages?: string[];
+  faqs?: { ques: string; ans: string }[];
 }
 
 export interface PaginatedResponse<T> {

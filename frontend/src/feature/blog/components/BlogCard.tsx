@@ -2,11 +2,13 @@ import Link from "next/link";
 import { CalendarDays, User, ArrowRight } from "lucide-react";
 import { stripHtml } from "@/lib/utils";
 import type { BlogPost } from "@/feature/blog/type";
-
-const FALLBACK_IMAGE = "/destinationImage/image/agra-6.webp";
+import { FallbackImage } from "@/components/shared/FallbackImage";
 
 export default function BlogCard({ post }: { post: BlogPost }) {
-  const excerpt = stripHtml(post.seoDescription || "").slice(0, 110);
+  const rawExcerpt = stripHtml(post.seoDescription || post.moreDescription || "").trim();
+  const excerpt = rawExcerpt
+    ? (rawExcerpt.length > 110 ? `${rawExcerpt.slice(0, 110)}...` : rawExcerpt)
+    : "Explore complete itinerary details, top attractions, travel tips and expert recommendations in this guide.";
 
   return (
     <Link
@@ -14,12 +16,11 @@ export default function BlogCard({ post }: { post: BlogPost }) {
       className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-slate-200/60 shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-500 ease-out h-full"
     >
       <div className="relative h-[240px] overflow-hidden bg-slate-100 shrink-0">
-        <img
-          src={post.thumbImg || FALLBACK_IMAGE}
+        <FallbackImage
+          src={post.thumbImg}
           alt={post.title}
-          loading="lazy"
-          decoding="async"
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          theme="light"
         />
 
         {/* Solid Overlay */}
@@ -52,7 +53,7 @@ export default function BlogCard({ post }: { post: BlogPost }) {
         </h3>
 
         <p className="mt-3 text-[14px] text-[#666] leading-relaxed line-clamp-3 flex-1">
-          {excerpt}...
+          {excerpt}
         </p>
 
         <div className="mt-5 pt-5 border-t border-slate-100 flex items-center justify-between">

@@ -11,7 +11,9 @@ import {
   refreshIdentity,
 } from "@/lib/analyticsIdentity";
 import { type ActivityEvent } from "@/feature/analytics/api";
+import { resolveNotFound } from "@/feature/analytics/api";
 import { useFlushActivityEvents } from "@/feature/analytics/api/useAnalytics";
+import { onSearchRefinement } from "@/lib/analyticsSearchEvents";
 
 const BATCH_SIZE = 10;
 const BATCH_INTERVAL_MS = 5000; // 5 seconds
@@ -46,6 +48,7 @@ export function useUserActivityTracker() {
       visitorId: getVisitorId(),
       userId: null,
       userAgent: navigator.userAgent,
+      referrer: document.referrer || undefined,
       events: [...eventsBatch.current],
     };
     eventsBatch.current = [];
@@ -98,6 +101,7 @@ export function useUserActivityTracker() {
       visitorId: getVisitorId(),
       userId: null,
       userAgent: navigator.userAgent,
+      referrer: document.referrer || undefined,
       events: [...eventsBatch.current],
     });
     eventsBatch.current = [];
@@ -123,6 +127,10 @@ export function useUserActivityTracker() {
         eventName: "PAGE_VIEW",
         pagePath: pathname,
       });
+      // Real-time resolution: if this page loads successfully it is no longer
+      // a broken/404 URL. Auto-resolve any recorded BROKEN_LINK for this path.
+      // Idempotent – no-op when there are none on record.
+      resolveNotFound(pathname).catch(() => {});
     });
     // Start a fresh visible-time visit for this page.
     pageVisit.current = { path: pathname, visibleMs: 0, lastResume: Date.now() };
@@ -330,6 +338,10 @@ export function useUserActivityTracker() {
     },
     [trackEvent]
   );
+
+  // Subscribe to the search bar event bus so the site's search bar can report
+  // SEARCH_INTENT events without mounting a second (duplicate) tracker.
+  useEffect(() => onSearchRefinement((p) => trackSearchRefinement(p.searchQuery, p.destination, p.filtersApplied)), [trackSearchRefinement]);
 
   return { enterSection, leaveSection, trackSearchRefinement, trackEvent };
 }

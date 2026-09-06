@@ -12,7 +12,7 @@ export const SITE_URL =
 
 const config: CreateAxiosDefaults = {
   baseURL: API_BASE,
-  timeout: 5000,
+  timeout: 15000,
   withCredentials: true,
 };
 

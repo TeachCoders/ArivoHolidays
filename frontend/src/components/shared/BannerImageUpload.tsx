@@ -79,8 +79,8 @@ export default function BannerImageUpload({
     const imgRatio = img.naturalWidth / img.naturalHeight;
     const contRatio = cw / ch;
     let drawW: number, drawH: number, drawX: number, drawY: number;
-    if (contRatio > imgRatio) { drawW = cw; drawH = cw / imgRatio; drawX = 0; drawY = (ch - drawH) / 2; }
-    else { drawH = ch; drawW = ch * imgRatio; drawX = (cw - drawW) / 2; drawY = 0; }
+    if (contRatio > imgRatio) { drawH = ch; drawW = ch * imgRatio; drawX = (cw - drawW) / 2; drawY = 0; }
+    else { drawW = cw; drawH = cw / imgRatio; drawX = 0; drawY = (ch - drawH) / 2; }
 
     ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
@@ -115,7 +115,13 @@ export default function BannerImageUpload({
       if (!container) return;
       const cw = container.clientWidth;
       const ch = container.clientHeight;
-      const newCrop = { x: 0, y: 0, w: cw, h: ch };
+      const imgRatio = img.naturalWidth / img.naturalHeight;
+      const contRatio = cw / ch;
+      let drawW: number, drawH: number, drawX: number, drawY: number;
+      if (contRatio > imgRatio) { drawH = ch; drawW = ch * imgRatio; drawX = (cw - drawW) / 2; drawY = 0; }
+      else { drawW = cw; drawH = cw / imgRatio; drawX = 0; drawY = (ch - drawH) / 2; }
+      
+      const newCrop = { x: drawX, y: drawY, w: drawW, h: drawH };
       setCropBox(newCrop);
       drawCanvas(img, newCrop);
     };
@@ -200,8 +206,8 @@ export default function BannerImageUpload({
     const imgRatio = img.naturalWidth / img.naturalHeight;
     const contRatio = cw / ch;
     let drawW: number, drawH: number, drawX: number, drawY: number;
-    if (contRatio > imgRatio) { drawW = cw; drawH = cw / imgRatio; drawX = 0; drawY = (ch - drawH) / 2; }
-    else { drawH = ch; drawW = ch * imgRatio; drawX = (cw - drawW) / 2; drawY = 0; }
+    if (contRatio > imgRatio) { drawH = ch; drawW = ch * imgRatio; drawX = (cw - drawW) / 2; drawY = 0; }
+    else { drawW = cw; drawH = cw / imgRatio; drawX = 0; drawY = (ch - drawH) / 2; }
 
     const scaleX = img.naturalWidth / drawW;
     const scaleY = img.naturalHeight / drawH;

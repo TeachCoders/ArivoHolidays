@@ -13,6 +13,7 @@ import {
   History,
   Hash,
   Users,
+  User as UserIcon,
   Info,
   CheckCircle2,
   XCircle,
@@ -232,7 +233,7 @@ export default function packagesection({
     setItems(newItems);
   }, [cityNames, lead?.requirement?.startDate, lead?.requirement?.endDate]);
 
- 
+
 
   const addCity = () => {
     if (!newCity.trim()) return;
@@ -1045,7 +1046,7 @@ export default function packagesection({
 
       {/* ── 5. INVOICE SECTION ── */}
       <div className="bg-white rounded-xl border shadow-sm w-full overflow-hidden">
-        <div className="bg-gradient-to-r from-indigo-600 to-indigo-500 px-5 py-3">
+        <div className="bg-teal-700 px-5 py-3">
           <h3 className="text-white font-bold text-base tracking-wide flex items-center gap-2">Invoice</h3>
         </div>
         <div className="p-6">
@@ -1187,7 +1188,7 @@ export default function packagesection({
       <ReusableModel
         open={isPreviewOpen}
         onOpenChange={setIsPreviewOpen}
-        contentClassName="max-w-5xl w-full max-h-[90vh] overflow-y-auto print:max-h-none print:overflow-visible print:p-0 print:max-w-none print:shadow-none p-8"
+        contentClassName="max-w-5xl sm:max-w-5xl md:max-w-6xl w-full max-h-[90vh] overflow-y-auto print:max-h-none print:overflow-visible print:p-0 print:max-w-none print:shadow-none p-8"
       >
         <DialogTitle className="sr-only">Package Quotation Preview</DialogTitle>
 
@@ -1200,140 +1201,94 @@ export default function packagesection({
           </button>
         </div>
 
-        <div id="printable-invoice" className="print:block" style={{ overflowWrap: "break-word", wordBreak: "break-word" }}>
-          <div className="flex justify-between border-b-2 border-brand-primary pb-6 mb-6">
+        <div id="printable-invoice" className="print:block bg-white p-6 md:p-8" style={{ overflowWrap: "break-word", wordBreak: "break-word" }}>
+          {/* Header Row: Brand Logo & Quote Info */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center pb-5 mb-5 border-b-2 border-teal-600 gap-4">
             <div>
-              <h1 className="h3 text-brand-primary">TOUR QUOTATION</h1>
-              {packageName && (
-                <p className="text-lg font-bold text-brand-neutral-dark mt-2">{packageName}</p>
-              )}
-              <div className="flex flex-wrap gap-3 mt-3">
+              <img
+                src="/logo-with-name.png"
+                alt="Arivo Holidays"
+                className="h-14 w-auto object-contain mb-2"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                }}
+              />
+              <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+                {packageName || "LUXURY TOUR PACKAGE"}
+              </h1>
+              <div className="flex flex-wrap gap-2 mt-2">
                 {destination && (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold bg-brand-primary-light text-brand-primary px-3 py-1 rounded-full">
-                    <MapPin size={12} /> {destination}
+                  <span className="text-xs font-bold text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded">
+                    📍 {destination}
                   </span>
                 )}
                 {computedDuration && (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold bg-brand-warning-light text-brand-warning px-3 py-1 rounded-full">
-                    <History size={12} /> {computedDuration}
+                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded">
+                    ⏱️ {computedDuration}
                   </span>
                 )}
                 {(adults > 0 || children > 0) && (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold bg-brand-success-light text-brand-success px-3 py-1 rounded-full">
-                    <Users size={12} /> {adults} Adults{children > 0 ? `, ${children} Children` : ""}
+                  <span className="text-xs font-bold text-orange-700 bg-orange-50 px-2.5 py-0.5 rounded">
+                    👥 {adults} Adults{children > 0 ? `, ${children} Children` : ""}
                   </span>
                 )}
               </div>
             </div>
-            <div className="text-right">
-              <h2 className="text-lg font-bold text-brand-neutral-dark">{(process.env.NEXT_PUBLIC_BRAND_NAME || "ARIVO HOLIDAY").toUpperCase()}</h2>
-              <p className="text-xs text-brand-neutral-muted mt-0.5">Premium Travel Experiences</p>
-              <p className="text-xs text-slate-400 mt-2">
-                Date: {new Date().toLocaleDateString(undefined, { dateStyle: "medium" })}
-              </p>
-              {quotationNo && (
-                <p className="text-xs font-semibold text-brand-primary mt-1">Quote: {quotationNo}</p>
-              )}
-              {validTill && (
-                <p className="text-xs text-slate-400">
-                  Valid Till: {new Date(validTill).toLocaleDateString(undefined, { dateStyle: "medium" })}
-                </p>
-              )}
+
+            <div className="text-left md:text-right">
+              <span className="inline-block bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-0.5 rounded mb-1.5">
+                OFFICIAL QUOTATION
+              </span>
+              <h2 className="text-base font-black text-slate-900 uppercase tracking-wide">
+                {(process.env.NEXT_PUBLIC_BRAND_NAME || "ARIVO HOLIDAYS").toUpperCase()}
+              </h2>
+              <div className="text-xs text-slate-500 space-y-0.5 mt-1 font-medium">
+                {quotationNo && <p className="font-mono text-slate-700 font-bold">Quote #{quotationNo}</p>}
+                <p>Date: {new Date().toLocaleDateString("en-IN", { dateStyle: "medium" })}</p>
+                {validTill && (
+                  <p className="text-teal-600 font-semibold">Valid Till: {new Date(validTill).toLocaleDateString("en-IN", { dateStyle: "medium" })}</p>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="mb-6">
-            <div className="text-lg font-bold text-brand-neutral-dark">Dear {clientName || "Guest"},</div>
-            <p className="text-sm text-brand-neutral-muted mt-1">
-              As per our discussion, we've prepared this tour quotation just for you. We've carefully planned everything — from stays to transport — to make your trip comfortable and memorable. Please go through the details below, and feel free to let us know if you'd like any changes. We're always happy to customize it further for you!
-            </p>
-          </div>
+          {/* Traveller Info Bar - Clean Inline Strip (No Outer Box) */}
+          {(clientName || clientEmail || clientPhone || travelDate) && (
+            <div className="py-3.5 mb-6 border-b border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+              {clientName && (
+                <div>
+                  <span className="text-slate-400 font-semibold uppercase tracking-wider block text-[10px]">Prepared For</span>
+                  <span className="font-bold text-slate-900 text-sm">{clientName}</span>
+                </div>
+              )}
+              {clientPhone && (
+                <div>
+                  <span className="text-slate-400 font-semibold uppercase tracking-wider block text-[10px]">Phone / WhatsApp</span>
+                  <span className="font-semibold text-slate-800">{clientPhone}</span>
+                </div>
+              )}
+              {clientEmail && (
+                <div>
+                  <span className="text-slate-400 font-semibold uppercase tracking-wider block text-[10px]">Email</span>
+                  <span className="font-semibold text-slate-800">{clientEmail}</span>
+                </div>
+              )}
+              {travelDate && (
+                <div>
+                  <span className="text-slate-400 font-semibold uppercase tracking-wider block text-[10px]">Travel Date</span>
+                  <span className="font-bold text-teal-700">{travelDate}</span>
+                </div>
+              )}
+            </div>
+          )}
 
           {bannerUrls.length > 0 && (
             <div className={`mb-6 ${bannerUrls.length === 1 ? "" : "grid grid-cols-2 gap-3"}`}>
               {bannerUrls.map((url, i) => (
-                <div key={i} className="rounded-xl border border-brand-neutral-border">
+                <div key={i} className="rounded-xl border border-brand-neutral-border overflow-hidden">
                   <img src={url} alt={`Banner ${i + 1}`} className="w-full h-auto" />
                 </div>
               ))}
-            </div>
-          )}
-
-          {(clientName || clientEmail || clientPhone || lead?.requirement) && (
-            <div className="mb-6">
-              <h3 className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                <Users size={13} /> Traveller Information
-              </h3>
-              <div className="border border-indigo-100 rounded-lg overflow-hidden">
-                <table className="w-full text-sm">
-                  <tbody>
-                    {clientName && (
-                      <tr className="border-b border-slate-100">
-                        <td className="py-2 px-4 font-semibold text-brand-neutral-muted w-2/5 bg-brand-neutral-light text-xs">Name</td>
-                        <td className="py-2 px-4 font-bold text-brand-neutral-dark text-sm">{clientName}</td>
-                      </tr>
-                    )}
-                    {clientEmail && (
-                      <tr className="border-b border-slate-100">
-                        <td className="py-2 px-4 font-semibold text-brand-neutral-muted bg-brand-neutral-light text-xs">Email</td>
-                        <td className="py-2 px-4 text-brand-neutral text-sm">{clientEmail}</td>
-                      </tr>
-                    )}
-                    {clientPhone && (
-                      <tr className="border-b border-slate-100">
-                        <td className="py-2 px-4 font-semibold text-brand-neutral-muted bg-brand-neutral-light text-xs">Phone / WhatsApp</td>
-                        <td className="py-2 px-4 text-brand-neutral text-sm">{clientPhone}</td>
-                      </tr>
-                    )}
-                    {lead?.requirement?.cityNames && (
-                      <tr className="border-b border-slate-100">
-                        <td className="py-2 px-4 font-semibold text-brand-neutral-muted bg-brand-neutral-light text-xs">Destination</td>
-                        <td className="py-2 px-4 text-brand-neutral text-sm">{lead.requirement?.cityNames}</td>
-                      </tr>
-                    )}
-                    {lead?.requirement?.serviceType && (
-                      <tr className="border-b border-slate-100">
-                        <td className="py-2 px-4 font-semibold text-brand-neutral-muted bg-brand-neutral-light text-xs">Service Type</td>
-                        <td className="py-2 px-4 text-brand-neutral text-sm">{lead.requirement?.serviceType}</td>
-                      </tr>
-                    )}
-                    {lead?.requirement?.tourTypes?.length > 0 && (
-                      <tr className="border-b border-slate-100">
-                        <td className="py-2 px-4 font-semibold text-brand-neutral-muted bg-brand-neutral-light text-xs">Tour Types</td>
-                        <td className="py-2 px-4 text-brand-neutral text-sm">{lead.requirement?.tourTypes.join(", ")}</td>
-                      </tr>
-                    )}
-                    {(lead?.requirement?.startDate || lead?.requirement?.endDate) && (
-                      <tr className="border-b border-slate-100">
-                        <td className="py-2 px-4 font-semibold text-brand-neutral-muted bg-brand-neutral-light text-xs">Travel Dates</td>
-                        <td className="py-2 px-4 text-brand-neutral text-sm">
-                          {lead.requirement?.startDate && new Date(lead.requirement?.startDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                          {lead.requirement?.startDate && lead.requirement?.endDate && " → "}
-                          {lead.requirement?.endDate && new Date(lead.requirement?.endDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                        </td>
-                      </tr>
-                    )}
-                    {(lead?.requirement?.adults > 0 || lead?.requirement?.children > 0) && (
-                      <tr className="border-b border-slate-100">
-                        <td className="py-2 px-4 font-semibold text-brand-neutral-muted bg-brand-neutral-light text-xs">Travellers</td>
-                        <td className="py-2 px-4 text-brand-neutral text-sm">
-                          {lead.requirement?.adults > 0 && `${lead.requirement?.adults} Adult${lead.requirement?.adults > 1 ? "s" : ""}`}
-                          {lead.requirement?.adults > 0 && lead.requirement?.children > 0 && ", "}
-                          {lead.requirement?.children > 0 && `${lead.requirement?.children} Child${lead.requirement?.children > 1 ? "ren" : ""}`}
-                        </td>
-                      </tr>
-                    )}
-                    {(lead.requirement?.needGuide) && (
-                      <tr>
-                        <td className="py-2 px-4 font-semibold text-brand-neutral-muted bg-brand-neutral-light text-xs">Extra Services</td>
-                        <td className="py-2 px-4 text-brand-neutral text-sm">
-                          {lead.requirement?.needGuide && "Guide"}
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
             </div>
           )}
 
@@ -1346,10 +1301,10 @@ export default function packagesection({
                 {itinerary.map((day, idx) => (
                   <div key={idx} className="flex gap-3">
                     <div className="flex flex-col items-center">
-                      <div className="w-8 h-8 bg-indigo-100 text-brand-primary rounded-full flex items-center justify-center text-xs font-bold shrink-0">
+                      <div className="w-8 h-8 bg-teal-100 text-teal-800 rounded-full flex items-center justify-center text-xs font-bold shrink-0">
                         {day.day || idx + 1}
                       </div>
-                      {idx < itinerary.length - 1 && <div className="w-0.5 flex-1 bg-indigo-100 mt-1" />}
+                      {idx < itinerary.length - 1 && <div className="w-0.5 flex-1 bg-teal-100 mt-1" />}
                     </div>
                     <div className="pb-4 flex-1 min-w-0">
                       <h4 className="text-sm font-bold text-slate-900">{day.title || `Day ${idx + 1}`}</h4>
@@ -1363,95 +1318,95 @@ export default function packagesection({
             </div>
           )}
 
-          <div className="mb-8 border border-brand-neutral-border rounded-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-5 py-3 font-bold text-base tracking-wide">Invoice</div>
-            <div className="p-5">
+          <div className="mb-8">
+            <div className="border-b-2 border-teal-600 pb-2 mb-4">
+              <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
+                Services & Pricing Breakdown
+              </h3>
+            </div>
 
-              {items.length === 0 && (
-                <p className="text-sm text-slate-400 text-center py-4">No items added yet.</p>
-              )}
+            {items.length === 0 && (
+              <p className="text-sm text-slate-400 text-center py-4">No items added yet.</p>
+            )}
 
-              {items.length > 0 && (
-                <div className="border border-brand-neutral-border rounded-lg overflow-hidden mb-4">
-                  <table className="tbl">
-                    <thead>
-                      <tr className="bg-brand-neutral-light border-b border-brand-neutral-border">
-                        <th className="tbl-th-sm px-3 py-2 text-left w-20">City</th>
-                        <th className="tbl-th-sm px-3 py-2 text-left w-20">Service</th>
-                        <th className="tbl-th-sm px-3 py-2 text-left w-24">Name</th>
-                        <th className="tbl-th-sm px-3 py-2 text-left w-28">Type</th>
-                        <th className="tbl-th-sm px-3 py-2 text-center w-28">Qty</th>
-                        <th className="tbl-th-sm px-3 py-2 text-right w-28">Unit ₹</th>
-                        <th className="tbl-th-sm px-3 py-2 text-right w-24">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-brand-neutral-light">
-                      {items.map((item, idx) => {
-                        const getName = () => {
-                          if (item.ServiceName === "Hotel") return item.hotelName || "—";
-                          if (item.ServiceName === "Car") return item.carName || "—";
-                          if (item.ServiceName === "Guide") return item.guideName || "—";
-                          return "—";
-                        };
-                        const getType = () => {
-                          if (item.ServiceName === "Hotel") return item.hotelType || "—";
-                          if (item.ServiceName === "Car") return item.carType || "—";
-                          if (item.ServiceName === "Guide") return item.guideLanguage || "—";
-                          return "—";
-                        };
-                        const getQtyLabel = () => item.ServiceName === "Hotel" ? "Nights" : "Days";
-                        return (
-                          <tr key={idx} className="hover:bg-brand-neutral-light/50 transition-colors">
-                            <td className="px-3 py-2 font-medium text-brand-neutral">{item.location}</td>
-                            <td className="px-3 py-2">
-                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${item.ServiceName === "Hotel" ? "bg-indigo-100 text-brand-primary" :
-                                item.ServiceName === "Car" ? "bg-brand-success-light text-brand-success" :
-                                  "bg-brand-warning-light text-brand-warning"
-                                }`}>{item.ServiceName}</span>
-                            </td>
-                            <td className="px-3 py-2 font-medium text-brand-neutral-dark">{getName()}</td>
-                            <td className="px-3 py-2 text-brand-neutral">{getType()}</td>
-                            <td className="px-3 py-2 text-center text-brand-neutral">{item.ServcieQty || 0} {getQtyLabel()}</td>
-                            <td className="px-3 py-2 text-right text-brand-neutral">₹{Number(item.UnitPrice || 0).toLocaleString()}</td>
-                            <td className="px-3 py-2 text-right font-bold text-brand-neutral-dark">₹{Number(item.TotalPrice || 0).toLocaleString()}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-
-              <div className="border-t border-brand-neutral-border pt-4 mt-2">
-                <h4 className="text-xs font-bold text-brand-primary uppercase tracking-wider mb-3 border-l-3 border-indigo-600 pl-2.5">Cost Summary</h4>
-                <div className="space-y-2 max-w-sm ml-auto text-sm">
-                  <div className="flex justify-between text-brand-neutral-muted">
-                    <span>Subtotal:</span>
-                    <span className="font-semibold text-brand-neutral">₹{subtotal}</span>
-                  </div>
-                  <div className="flex justify-between text-brand-neutral-muted">
-                    <span>GST ({gstRate}%):</span>
-                    <span className="font-semibold text-brand-neutral">₹{gstAmount}</span>
-                  </div>
-                  {discount > 0 && (
-                    <div className="flex justify-between text-brand-danger">
-                      <span>Discount:</span>
-                      <span className="font-semibold">- ₹{discount}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between border-t-2 border-brand-primary pt-3 text-xl font-bold text-brand-neutral-dark">
-                    <span>Total Cost:</span>
-                    <span className="text-brand-primary">₹{payablePrice}</span>
-                  </div>
-                  {advanceAmount > 0 && (
-                    <div className="flex justify-between text-sm text-brand-success font-semibold mt-1">
-                      <span>Advance Required:</span>
-                      <span>₹{advanceAmount}</span>
-                    </div>
-                  )}
-                </div>
+            {items.length > 0 && (
+              <div className="border border-slate-200 rounded-lg overflow-hidden mb-4 shadow-sm">
+                <table className="w-full text-xs text-left">
+                  <thead>
+                    <tr className="bg-slate-100/80 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
+                      <th className="px-3 py-2.5 w-24">City</th>
+                      <th className="px-3 py-2.5 w-24">Service</th>
+                      <th className="px-3 py-2.5">Name</th>
+                      <th className="px-3 py-2.5">Type</th>
+                      <th className="px-3 py-2.5 text-center w-20">Qty</th>
+                      <th className="px-3 py-2.5 text-right w-28">Unit ₹</th>
+                      <th className="px-3 py-2.5 text-right w-28">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                    {items.map((item, idx) => {
+                      const getName = () => {
+                        if (item.ServiceName === "Hotel") return item.hotelName || "—";
+                        if (item.ServiceName === "Car") return item.carName || "—";
+                        if (item.ServiceName === "Guide") return item.guideName || "—";
+                        return "—";
+                      };
+                      const getType = () => {
+                        if (item.ServiceName === "Hotel") return item.hotelType || "—";
+                        if (item.ServiceName === "Car") return item.carType || "—";
+                        if (item.ServiceName === "Guide") return item.guideLanguage || "—";
+                        return "—";
+                      };
+                      const getQtyLabel = () => item.ServiceName === "Hotel" ? "Nights" : "Days";
+                      return (
+                        <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                          <td className="px-3 py-2.5 font-bold text-slate-900">{item.location}</td>
+                          <td className="px-3 py-2.5">
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${item.ServiceName === "Hotel" ? "bg-teal-50 text-teal-700 border border-teal-100" :
+                              item.ServiceName === "Car" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" :
+                                "bg-amber-50 text-amber-700 border border-amber-100"
+                              }`}>{item.ServiceName}</span>
+                          </td>
+                          <td className="px-3 py-2.5 font-semibold text-slate-900">{getName()}</td>
+                          <td className="px-3 py-2.5 text-slate-600">{getType()}</td>
+                          <td className="px-3 py-2.5 text-center text-slate-600">{item.ServcieQty || 0} {getQtyLabel()}</td>
+                          <td className="px-3 py-2.5 text-right text-slate-600">₹{Number(item.UnitPrice || 0).toLocaleString()}</td>
+                          <td className="px-3 py-2.5 text-right font-bold text-slate-900">₹{Number(item.TotalPrice || 0).toLocaleString()}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
+            )}
 
+            <div className="pt-2">
+              <div className="space-y-2 max-w-xs ml-auto text-xs">
+                <div className="flex justify-between text-slate-500 font-medium">
+                  <span>Subtotal:</span>
+                  <span className="font-semibold text-slate-800">₹{subtotal}</span>
+                </div>
+                <div className="flex justify-between text-slate-500 font-medium">
+                  <span>GST ({gstRate}%):</span>
+                  <span className="font-semibold text-slate-800">₹{gstAmount}</span>
+                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-rose-600 font-medium">
+                    <span>Discount:</span>
+                    <span className="font-semibold">- ₹{discount}</span>
+                  </div>
+                )}
+                <div className="flex justify-between border-t-2 border-slate-900 pt-2 text-sm font-black text-slate-900">
+                  <span>Total Cost:</span>
+                  <span className="text-teal-700">₹{payablePrice}</span>
+                </div>
+                {advanceAmount > 0 && (
+                  <div className="flex justify-between text-xs text-emerald-700 font-bold mt-1">
+                    <span>Advance Required:</span>
+                    <span>₹{advanceAmount}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -1494,9 +1449,11 @@ export default function packagesection({
             <div className="mt-6 pt-6 border-t border-brand-neutral-border">
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Important Notes</h3>
               <ul className="space-y-1 text-sm text-brand-neutral">
-                {notes.split("\n").filter(Boolean).map((line, idx) => (
-                  <li key={idx}>&#8226; {line}</li>
-                ))}
+                {notes.split("\n").filter(Boolean).map((line, idx) => {
+                  const cleanLine = line.replace(/^[•\-\*\s]+/, "").trim();
+                  if (!cleanLine) return null;
+                  return <li key={idx}>&#8226; {cleanLine}</li>;
+                })}
               </ul>
             </div>
           )}

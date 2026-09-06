@@ -9,21 +9,21 @@ const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+91-9212777225";
 
 const FacebookIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3V2z"/>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3V2z" />
   </svg>
 );
 
 const TwitterIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
   </svg>
 );
 
 const InstagramIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
   </svg>
 );
 
@@ -38,13 +38,13 @@ export function QuoteModal({ children }: { children: ReactNode }) {
       <DialogContent className="sm:max-w-5xl w-[95vw] p-0 overflow-hidden bg-white rounded-[24px] md:rounded-[32px] border-none shadow-2xl">
         <DialogTitle className="sr-only">Request a Quote</DialogTitle>
         <div className="grid grid-cols-1 md:grid-cols-[1fr_1.4fr] max-h-[90vh] md:max-h-[85vh]">
-          
+
           {/* Left Panel - Information */}
           <div className="p-8 md:p-12 flex flex-col bg-[#F3F4F6] border-b md:border-b-0 md:border-r border-slate-200">
             <h2 className="text-[32px] md:text-[40px] font-bold text-[#3B4254] mb-8 leading-tight tracking-tight">
               How It Works
             </h2>
-            
+
             <ul className="space-y-6 mb-12 flex-1">
               <li className="flex gap-4">
                 <div className="w-2 h-2 rounded-full bg-[#D4561A] mt-2.5 shrink-0" />
@@ -61,7 +61,7 @@ export function QuoteModal({ children }: { children: ReactNode }) {
               <li className="flex gap-4">
                 <div className="w-2 h-2 rounded-full bg-[#D4561A] mt-2.5 shrink-0" />
                 <p className="text-[#5B6375] text-[15px] md:text-base leading-relaxed">
-                  Grab the deal and start packing your bags for an indelible holiday with Tour My India.
+                  Grab the deal and start packing your bags for an indelible holiday with Arivo Holidays.
                 </p>
               </li>
             </ul>
@@ -82,12 +82,10 @@ export function QuoteModal({ children }: { children: ReactNode }) {
               <div className="w-full h-[1px] bg-slate-300 mb-6" />
 
               <div className="text-center md:text-left">
-                <p className="text-[#6B7280] text-sm md:text-base mb-1 font-medium">
-                  Call Us for details
+                <p className="text-[#2E8B8B] text-sm md:text-base mb-1 font-bold">
+                  🔒 100% Free Consultation & Instant Quote
                 </p>
-                <a href={`tel:${SALES_PHONE}`} className="text-[#E96A1E] text-2xl md:text-[28px] font-bold hover:opacity-80 transition-opacity">
-                  {SALES_PHONE}
-                </a>
+
               </div>
             </div>
           </div>
@@ -102,7 +100,7 @@ export function QuoteModal({ children }: { children: ReactNode }) {
                 </span>
               </h2>
             </div>
-            
+
             <TourBookingForm embedded hideHeader onSuccess={() => setOpen(false)} />
           </div>
         </div>

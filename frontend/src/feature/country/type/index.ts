@@ -28,6 +28,7 @@ export interface Country {
   displayOrder?: number;
   states: { id: number; title: string; slug: string }[];
   banner?: Banner | null;
+  faqs?: { id?: number; ques: string; ans: string }[];
   tourCount?: number;
   //_count?: { states: number };
 }
@@ -55,6 +56,7 @@ export interface CountryPayload {
   bannerTitle?: string;
   bannerTag?: string;
   bannerImages?: string[];
+  faqs?: { ques: string; ans: string }[];
 }
 
 export interface PaginatedResponse<T> {

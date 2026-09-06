@@ -250,7 +250,7 @@ export default function CityClient() {
               cellClassName: "px-4 py-3",
               render: (city) => (
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{city.title}</p>
+                  <p className="text-sm font-medium text-gray-900">{city.seoTitle || "-"}</p>
 
                 </div>
               ),
@@ -304,7 +304,7 @@ export default function CityClient() {
               render: (city) => (
                 <div className="flex items-center justify-center gap-1">
                   {city.state?.country?.slug && city.state?.slug && (
-                    <Link href={`/${city.state.country.slug}/${city.state.slug}/${city.slug}`} target="_blank" className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors" title="View Public Page">
+                    <Link href={`/tour-packages/${city.state.country.slug}/${city.state.slug}/${city.slug}`} target="_blank" className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors" title="View Public Page">
                       <Eye size={14} />
                     </Link>
                   )}

@@ -44,6 +44,7 @@ export interface ActivityBatchPayload {
   userAgent?: string;
   deviceType?: string;
   country?: string;
+  referrer?: string;
   totalTimeSpent?: number;
   events: Omit<ActivityEvent, "id">[];
 }
@@ -70,6 +71,15 @@ export interface FlowPageStat {
 
 export interface AnalyticsStats {
   totalSessions: number;
+  trend?: {
+    date: string;
+    count: number;
+  }[];
+  funnel?: {
+    totalVisits: number;
+    totalLeads: number;
+    conversionRate: number;
+  };
   topPages: {
     pagePath: string;
     avgTimeSeconds: number;
@@ -113,11 +123,111 @@ export interface AnalyticsStats {
   }[];
   entryPages?: FlowPageStat[];
   exitPages?: FlowPageStat[];
+  highFriction?: {
+    pagePath: string;
+    frictionEvents: number;
+    rageClicks: number;
+    deadClicks: number;
+    brokenLinks: number;
+  }[];
+  journeyTransitions?: {
+    from: string;
+    to: string;
+    count: number;
+  }[];
 }
 
-export async function getAnalyticsStats(): Promise<AnalyticsStats> {
-  const res = await apiClient.get<AnalyticsStats>("/analytics/stats");
+export interface DateRange {
+  from: string; // YYYY-MM-DD
+  to: string; // YYYY-MM-DD
+}
+
+function dateRangeParams(range?: DateRange) {
+  return range ? { from: range.from, to: range.to } : {};
+}
+
+export interface NameCount {
+  name: string;
+  count: number;
+}
+
+export interface DeviceBreakdown {
+  totalUsers: number;
+  devices: NameCount[];
+  browsers: NameCount[];
+  os: NameCount[];
+  countries: NameCount[];
+}
+
+export interface TrafficSource {
+  totalSessions: number;
+  channels: { channel: string; sessions: number }[];
+  keywords: { keyword: string; count: number }[];
+}
+
+export interface SearchIntentStats {
+  totalIntents: number;
+  modifiedCount: number;
+  topQueries: { query: string; count: number }[];
+  topDestinations: { destination: string; count: number }[];
+  topFilters: { filter: string; count: number }[];
+}
+
+export interface LiveView {
+  activeNow: number;
+  windowMinutes: number;
+  byCountry: NameCount[];
+  byDevice: NameCount[];
+  recentEvents: {
+    eventName: string;
+    pagePath: string;
+    element: string | null;
+    dwellTimeMs: number | null;
+    createdAt: string;
+  }[];
+}
+
+export async function getAnalyticsStats(range?: DateRange): Promise<AnalyticsStats> {
+  const res = await apiClient.get<AnalyticsStats>("/analytics/stats", {
+    params: dateRangeParams(range),
+  });
   return res.data;
+}
+
+export async function getDeviceBreakdown(range?: DateRange): Promise<DeviceBreakdown> {
+  const res = await apiClient.get<DeviceBreakdown>("/analytics/breakdown", {
+    params: dateRangeParams(range),
+  });
+  return res.data;
+}
+
+export async function getTrafficSources(range?: DateRange): Promise<TrafficSource> {
+  const res = await apiClient.get<TrafficSource>("/analytics/sources", {
+    params: dateRangeParams(range),
+  });
+  return res.data;
+}
+
+export async function getSearchIntents(range?: DateRange): Promise<SearchIntentStats> {
+  const res = await apiClient.get<SearchIntentStats>("/analytics/search-intents", {
+    params: dateRangeParams(range),
+  });
+  return res.data;
+}
+
+export async function getLiveNow(): Promise<LiveView> {
+  const res = await apiClient.get<LiveView>("/analytics/live-now", {
+    params: { minutes: 15 },
+  });
+  return res.data;
+}
+
+export async function resolveNotFound(pagePath: string): Promise<void> {
+  await apiClient.post("/analytics/resolve-404", { pagePath });
+}
+
+export async function dismissHighFriction(pagePath: string): Promise<void> {
+  await apiClient.post("/analytics/high-friction/dismiss", { pagePath });
 }
 
 /* ───────────── Session replay ───────────── */

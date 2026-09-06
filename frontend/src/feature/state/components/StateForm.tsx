@@ -11,6 +11,7 @@ import Heading from "@/components/shared/heading";
 import SeoFields from "@/components/shared/SeoFields";
 import BannerSection from "@/components/shared/BannerSection";
 import RichTextEditor from "@/components/shared/RichTextEditor";
+import FaqEditor, { FaqData } from "@/components/shared/FaqEditor";
 import {
   useCreateState,
   useUpdateState,
@@ -73,6 +74,7 @@ export default function StateFormPage({ initialData, mode }: StateFormProps) {
   const [bannerImages, setBannerImages] = useState<string[]>(initialData?.banner?.images || []);
   const [bannerFiles, setBannerFiles] = useState<{ file: File; index: number }[]>([]);
   const [moreDescription, setMoreDescription] = useState(initialData?.moreDescription || "");
+  const [faqs, setFaqs] = useState<FaqData[]>(initialData?.faqs || []);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const initializedRef = React.useRef(false);
@@ -101,6 +103,7 @@ export default function StateFormPage({ initialData, mode }: StateFormProps) {
       setBannerTag(initialData.banner?.bannerTag || "");
       setBannerImages(initialData.banner?.images || []);
       setMoreDescription(initialData.moreDescription || "");
+      setFaqs(initialData.faqs || []);
     }
   }, [initialData]);
 
@@ -175,6 +178,7 @@ export default function StateFormPage({ initialData, mode }: StateFormProps) {
       bannerTag: bannerTag.trim() || undefined,
       bannerImages: finalBannerImages,
       moreDescription: moreDescription.trim() || undefined,
+      faqs,
     };
 
     if (mode === "edit" && initialData?.id) {
@@ -309,6 +313,8 @@ export default function StateFormPage({ initialData, mode }: StateFormProps) {
           <label className="text-sm font-bold text-slate-700 uppercase tracking-wider block mb-2">More Description</label>
           <RichTextEditor content={moreDescription} onChange={(html) => setMoreDescription(html)} />
         </div>
+
+        <FaqEditor faqs={faqs} setFaqs={setFaqs} />
 
         {/* Submit */}
         <div className="flex items-center justify-between gap-3 pb-8">

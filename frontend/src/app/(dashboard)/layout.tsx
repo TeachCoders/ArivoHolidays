@@ -37,6 +37,7 @@ import {
   BookOpen,
   CircleHelp,
   LineChart,
+  Images,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -135,6 +136,8 @@ const sidebarSections: SidebarSection[] = [{
     { name: "Travel Experiences", href: "/dashboard/travel-experience", icon: Compass, teams: ["it"] },
     { name: "Journeys", href: "/dashboard/journey", icon: Route, teams: ["it"] },
     { name: "Content Pages", href: "/dashboard/cms-page", icon: FileText, teams: ["it"] },
+    { name: "Ad Landing Pages", href: "/dashboard/ad-landing-pages", icon: FileText, teams: ["it"] },
+    { name: "Guest Gallery", href: "/dashboard/guest-gallery", icon: Images, teams: ["it"] },
     { name: "Blog", href: "/dashboard/blog", icon: Newspaper, teams: ["it"] },
     { name: "Blog Categories", href: "/dashboard/blog-category", icon: Tags, teams: ["it"] },
     
@@ -340,6 +343,20 @@ export default function Layout({ children }: LayoutProps) {
 
       // CMS Page page: IT team + super admin only
       if (path.startsWith("/dashboard/cms-page")) {
+        if (isSuperAdmin) return;
+        if (userTeamKey !== "it") { router.replace("/dashboard"); }
+        return;
+      }
+
+      // Ad Landing Pages: IT team + super admin only
+      if (path.startsWith("/dashboard/ad-landing-pages")) {
+        if (isSuperAdmin) return;
+        if (userTeamKey !== "it") { router.replace("/dashboard"); }
+        return;
+      }
+
+      // Guest Gallery: IT team + super admin only
+      if (path.startsWith("/dashboard/guest-gallery")) {
         if (isSuperAdmin) return;
         if (userTeamKey !== "it") { router.replace("/dashboard"); }
         return;

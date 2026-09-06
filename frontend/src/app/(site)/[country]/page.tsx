@@ -1,100 +1,116 @@
 import type { Metadata } from "next";
-import CountryDetail from "@/feature/destinations/components/CountryDetail";
-import CmsFallbackPage from "@/feature/cms/components/CmsFallbackPage";
+import { redirect, notFound } from "next/navigation";
+import CmsPageDetail from "@/feature/cms/components/CmsPageDetail";
 import JsonLd from "@/components/shared/JsonLd";
-import { breadcrumbSchema, touristDestinationSchema } from "@/lib/jsonLd";
-import { fetchBySlug, fetchPublicJson } from "@/feature/destinations/api/public-server";
-import { stripHtml } from "@/lib/utils";
+import { breadcrumbSchema } from "@/lib/jsonLd";
+import { fetchBySlug } from "@/feature/destinations/api/public-server";
+import { stripHtml, absoluteUrl } from "@/lib/utils";
 import type { Country } from "@/feature/country/type";
-import type { State, PaginatedResponse as StatePage } from "@/feature/state/type";
-import type { Journey, PaginatedResponse as JourneyPage } from "@/feature/journey/type";
+import type { Journey } from "@/feature/journey/type";
 import type { CmsPage } from "@/feature/cms/type";
+import type { Season } from "@/feature/season/type";
 
 export const revalidate = 60;
 
 type Props = { params: Promise<{ country: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { country } = await params;
-  const data = await fetchBySlug<Country>("/country/by-slug", country);
-  if (!data) {
-    const cms = await fetchBySlug<CmsPage>("/cms/by-slug", country);
-    if (cms) {
-      const seoDescription = stripHtml(cms.seoDescription || cms.moreDescription || "").slice(0, 160);
-      return {
-        title: cms.seoTitle || cms.title,
-        description: seoDescription || undefined,
-        keywords: cms.seoKeyword || undefined,
-        alternates: { canonical: cms.canonical || `/${cms.slug}` },
-      };
-    }
-    return { title: "Page Not Found | Arivo Holiday" };
+  const { country: slug } = await params;
+
+  const country = await fetchBySlug<Country>("/country/by-slug", slug);
+  if (country) {
+    const title =
+      country.seoTitle ||
+      country.title?.replace(/\s*Tour$/i, "") ||
+      country.title ||
+      slug;
+    const description =
+      stripHtml(country.seoDescription || country.overView || "")
+        .slice(0, 160) || undefined;
+    return {
+      title,
+      description,
+      keywords: country.seoKeyword,
+      alternates: { canonical: `/tour-packages/${country.slug}` },
+    };
   }
-  const title = data?.title?.replace(/\s*Tour$/i, "") || data?.title || country;
-  const seoDescription = stripHtml(data?.seoDescription || data?.overView) || undefined;
-  const canonical = data?.canonical || `/${country}`;
+
+  const journey = await fetchBySlug<Journey>("/journey/by-slug", slug);
+  if (journey) {
+    const title = journey.seoTitle || journey.title;
+    const description = stripHtml(journey.seoDescription || journey.overView || "").slice(0, 160);
+    return {
+      title,
+      description,
+      keywords: journey.seoKeyword,
+      alternates: { canonical: `/tour-packages/${journey.slug}` },
+    };
+  }
+
+  const season = await fetchBySlug<Season>("/season/by-slug", slug);
+  if (season) {
+    const title = season.seoTitle || season.title;
+    const description = stripHtml(season.seoDescription || season.overView || "").slice(0, 160);
+    return {
+      title,
+      description,
+      keywords: season.seoKeyword,
+      alternates: { canonical: `/season/${season.slug}` },
+    };
+  }
+
+  const page = await fetchBySlug<CmsPage>("/cms/by-slug", slug);
+  if (!page) return { title: "Page Not Found | Arivo Holiday" };
+  const seoDescription = stripHtml(page.seoDescription || page.moreDescription || "").slice(0, 160);
+  const title = page.seoTitle || page.title;
+  const canonical = page.canonical || `/${page.slug}`;
   return {
-    title: title,
-    description: seoDescription,
-    keywords: data?.seoKeyword,
+    title,
+    description: seoDescription || undefined,
+    keywords: page.seoKeyword || undefined,
     alternates: { canonical },
     openGraph: {
       type: "website",
-      title: title,
-      description: seoDescription,
+      title,
+      description: seoDescription || undefined,
       url: canonical,
-      images: data?.thumbImg ? [{ url: data.thumbImg, alt: title }] : undefined,
+      images: absoluteUrl(page.thumbImg)
+        ? [{ url: absoluteUrl(page.thumbImg)!, alt: page.title }]
+        : undefined,
     },
     twitter: {
       card: "summary_large_image",
-      title: title,
-      description: seoDescription,
-      images: data?.thumbImg ? [data.thumbImg] : undefined,
+      title,
+      description: seoDescription || undefined,
+      images: absoluteUrl(page.thumbImg) ? [absoluteUrl(page.thumbImg)!] : undefined,
     },
   };
 }
 
-export default async function CountryPage({ params }: Props) {
-  const { country } = await params;
-  const data = await fetchBySlug<Country>("/country/by-slug", country);
-  if (!data) {
-    return <CmsFallbackPage slug={country} />;
-  }
-  const [initialStates, initialJourneys] = await Promise.all([
-    data
-      ? fetchPublicJson<StatePage<State>>(`/state?limit=100&countryId=${data.id}`)
-      : null,
-    fetchPublicJson<JourneyPage<Journey>>("/journey?limit=100&isActive=true"),
-  ]);
-  
-  const schema = data
-    ? [
-        touristDestinationSchema({
-          name: data.title,
-          description: data.seoDescription || data.overView || undefined,
-          image: data.thumbImg || undefined,
-          url: data.canonical || `/${data.slug}`,
-        }),
-        breadcrumbSchema([
-          { name: "Home", path: "/" },
-          { name: data.title, path: `/${data.slug}` },
-        ]),
-      ]
-    : [];
+export default async function OldCountryRedirectPage({ params }: Props) {
+  const { country: slug } = await params;
+
+  const country = await fetchBySlug<Country>("/country/by-slug", slug);
+  if (country) redirect(`/tour-packages/${country.slug}`);
+
+  const journey = await fetchBySlug<Journey>("/journey/by-slug", slug);
+  if (journey) redirect(`/tour-packages/${journey.slug}`);
+
+  const season = await fetchBySlug<Season>("/season/by-slug", slug);
+  if (season) redirect(`/season/${season.slug}`);
+
+  const page = await fetchBySlug<CmsPage>("/cms/by-slug", slug);
+  if (!page) notFound();
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
-      {schema.map((s, i) => (
-        <JsonLd key={i} data={s} />
-      ))}
-      <main className="flex-1">
-        <CountryDetail
-          slug={country}
-          initialCountry={data}
-          initialStates={initialStates}
-          initialJourneys={initialJourneys}
-        />
-      </main>
-    </div>
+    <>
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: page.title, path: `/${page.slug}` },
+        ])}
+      />
+      <CmsPageDetail page={page} />
+    </>
   );
 }

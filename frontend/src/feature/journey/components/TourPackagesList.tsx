@@ -1,19 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { MapPin, ChevronRight } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import { MapPin, ChevronRight, Sparkles, CalendarDays, Sun } from "lucide-react";
 import { useGetJourneys } from "@/feature/journey/api/useJourney";
 import TourPackageCard from "@/components/shared/TourPackageCard";
 import Pagination from "@/components/shared/Pagination";
+import FilterBar from "@/components/shared/FilterBar";
 import DestinationsSkeleton from "@/feature/destinations/components/DestinationsSkeleton";
-import { useSearchParams, usePathname } from "next/navigation";
 import HeroSlider from "@/components/shared/HeroSlider";
 import { useCountryBySlug } from "@/feature/country/api/useCountry";
 import type { Journey } from "@/feature/journey/type";
 import type { Country } from "@/feature/country/type";
+import {
+  travelExperienceOptions,
+  durationOptions,
+  seasonOptions,
+  journeyMatchesExperiences,
+  journeyMatchesDuration,
+  journeyMatchesSeasons,
+} from "@/feature/journey/filterOptions";
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 24;
 
 export default function TourPackagesList({
   countrySlug,
@@ -24,9 +32,6 @@ export default function TourPackagesList({
   initialJourneys?: Journey[];
   initialCountry?: Country | null;
 }) {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-
   const { country, isLoading: countryLoading } = useCountryBySlug(countrySlug, initialCountry);
   const { journeys, isLoading } = useGetJourneys(
     { limit: 1000, isActive: "true" },
@@ -39,20 +44,102 @@ export default function TourPackagesList({
       : undefined
   );
 
-  const countryJourneys = journeys.filter(
-    (j) => j.cities?.some((c) => c.state?.country?.slug === countrySlug)
+  const countryJourneys = useMemo(
+    () => journeys.filter((j) => j.cities?.some((c) => c.state?.country?.slug === countrySlug)),
+    [journeys, countrySlug]
   );
 
-  const page = parseInt(searchParams.get("page") || "1", 10);
-  const totalPages = Math.max(1, Math.ceil(countryJourneys.length / PAGE_SIZE));
-  const currentPage = Math.min(Math.max(page, 1), totalPages);
+  const [selectedStates, setSelectedStates] = useState<string[]>([]);
+  const [selectedCities, setSelectedCities] = useState<string[]>([]);
+  const [selectedExperiences, setSelectedExperiences] = useState<string[]>([]);
+  const [selectedSeasons, setSelectedSeasons] = useState<string[]>([]);
+  const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
 
-  const paginatedJourneys = countryJourneys.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const states = useMemo(() => {
+    const set = new Set<string>();
+    for (const j of countryJourneys) {
+      const state = j.cities?.[0]?.state?.title;
+      if (state) set.add(state);
+    }
+    return [...set].sort();
+  }, [countryJourneys]);
 
-  const createPageUrl = (pageNumber: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", pageNumber.toString());
-    return `${pathname}?${params.toString()}#packages`;
+  const stateOptions = useMemo(
+    () =>
+      states.map((s) => ({
+        value: s,
+        label: s,
+        count: countryJourneys.filter((j) => j.cities?.[0]?.state?.title === s).length,
+      })),
+    [states, countryJourneys]
+  );
+
+  const cityOptions = useMemo(() => {
+    const map = new Map<string, { value: string; label: string; count: number }>();
+    for (const j of countryJourneys) {
+      for (const c of j.cities ?? []) {
+        const entry = map.get(c.slug);
+        if (entry) entry.count += 1;
+        else map.set(c.slug, { value: c.slug, label: c.title, count: 1 });
+      }
+    }
+    return [...map.values()].sort((a, b) => b.count - a.count);
+  }, [countryJourneys]);
+
+  const filtered = useMemo(() => {
+    let list = countryJourneys.filter((j) => {
+      if (selectedStates.length > 0) {
+        const state = j.cities?.[0]?.state?.title;
+        if (!state || !selectedStates.includes(state)) return false;
+      }
+      if (selectedCities.length > 0) {
+        const slugs = new Set(selectedCities);
+        if (!(j.cities ?? []).some((c) => slugs.has(c.slug))) return false;
+      }
+      if (!journeyMatchesExperiences(j, selectedExperiences)) return false;
+      if (!journeyMatchesSeasons(j, selectedSeasons)) return false;
+      if (!journeyMatchesDuration(j, selectedDurations)) return false;
+      return true;
+    });
+
+    list = [...list].sort((a, b) => (b.purchaseCount || 0) - (a.purchaseCount || 0));
+    return list;
+  }, [countryJourneys, selectedStates, selectedCities, selectedExperiences, selectedSeasons, selectedDurations]);
+
+  const clearAll = () => {
+    setSelectedStates([]);
+    setSelectedCities([]);
+    setSelectedExperiences([]);
+    setSelectedSeasons([]);
+    setSelectedDurations([]);
+  };
+
+  const activeFilterCount =
+    selectedStates.length +
+    selectedCities.length +
+    selectedExperiences.length +
+    selectedSeasons.length +
+    selectedDurations.length;
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const key = filtered.map((j) => String(j.id ?? "")).join(",");
+  const [prevKey, setPrevKey] = useState(key);
+  if (prevKey !== key) {
+    setPrevKey(key);
+    setCurrentPage(1);
+  }
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedJourneys = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  const handlePageChange = (p: number) => {
+    setCurrentPage(p);
+    const el = document.getElementById("packages");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const title = country?.title.replace(/\s*Tour$/i, "") || countrySlug;
@@ -80,7 +167,7 @@ export default function TourPackagesList({
               Home
             </Link>
             <ChevronRight size={14} />
-            <Link href={`/${countrySlug}`} className="hover:text-white transition-colors">
+            <Link href={`/tour-packages/${countrySlug}`} className="hover:text-white transition-colors">
               {title}
             </Link>
             <ChevronRight size={14} />
@@ -107,21 +194,66 @@ export default function TourPackagesList({
         ) : (
           <>
             <div className="mb-8">
-              <span className="accent-label">Tour Packages</span>
-              <h2 className="h3 text-[#1C1C1C] mt-2">
-                {countryJourneys.length} Packages in {title}
-              </h2>
+              <FilterBar
+                sections={[
+                  {
+                    id: "state",
+                    title: "State",
+                    options: stateOptions,
+                    selected: selectedStates,
+                    onChange: setSelectedStates,
+                  },
+                  {
+                    id: "city",
+                    title: "Destination",
+                    icon: <MapPin size={14} />,
+                    options: cityOptions,
+                    selected: selectedCities,
+                    onChange: setSelectedCities,
+                  },
+                  {
+                    id: "experience",
+                    title: "Travel Experience",
+                    icon: <Sparkles size={14} />,
+                    options: travelExperienceOptions(countryJourneys),
+                    selected: selectedExperiences,
+                    onChange: setSelectedExperiences,
+                  },
+                  {
+                    id: "season",
+                    title: "Best Season / Month",
+                    icon: <Sun size={14} />,
+                    options: seasonOptions(countryJourneys),
+                    selected: selectedSeasons,
+                    onChange: setSelectedSeasons,
+                  },
+                  {
+                    id: "duration",
+                    title: "Duration",
+                    icon: <CalendarDays size={14} />,
+                    options: durationOptions(countryJourneys),
+                    selected: selectedDurations,
+                    onChange: setSelectedDurations,
+                  },
+                ]}
+                activeCount={activeFilterCount}
+                onClearAll={clearAll}
+                resultCount={filtered.length}
+                totalCount={countryJourneys.length}
+              />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {paginatedJourneys.map((j) => (
                 <TourPackageCard key={j.id} journey={j} />
               ))}
             </div>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              createPageUrl={createPageUrl}
-            />
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={safePage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
           </>
         )}
       </section>

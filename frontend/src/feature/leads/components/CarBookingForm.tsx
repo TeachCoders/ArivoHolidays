@@ -4,7 +4,7 @@ import { CarBookingFormData, EMPTY_CAR_BOOKING } from "../type";
 import { useCarBooking } from "../api/useLeeds";
 import { successToast, errorToast } from "@/components/shared/tost";
 import PageLoader from "@/components/shared/PageLoader";
-import { COUNTRIES, detectCountryFromIP, stripDialCode } from "../data/countries";
+import { COUNTRIES, detectGeoFromIP, stripDialCode } from "../data/countries";
 
 const SERVICE_OPTIONS = [
   { value: "oneway", label: "One-Way Transfer", icon: "➡️" },
@@ -30,16 +30,15 @@ export default function CarBookingPage() {
   const { isLoading, createNewCarBooking } = useCarBooking();
 
   useEffect(() => {
-    detectCountryFromIP().then((country) => {
-      if (country) {
-        setData((prev) => ({ ...prev, country: country.name, countryId: country.code, phone: country.dialCode + " " }));
-        setSelectedDialCode(country.dialCode);
-      } else {
-        fetch("https://api.ipify.org?format=json")
-          .then((res) => res.json())
-          .then((ipData) => { if (ipData.ip) setData((prev) => ({ ...prev, countryId: ipData.ip })); })
-          .catch(console.error);
-      }
+    detectGeoFromIP().then((geo) => {
+      if (!geo?.ip) return;
+      setData((prev) => ({
+        ...prev,
+        ipAddress: geo.ip,
+        location: geo.location,
+        ...(geo.country ? { country: geo.country.name, countryId: geo.country.code, phone: geo.country.dialCode + " " } : {}),
+      }));
+      if (geo.country) setSelectedDialCode(geo.country.dialCode);
     });
   }, []);
 

@@ -5,7 +5,7 @@ import { useTravellerLead } from "../api/useLeeds";
 import { successToast, errorToast } from "@/components/shared/tost";
 import PageLoader from "@/components/shared/PageLoader";
 import { DarkDatePicker } from "@/components/shared/darkDatePicker";
-import { COUNTRIES, detectCountryFromIP, stripDialCode } from "../data/countries";
+import { COUNTRIES, detectGeoFromIP, stripDialCode } from "../data/countries";
 
 export default function ContactFormPage() {
   const [data, setData] = useState<ContactFormData>(EMPTY);
@@ -16,25 +16,15 @@ export default function ContactFormPage() {
   const { isLoading, createNewTravellerLead } = useTravellerLead();
 
   useEffect(() => {
-    detectCountryFromIP().then((country) => {
-      if (country) {
-        setData((prev) => ({
-          ...prev,
-          country: country.name,
-          countryId: country.code,
-          phone: country.dialCode + " ",
-        }));
-        setSelectedDialCode(country.dialCode);
-      } else {
-        fetch("https://api.ipify.org?format=json")
-          .then((res) => res.json())
-          .then((ipData) => {
-            if (ipData.ip) {
-              setData((prev) => ({ ...prev, countryId: ipData.ip }));
-            }
-          })
-          .catch(console.error);
-      }
+    detectGeoFromIP().then((geo) => {
+      if (!geo?.ip) return;
+      setData((prev) => ({
+        ...prev,
+        ipAddress: geo.ip,
+        location: geo.location,
+        ...(geo.country ? { country: geo.country.name, countryId: geo.country.code, phone: geo.country.dialCode + " " } : {}),
+      }));
+      setSelectedDialCode((prev) => (geo.country ? geo.country.dialCode : prev));
     });
   }, []);
 

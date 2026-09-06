@@ -8,7 +8,14 @@ import {
   getSessionAnalysis,
   getRetentionDays,
   setRetentionDays,
+  resolveNotFound,
+  dismissHighFriction,
+  getDeviceBreakdown,
+  getTrafficSources,
+  getSearchIntents,
+  getLiveNow,
   type ActivityBatchPayload,
+  type DateRange,
 } from ".";
 
 /**
@@ -24,10 +31,10 @@ export const useFlushActivityEvents = () => {
   });
 };
 
-export const useAnalyticsStats = () => {
+export const useAnalyticsStats = (range?: DateRange) => {
   const query = useQuery({
-    queryKey: ["analytics-stats"],
-    queryFn: getAnalyticsStats,
+    queryKey: ["analytics-stats", range?.from ?? "all", range?.to ?? "all"],
+    queryFn: () => getAnalyticsStats(range),
     staleTime: 30 * 1000,
   });
   return {
@@ -35,6 +42,43 @@ export const useAnalyticsStats = () => {
     isLoading: query.isLoading,
     error: query.error,
   };
+};
+
+export const useDeviceBreakdown = (range?: DateRange) => {
+  const query = useQuery({
+    queryKey: ["analytics-breakdown", range?.from ?? "all", range?.to ?? "all"],
+    queryFn: () => getDeviceBreakdown(range),
+    staleTime: 60 * 1000,
+  });
+  return { data: query.data ?? null, isLoading: query.isLoading, error: query.error };
+};
+
+export const useTrafficSources = (range?: DateRange) => {
+  const query = useQuery({
+    queryKey: ["analytics-sources", range?.from ?? "all", range?.to ?? "all"],
+    queryFn: () => getTrafficSources(range),
+    staleTime: 60 * 1000,
+  });
+  return { data: query.data ?? null, isLoading: query.isLoading, error: query.error };
+};
+
+export const useSearchIntents = (range?: DateRange) => {
+  const query = useQuery({
+    queryKey: ["analytics-search-intents", range?.from ?? "all", range?.to ?? "all"],
+    queryFn: () => getSearchIntents(range),
+    staleTime: 60 * 1000,
+  });
+  return { data: query.data ?? null, isLoading: query.isLoading, error: query.error };
+};
+
+export const useLiveNow = () => {
+  const query = useQuery({
+    queryKey: ["analytics-live-now"],
+    queryFn: getLiveNow,
+    refetchInterval: 30 * 1000,
+    staleTime: 25 * 1000,
+  });
+  return { data: query.data ?? null, isLoading: query.isLoading, error: query.error };
 };
 
 export const useReplaySessions = (enabled = true) => {
@@ -109,4 +153,24 @@ export const useRetentionDays = () => {
     isLoading: query.isLoading,
     save,
   };
+};
+
+export const useResolveNotFound = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (pagePath: string) => resolveNotFound(pagePath),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["analytics-stats"] });
+    },
+  });
+};
+
+export const useDismissHighFriction = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (pagePath: string) => dismissHighFriction(pagePath),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["analytics-stats"] });
+    },
+  });
 };

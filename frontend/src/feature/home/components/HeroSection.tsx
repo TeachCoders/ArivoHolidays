@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { API_BASE } from "@/lib/apiClient";
 import HeroSearchBar from "@/components/shared/HeroSearchBar";
+import { FallbackImage } from "@/components/shared/FallbackImage";
 
 const SLIDES = [
   { image: `${API_BASE}/content/rajasthan-tours-holiday-1.webp`, alt: "Rajasthan heritage tour" },
@@ -29,17 +30,19 @@ export const HeroSection: React.FC = () => {
   }, [next]);
 
   return (
-    <section className="relative min-h-[600px] lg:min-h-[680px] flex items-center justify-center overflow-hidden py-14 lg:py-20">
+    <section className="relative min-h-[600px] lg:min-h-[680px] flex items-center justify-center overflow-hidden py-14 lg:py-20 bg-slate-900">
       <div className="absolute inset-0 flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${current * 100}%)` }}>
         {SLIDES.map((s, i) => (
-          <img
-            key={i}
-            src={s.image}
-            alt={s.alt}
-            fetchPriority={i === 0 ? "high" : undefined}
-            loading={i === 0 ? "eager" : "lazy"}
-            className="w-full h-full object-cover object-center shrink-0"
-          />
+          <div key={i} className="relative w-full h-full shrink-0">
+            <FallbackImage
+              src={s.image}
+              alt={s.alt}
+              fill
+              priority={i === 0}
+              className="object-cover object-center"
+              theme="dark"
+            />
+          </div>
         ))}
       </div>
 

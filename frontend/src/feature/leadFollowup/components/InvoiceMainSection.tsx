@@ -443,7 +443,7 @@ export default function InvoiceMainSection({
       <ReusableModel
         open={isPreviewOpen}
         onOpenChange={setIsPreviewOpen}
-        contentClassName="max-w-5xl w-full max-h-[90vh] overflow-y-auto print:max-h-none print:overflow-visible print:p-0 print:max-w-none print:shadow-none p-8"
+        contentClassName="max-w-5xl sm:max-w-5xl md:max-w-6xl w-full max-h-[90vh] overflow-y-auto print:max-h-none print:overflow-visible print:p-0 print:max-w-none print:shadow-none p-8"
       >
         <DialogTitle className="sr-only">Package Quotation Preview</DialogTitle>
 
@@ -456,68 +456,78 @@ export default function InvoiceMainSection({
           </button>
         </div>
 
-        <div id="printable-invoice" className="print:block" style={{ overflowWrap: "break-word", wordBreak: "break-word" }}>
-          <div className="flex justify-between border-b-2 border-brand-primary pb-6 mb-6">
+        <div id="printable-invoice" className="print:block bg-white p-6 md:p-8" style={{ overflowWrap: "break-word", wordBreak: "break-word" }}>
+          {/* Header Row: Brand Logo & Quote Info */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center pb-5 mb-5 border-b-2 border-teal-600 gap-4">
             <div>
-              <h1 className="h3 text-brand-primary">TOUR QUOTATION</h1>
-              {packageName && (
-                <p className="text-lg font-bold text-brand-neutral-dark mt-2">{packageName}</p>
-              )}
-              <div className="flex flex-wrap gap-3 mt-3">
+              <img
+                src="/logo-with-name.png"
+                alt="Arivo Holidays"
+                className="h-14 w-auto object-contain mb-2"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                }}
+              />
+              <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+                {packageName || "LUXURY TOUR PACKAGE"}
+              </h1>
+              <div className="flex flex-wrap gap-2 mt-2">
                 {destination && (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold bg-brand-primary-light text-brand-primary px-3 py-1 rounded-full">
-                    <MapPin size={12} /> {destination}
+                  <span className="text-xs font-bold text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded">
+                    📍 {destination}
                   </span>
                 )}
                 {duration && (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold bg-brand-warning-light text-brand-warning px-3 py-1 rounded-full">
-                    <History size={12} /> {duration}
+                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded">
+                    ⏱️ {duration}
                   </span>
                 )}
                 {(adults > 0 || children > 0) && (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold bg-brand-success-light text-brand-success px-3 py-1 rounded-full">
-                    <Users size={12} /> {adults} Adults{children > 0 ? `, ${children} Children` : ""}
+                  <span className="text-xs font-bold text-orange-700 bg-orange-50 px-2.5 py-0.5 rounded">
+                    👥 {adults} Adults{children > 0 ? `, ${children} Children` : ""}
                   </span>
                 )}
               </div>
             </div>
-            <div className="text-right">
-              <h2 className="text-lg font-bold text-brand-neutral-dark">{(process.env.NEXT_PUBLIC_BRAND_NAME || "ARIVO HOLIDAY").toUpperCase()}</h2>
-              <p className="text-xs text-brand-neutral-muted mt-0.5">Premium Travel Experiences</p>
-              <p className="text-xs text-slate-400 mt-2">
-                Date: {new Date().toLocaleDateString(undefined, { dateStyle: "medium" })}
-              </p>
-              {quotationNo && (
-                <p className="text-xs font-semibold text-brand-primary mt-1">Quote: {quotationNo}</p>
-              )}
-              {validTill && (
-                <p className="text-xs text-slate-400">
-                  Valid Till: {new Date(validTill).toLocaleDateString(undefined, { dateStyle: "medium" })}
-                </p>
-              )}
+
+            <div className="text-left md:text-right">
+              <span className="inline-block bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-0.5 rounded mb-1.5">
+                OFFICIAL QUOTATION
+              </span>
+              <h2 className="text-base font-black text-slate-900 uppercase tracking-wide">
+                {(process.env.NEXT_PUBLIC_BRAND_NAME || "ARIVO HOLIDAYS").toUpperCase()}
+              </h2>
+              <div className="text-xs text-slate-500 space-y-0.5 mt-1 font-medium">
+                {quotationNo && <p className="font-mono text-slate-700 font-bold">Quote #{quotationNo}</p>}
+                <p>Date: {new Date().toLocaleDateString("en-IN", { dateStyle: "medium" })}</p>
+                {validTill && (
+                  <p className="text-teal-600 font-semibold">Valid Till: {new Date(validTill).toLocaleDateString("en-IN", { dateStyle: "medium" })}</p>
+                )}
+              </div>
             </div>
           </div>
 
-          {bannerUrls.length > 0 && (
-            <div className={`mb-6 ${bannerUrls.length === 1 ? "" : "grid grid-cols-2 gap-3"}`}>
-              {bannerUrls.map((url, i) => (
-                <div key={i} className="rounded-xl border border-brand-neutral-border">
-                  <img src={url} alt={`Banner ${i + 1}`} className="w-full h-auto" />
-                </div>
-              ))}
-            </div>
-          )}
-
+          {/* Traveller Info Bar - Clean Inline Strip (No Outer Box) */}
           {(clientName || clientEmail || clientPhone) && (
-            <div className="mb-6">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Billed To</h3>
-              <div className="bg-brand-neutral-light/50 border border-slate-100 rounded-lg p-4">
-                {clientName && <p className="font-bold text-brand-neutral-dark">{clientName}</p>}
-                <div className="mt-1 space-y-0.5 text-sm text-brand-neutral">
-                  {clientEmail && <p>{clientEmail}</p>}
-                  {clientPhone && <p>WhatsApp / Phone: {clientPhone}</p>}
+            <div className="py-3.5 mb-6 border-b border-slate-200 grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+              {clientName && (
+                <div>
+                  <span className="text-slate-400 font-semibold uppercase tracking-wider block text-[10px]">Prepared For</span>
+                  <span className="font-bold text-slate-900 text-sm">{clientName}</span>
                 </div>
-              </div>
+              )}
+              {clientPhone && (
+                <div>
+                  <span className="text-slate-400 font-semibold uppercase tracking-wider block text-[10px]">Phone / WhatsApp</span>
+                  <span className="font-semibold text-slate-800">{clientPhone}</span>
+                </div>
+              )}
+              {clientEmail && (
+                <div>
+                  <span className="text-slate-400 font-semibold uppercase tracking-wider block text-[10px]">Email</span>
+                  <span className="font-semibold text-slate-800">{clientEmail}</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -743,9 +753,11 @@ export default function InvoiceMainSection({
             <div className="mt-6 pt-6 border-t border-brand-neutral-border">
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Important Notes</h3>
               <ul className="space-y-1 text-sm text-brand-neutral">
-                {notes.split("\n").filter(Boolean).map((line, idx) => (
-                  <li key={idx}>&#8226; {line}</li>
-                ))}
+                {notes.split("\n").filter(Boolean).map((line, idx) => {
+                  const cleanLine = line.replace(/^[•\-\*\s]+/, "").trim();
+                  if (!cleanLine) return null;
+                  return <li key={idx}>&#8226; {cleanLine}</li>;
+                })}
               </ul>
             </div>
           )}

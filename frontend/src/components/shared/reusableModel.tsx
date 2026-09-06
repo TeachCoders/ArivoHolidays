@@ -49,7 +49,8 @@ export function ReusableModel({
   onOpenChange,
   contentClassName,
 }: ReusableModelProps) {
-  const dialogProps = open !== undefined ? { open, onOpenChange } : {}
+  const dialogProps = open !== undefined ? { open, onOpenChange } : {};
+  const hasCustomMaxWidth = contentClassName && contentClassName.includes("max-w-");
 
   return (
     <Dialog {...dialogProps}>
@@ -57,8 +58,9 @@ export function ReusableModel({
 
       <DialogContent
         className={cn(
-          "rounded w-full sm:max-w-[425px]",  // default
-          contentClassName                     // user override (last mein → highest priority)
+          "rounded w-full",
+          !hasCustomMaxWidth && "sm:max-w-[425px]",
+          contentClassName
         )}
       >
         {(title || description) && (

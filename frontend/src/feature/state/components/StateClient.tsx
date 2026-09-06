@@ -252,7 +252,7 @@ export default function StateClient() {
               cellClassName: "px-4 py-3",
               render: (state) => (
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{state.title}</p>
+                  <p className="text-sm font-medium text-gray-900">{state.seoTitle || "-"}</p>
 
                 </div>
               ),
@@ -328,7 +328,7 @@ export default function StateClient() {
               render: (state) => (
                 <div className="flex items-center justify-center gap-1">
                   {state.country?.slug && (
-                    <Link href={`/${state.country.slug}/${state.slug}`} target="_blank" className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors" title="View Public Page">
+                    <Link href={`/tour-packages/${state.country.slug}/${state.slug}`} target="_blank" className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors" title="View Public Page">
                       <Eye size={14} />
                     </Link>
                   )}

@@ -7,16 +7,25 @@ import RichContent from "@/components/shared/RichContent";
 import { fetchPackageBySlug } from "@/feature/tourPackages/public-server";
 import { stripHtml } from "@/lib/utils";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+function absoluteUrl(src?: string): string | undefined {
+  if (!src) return undefined;
+  if (/^https?:\/\//.test(src)) return src;
+  return `${SITE_URL}${src.startsWith("/") ? src : `/${src}`}`;
+}
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const pkg = await fetchPackageBySlug(slug);
   if (!pkg) return { title: "Package Not Found | Arivo Holiday" };
-  const title = `${pkg.name} | Arivo Holiday`;
+  const title = pkg.name;
   const description = stripHtml(pkg.shortDescription || pkg.description || "").slice(0, 160);
   const canonical = `/packages/${pkg.slug}`;
   const image = Array.isArray(pkg.bannerImageUrl) ? pkg.bannerImageUrl[0] : pkg.bannerImageUrl;
+  const ogImage = image ? absoluteUrl(image) : undefined;
   return {
     title,
     description,
@@ -26,13 +35,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url: canonical,
-      images: image ? [{ url: image, alt: pkg.name }] : undefined,
+      images: ogImage ? [{ url: ogImage, alt: pkg.name }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: image ? [image] : undefined,
+      images: ogImage ? [ogImage] : undefined,
     },
   };
 }

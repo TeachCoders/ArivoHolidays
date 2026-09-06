@@ -46,7 +46,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ]);
 
   const RESERVED_SLUGS = new Set([
-    "destinations",
+    "tour-packages",
     "travel-experiences",
     "blog",
     "packages",
@@ -60,27 +60,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url("/", new Date().toISOString()),
     url("/travel-experiences"),
     url("/blog"),
-    url("/packages"),
+    url("/tour-packages"),
   ];
 
-  countries.forEach((c: SitemapItem) => entries.push(url(`/${c.slug}`, c.updatedAt)));
+  countries.forEach((c: SitemapItem) => entries.push(url(`/tour-packages/${c.slug}`, c.updatedAt)));
   states.forEach((s: SitemapItem) => {
-    if (s.country?.slug) entries.push(url(`/${s.country.slug}/${s.slug}`, s.updatedAt));
+    if (s.country?.slug) entries.push(url(`/tour-packages/${s.country.slug}/${s.slug}`, s.updatedAt));
   });
   cities.forEach((c: SitemapItem) => {
     if (c.state?.country?.slug) {
-      entries.push(url(`/${c.state.country.slug}/${c.state.slug}/${c.slug}`, c.updatedAt));
+      entries.push(url(`/tour-packages/${c.state.country.slug}/${c.state.slug}/${c.slug}`, c.updatedAt));
     }
   });
   experiences.forEach((e: SitemapItem) => entries.push(url(`/travel-experiences/${e.slug}`, e.updatedAt)));
   journeys.forEach((j: SitemapItem) => {
-    const countrySlug = j.cities?.[0]?.state?.country?.slug;
-    if (countrySlug) entries.push(url(`/${countrySlug}/tour-packages/${j.slug}`, j.updatedAt));
+    entries.push(url(`/tour-packages/${j.slug}`, j.updatedAt));
   });
-  const packageCountries = new Set(
-    journeys.map((j: SitemapItem) => j.cities?.[0]?.state?.country?.slug).filter(Boolean) as string[]
-  );
-  packageCountries.forEach((c) => entries.push(url(`/${c}/tour-packages`)));
   posts.forEach((p: SitemapItem) => entries.push(url(`/blog/${p.slug}`, p.updatedAt)));
   cmsPages.forEach((c: SitemapItem) => {
     if (RESERVED_SLUGS.has(c.slug)) return;

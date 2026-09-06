@@ -32,6 +32,7 @@ export interface State {
   cities?: Partial<City>[];
   journeys?: Journey[];
   banner?: Banner | null;
+  faqs?: { id?: number; ques: string; ans: string }[];
   tourCount?: number;
   _count?: { cities: number };
 }
@@ -58,6 +59,7 @@ export interface StatePayload {
   bannerTitle?: string;
   bannerTag?: string;
   bannerImages?: string[];
+  faqs?: { ques: string; ans: string }[];
 }
 
 export interface PaginatedResponse<T> {

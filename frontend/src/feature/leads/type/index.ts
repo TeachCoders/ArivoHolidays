@@ -4,6 +4,8 @@ export interface ContactFormData {
   phone: string;
   country: string;
   countryId: string;
+  ipAddress?: string;
+  location?: string;
   travelDate?: string;
 }
 
@@ -24,6 +26,8 @@ export interface RegistrationPayload  {
   phone:string;
   country:string;
   countryId:string;
+  ipAddress?:string;
+  location?:string;
   pageReference?:string;
   travelDate?:string;
 }
@@ -34,6 +38,8 @@ export interface TourBookingFormData {
   phone: string;
   country: string;
   countryId: string;
+  ipAddress?: string;
+  location?: string;
   pageReference?: string;
   travellerMessage: string;
   noOfPersons: string;
@@ -63,6 +69,8 @@ export interface CarBookingFormData {
   phone: string;
   country: string;
   countryId: string;
+  ipAddress?: string;
+  location?: string;
   travellerMessage: string;
   vehicleName: string;
   serviceType: string;

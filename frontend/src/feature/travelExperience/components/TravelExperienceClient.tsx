@@ -190,7 +190,7 @@ export default function TravelExperienceClient() {
               cellClassName: "px-4 py-3",
               render: (exp) => (
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{exp.title}</p>
+                  <p className="text-sm font-medium text-gray-900">{exp.seoTitle || "-"}</p>
 
                 </div>
               ),

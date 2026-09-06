@@ -10,6 +10,7 @@ import SeoFields from "@/components/shared/SeoFields";
 import BannerSection from "@/components/shared/BannerSection";
 import EntityFields from "@/components/shared/EntityFields";
 import RichTextEditor from "@/components/shared/RichTextEditor";
+import FaqEditor, { FaqData } from "@/components/shared/FaqEditor";
 import {
   useCreateCountry,
   useUpdateCountry,
@@ -59,6 +60,7 @@ export default function CountryFormPage({ initialData, mode }: CountryFormProps)
   });
 
   const [moreDescription, setMoreDescription] = useState(initialData?.moreDescription || "");
+  const [faqs, setFaqs] = useState<FaqData[]>(initialData?.faqs || []);
 
   const [bannerTitle, setBannerTile] = useState(initialData?.banner?.bannerTitle || "");
   const [bannerTag, setBannerTag] = useState(initialData?.banner?.bannerTag || "");
@@ -94,6 +96,7 @@ export default function CountryFormPage({ initialData, mode }: CountryFormProps)
         h1Title: initialData.h1Title || "",
       });
       setMoreDescription(initialData.moreDescription || "");
+      setFaqs(initialData.faqs || []);
       setBannerTile(initialData.banner?.bannerTitle || "");
       setBannerTag(initialData.banner?.bannerTag || "");
       setBannerImages(initialData.banner?.images || []);
@@ -181,6 +184,7 @@ export default function CountryFormPage({ initialData, mode }: CountryFormProps)
       bannerTag: bannerTag.trim() || undefined,
       bannerImages: finalBannerImages,
       moreDescription: moreDescription.trim() || undefined,
+      faqs,
       isActive,
       showOnSite,
     };
@@ -260,6 +264,8 @@ export default function CountryFormPage({ initialData, mode }: CountryFormProps)
           <label className="text-sm font-bold text-slate-700 uppercase tracking-wider block mb-2">More Description</label>
           <RichTextEditor content={moreDescription} onChange={(html) => setMoreDescription(html)} />
         </div>
+
+        <FaqEditor faqs={faqs} setFaqs={setFaqs} />
 
         <div className="flex items-center justify-between gap-3 pb-8">
           <div className="flex items-center gap-5">

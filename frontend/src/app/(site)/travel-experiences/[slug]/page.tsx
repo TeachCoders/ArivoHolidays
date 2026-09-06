@@ -3,7 +3,7 @@ import TravelExperienceDetail from "@/feature/travelExperience/components/Travel
 import JsonLd from "@/components/shared/JsonLd";
 import { breadcrumbSchema } from "@/lib/jsonLd";
 import { fetchBySlug } from "@/feature/destinations/api/public-server";
-import { stripHtml } from "@/lib/utils";
+import { stripHtml, absoluteUrl } from "@/lib/utils";
 import type { TravelExperience } from "@/feature/travelExperience/type";
 
 export const revalidate = 60;
@@ -16,7 +16,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!data) return { title: "Travel Experience Not Found | Arivo Holiday" };
   const title = data.seoTitle || data.title;
   const seoDescription = stripHtml(data.seoDescription || data.moreDescription || "").slice(0, 160);
-  const canonical = data.canonical || `/travel-experiences/${data.slug}`;
+  const canonical = canonicalFor(data, slug);
+  const ogImage = absoluteUrl(data.thumbImg);
   return {
     title,
     description: seoDescription,
@@ -27,15 +28,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description: seoDescription,
       url: canonical,
-      images: data.thumbImg ? [{ url: data.thumbImg, alt: data.title }] : undefined,
+      images: ogImage ? [{ url: ogImage, alt: data.title }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: seoDescription,
-      images: data.thumbImg ? [data.thumbImg] : undefined,
+      images: ogImage ? [ogImage] : undefined,
     },
   };
+}
+
+function canonicalFor(
+  data: { canonical?: string | null; slug: string },
+  paramSlug: string
+): string {
+  const derived = `/travel-experiences/${data.slug || paramSlug}`;
+  if (!data.canonical) return derived;
+  const base = data.canonical.includes("://")
+    ? data.canonical.slice(data.canonical.indexOf("/", data.canonical.indexOf("://") + 3))
+    : data.canonical;
+  return base.startsWith("/travel-experiences/") ? base : derived;
 }
 
 export default async function TravelExperiencePage({ params }: Props) {

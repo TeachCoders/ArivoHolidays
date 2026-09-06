@@ -3,25 +3,35 @@ import { ChevronRight } from "lucide-react";
 import RichContent from "@/components/shared/RichContent";
 import TrackMissingContent from "@/components/shared/TrackMissingContent";
 import type { CmsPage } from "@/feature/cms/type";
+import CmsGuestGalleryWrapper from "@/feature/guestGallery/components/CmsGuestGalleryWrapper";
+
+const cleanTitle = (rawTitle: string) => {
+  if (!rawTitle) return "";
+  return rawTitle.replace(/\s*\|\s*Arivo\s*Holidays?/gi, "").trim();
+};
 
 export default function CmsPageDetail({ page }: { page: CmsPage }) {
-  const title = page.h1Title || page.title;
+  const displayTitle = cleanTitle(page.h1Title || page.title || "Page");
   const hasThumb = Boolean(page.thumbImg);
   const hasContent = Boolean(page.seoDescription) || Boolean(page.moreDescription);
+  const isGuestGalleryPage = page.slug === "guest-gallery" || page.title?.toLowerCase().includes("guest gallery");
 
   return (
     <div>
       {/* Track rendered-but-empty pages (data not found) under 404 analytics */}
-      {!hasContent && <TrackMissingContent />}
+      {!hasContent && !isGuestGalleryPage && <TrackMissingContent />}
+
       {/* ===== HERO / HEADER ===== */}
       <section
-        className={`relative ${hasThumb ? "h-[360px] md:h-[440px]" : "bg-[#1C1C1C]"} overflow-hidden`}
+        className={`relative ${
+          hasThumb ? "h-[360px] md:h-[440px]" : "bg-[#1C1C1C]"
+        } overflow-hidden`}
       >
         {hasThumb ? (
           <>
             <img
               src={page.thumbImg}
-              alt={title}
+              alt={displayTitle}
               className="absolute inset-0 w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/30" />
@@ -35,45 +45,37 @@ export default function CmsPageDetail({ page }: { page: CmsPage }) {
           />
         )}
 
-        <div className="relative z-10 max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 h-full flex flex-col justify-center">
-          <nav className="flex flex-wrap items-center gap-1.5 text-white/70 text-sm mb-4">
+        <div className="relative z-10 max-w-[1600px] py-12 md:py-16 mx-auto px-6 sm:px-8 lg:px-10 h-full flex flex-col justify-center">
+          {/* Main Title (H1) */}
+          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-lg mb-3 max-w-4xl">
+            {displayTitle}
+          </h1>
+
+          {/* Breadcrumbs below Title */}
+          <nav className="flex flex-wrap items-center gap-1.5 text-white/70 text-sm">
             <Link href="/" className="hover:text-white transition-colors">
               Home
             </Link>
-            <ChevronRight size={14} />
-            <span className="text-white/95">{title}</span>
+            <ChevronRight size={14} className="text-white/40" />
+            <span className="text-white/95 font-medium">{displayTitle}</span>
           </nav>
-          {page.h1Title && (
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight drop-shadow-lg max-w-3xl">
-            {page.h1Title}
-          </h1>
-          )}
         </div>
       </section>
 
       {/* ===== CONTENT ===== */}
-      <section className="max-w-[900px] mx-auto px-6 sm:px-8 lg:px-10 py-14 md:py-20">
-        {page.seoDescription && (
-          <RichContent
-            html={page.seoDescription}
-            className="text-[15px] text-[#555] leading-relaxed [&_p]:text-base [&_p]:leading-relaxed [&_p]:text-[#555]"
-          />
-        )}
-
+      <section className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 py-12 md:py-16 space-y-10">
         {page.moreDescription && (
-          <div className="mt-10">
+          <div className="prose prose-lg max-w-none">
             <RichContent html={page.moreDescription} />
           </div>
         )}
 
-        <div className="mt-14 pt-8 border-t border-slate-200">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#2E8B8B] hover:text-[#D4561A] transition-colors"
-          >
-            ← Back to Home
-          </Link>
-        </div>
+        {/* Render Guest Gallery Grid & Lightbox Modal for guest-gallery CMS page */}
+        {isGuestGalleryPage && (
+          <div>
+            <CmsGuestGalleryWrapper />
+          </div>
+        )}
       </section>
     </div>
   );

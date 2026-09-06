@@ -29,7 +29,7 @@ export default function NotFound() {
           Back to Home
         </Link>
         <Link
-          href="/india"
+          href="/tour-packages"
           className="btn-outline px-6 py-3 text-sm font-semibold"
         >
           Explore Destinations

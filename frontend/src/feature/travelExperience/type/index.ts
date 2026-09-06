@@ -25,6 +25,7 @@ export interface TravelExperience {
   isActive: boolean;
   displayOrder?: number;
   banner?: Banner | null;
+  faqs?: { id?: number; ques: string; ans: string }[];
 }
 
 export interface TravelExperiencePayload {
@@ -48,6 +49,7 @@ export interface TravelExperiencePayload {
   bannerTitle?: string;
   bannerTag?: string;
   bannerImages?: string[];
+  faqs?: { ques: string; ans: string }[];
 }
 
 export interface PaginatedResponse<T> {

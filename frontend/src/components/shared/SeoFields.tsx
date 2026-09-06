@@ -53,6 +53,9 @@ interface SeoFieldsProps {
   folderPath?: string;
   bannerImages?: string[];
   hideShortDesc?: boolean;
+  hideThumbnail?: boolean;
+  hideKeywords?: boolean;
+  hideCanonical?: boolean;
 }
 
 export default function SeoFields({
@@ -66,6 +69,9 @@ export default function SeoFields({
   folderPath = "",
   bannerImages = [],
   hideShortDesc = false,
+  hideThumbnail = false,
+  hideKeywords = false,
+  hideCanonical = false,
 }: SeoFieldsProps) {
   const [mediaOpen, setMediaOpen] = useState(false);
   const userEditedSlug = useRef(false);
@@ -188,34 +194,38 @@ export default function SeoFields({
           </div>
         </div>
 
-        <div className="space-y-1.5">
-          <Label className="text-sm font-semibold text-slate-600">
-            SEO Keywords
-          </Label>
-          <Textarea
-            value={formData.seoKeyword}
-            onChange={(e) => onFieldChange("seoKeyword", e.target.value)}
-            placeholder="SEO keywords — separate with commas"
-            rows={3}
-          />
-          <p className="text-[10px] text-slate-400">
-            Keywords for search engines (separate with commas).
-          </p>
-        </div>
+        {!hideKeywords && (
+          <div className="space-y-1.5">
+            <Label className="text-sm font-semibold text-slate-600">
+              SEO Keywords
+            </Label>
+            <Textarea
+              value={formData.seoKeyword}
+              onChange={(e) => onFieldChange("seoKeyword", e.target.value)}
+              placeholder="SEO keywords — separate with commas"
+              rows={3}
+            />
+            <p className="text-[10px] text-slate-400">
+              Keywords for search engines (separate with commas).
+            </p>
+          </div>
+        )}
 
-        <div className="space-y-1.5">
-          <Label className="text-sm font-semibold text-slate-600">
-            Canonical URL
-          </Label>
-          <Input
-            value={canonicalUrl}
-            readOnly
-            className="bg-slate-50 text-slate-500"
-          />
-          <p className="text-[10px] text-slate-400">
-            This URL tells Google that this is the original page. Auto-generated from Title/Slug.
-          </p>
-        </div>
+        {!hideCanonical && (
+          <div className="space-y-1.5">
+            <Label className="text-sm font-semibold text-slate-600">
+              Canonical URL
+            </Label>
+            <Input
+              value={canonicalUrl}
+              readOnly
+              className="bg-slate-50 text-slate-500"
+            />
+            <p className="text-[10px] text-slate-400">
+              This URL tells Google that this is the original page. Auto-generated from Title/Slug.
+            </p>
+          </div>
+        )}
 
         <div className="space-y-1.5">
           <Label className="text-sm font-semibold text-slate-600">
@@ -252,68 +262,70 @@ export default function SeoFields({
           </div>
         )}
 
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label className="text-sm font-semibold text-slate-600">
-              Thumbnail Image
-            </Label>
-            {/* Switch: use banner image as thumb */}
-            {bannerImages.length > 0 && (
-              <button
-                type="button"
-                onClick={() => {
-                  const url = bannerImages[0];
-                  onFieldChange("thumbImg", url);
-                  onThumbImgUpload?.(url);
-                }}
-                className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold text-brand-primary border border-brand-primary/30 bg-brand-primary/5 hover:bg-brand-primary/10 rounded-lg transition-colors"
-                title="Use first banner image as thumbnail"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" />
-                </svg>
-                Use Banner Image
-              </button>
-            )}
-          </div>
+        {!hideThumbnail && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-semibold text-slate-600">
+                Thumbnail Image
+              </Label>
+              {/* Switch: use banner image as thumb */}
+              {bannerImages.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const url = bannerImages[0];
+                    onFieldChange("thumbImg", url);
+                    onThumbImgUpload?.(url);
+                  }}
+                  className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold text-brand-primary border border-brand-primary/30 bg-brand-primary/5 hover:bg-brand-primary/10 rounded-lg transition-colors"
+                  title="Use first banner image as thumbnail"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" />
+                  </svg>
+                  Use Banner Image
+                </button>
+              )}
+            </div>
 
-          {formData.thumbImg ? (
-            <div className="relative inline-block">
-              <img
-                src={formData.thumbImg}
-                alt="Thumbnail"
-                className="w-32 h-20 object-cover rounded-lg border"
+            {formData.thumbImg ? (
+              <div className="relative inline-block">
+                <img
+                  src={formData.thumbImg}
+                  alt="Thumbnail"
+                  className="w-32 h-20 object-cover rounded-lg border"
+                />
+                <button
+                  type="button"
+                  onClick={() => onFieldChange("thumbImg", "")}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                >
+                  ×
+                </button>
+              </div>
+            ) : (
+              <p className="text-xs text-slate-400">No thumbnail yet — upload one below or choose from the library.</p>
+            )}
+            <div className="space-y-2">
+              <ImageCropUpload
+                onFileSelect={handleThumbUpload}
+                maxWidth={400}
+                maxHeight={300}
+                outputFormat="image/jpeg"
+                quality={0.85}
+                label={formData.thumbImg ? "Upload / Replace Thumbnail" : "Upload Thumbnail"}
               />
               <button
                 type="button"
-                onClick={() => onFieldChange("thumbImg", "")}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                onClick={() => setMediaOpen(true)}
+                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-brand-primary/40 rounded-xl bg-brand-primary/5 hover:bg-brand-primary/10 transition-colors"
               >
-                ×
+                <Grid3X3 size={16} className="text-brand-primary" />
+                <span className="text-sm font-medium text-brand-primary">Browse Library</span>
               </button>
             </div>
-          ) : (
-            <p className="text-xs text-slate-400">No thumbnail yet — upload one below or choose from the library.</p>
-          )}
-          <div className="space-y-2">
-            <ImageCropUpload
-              onFileSelect={handleThumbUpload}
-              maxWidth={400}
-              maxHeight={300}
-              outputFormat="image/jpeg"
-              quality={0.85}
-              label={formData.thumbImg ? "Upload / Replace Thumbnail" : "Upload Thumbnail"}
-            />
-            <button
-              type="button"
-              onClick={() => setMediaOpen(true)}
-              className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-brand-primary/40 rounded-xl bg-brand-primary/5 hover:bg-brand-primary/10 transition-colors"
-            >
-              <Grid3X3 size={16} className="text-brand-primary" />
-              <span className="text-sm font-medium text-brand-primary">Browse Library</span>
-            </button>
           </div>
-        </div>
+        )}
 
         <MediaLibrary
           open={mediaOpen}

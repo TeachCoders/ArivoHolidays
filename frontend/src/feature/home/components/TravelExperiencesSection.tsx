@@ -8,6 +8,7 @@ import { useGetTravelExperiences } from "@/feature/travelExperience/api/useTrave
 import { useGetJourneys } from "@/feature/journey/api/useJourney";
 import { resolveExperienceTheme, FALLBACK_IMAGE } from "@/feature/travelExperience/theme";
 import { stripHtml } from "@/lib/utils";
+import { FallbackImage } from "@/components/shared/FallbackImage";
 
 export const TravelExperiencesSection: React.FC = () => {
   const { travelExperiences, isLoading } = useGetTravelExperiences({
@@ -29,7 +30,7 @@ export const TravelExperiencesSection: React.FC = () => {
     ).length;
 
   return (
-    <section id="experiences" className="py-20 bg-white">
+    <section id="experiences" className="py-20 bg-white relative shadow-[inset_0_15px_20px_-15px_rgba(0,0,0,0.06)]">
       <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
@@ -71,12 +72,11 @@ export const TravelExperiencesSection: React.FC = () => {
                   className="group relative block overflow-hidden rounded-2xl bg-white border border-[#e5e5e5] shadow-sm hover:shadow-xl transition-all duration-500"
                 >
                   <div className="relative h-48 md:h-52 w-full overflow-hidden">
-                    <img
-                      src={image || FALLBACK_IMAGE}
+                    <FallbackImage
+                      src={image}
                       alt={exp.title}
-                      loading="lazy"
-                      decoding="async"
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      theme="light"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     <div className="absolute top-4 left-4 w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center text-white">

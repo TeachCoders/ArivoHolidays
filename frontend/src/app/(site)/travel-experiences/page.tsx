@@ -12,15 +12,18 @@ import {
   Compass,
   ArrowRight,
   Crown,
+  ChevronRight,
 } from "lucide-react";
 import { stripHtml } from "@/lib/utils";
 import { SERVER_API_BASE } from "@/feature/destinations/api/public-server";
+import { QuoteModal } from "@/components/shared/QuoteModal";
+import FaqSection from "@/feature/home/components/FaqSection";
 
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Travel Experiences | Arivo Holiday",
+    title: "Travel Experiences",
     description:
       "Hand-picked travel experiences across India — honeymoons, heritage, culinary, yoga, nature & more. Book your perfect trip with Arivo Holiday.",
     alternates: { canonical: "/travel-experiences" },
@@ -43,8 +46,9 @@ async function fetchAllJourneys() {
   return json?.data || [];
 }
 
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1488085061387-422e29b40080?q=80&w=1000&auto=format&fit=crop";
+import { FallbackImage } from "@/components/shared/FallbackImage";
+
+const FALLBACK_IMAGE = "";
 
 const THEMES: {
   match: string[];
@@ -54,42 +58,42 @@ const THEMES: {
   {
     match: ["honeymoon", "couple", "romance"],
     icon: <Heart size={20} />,
-    image: "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?q=80&w=1000&auto=format&fit=crop",
+    image: "",
   },
   {
     match: ["heritage", "culture", "historical", "monument"],
     icon: <Landmark size={20} />,
-    image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1000&auto=format&fit=crop",
+    image: "",
   },
   {
     match: ["culinary", "food", "dishes"],
     icon: <UtensilsCrossed size={20} />,
-    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1000&auto=format&fit=crop",
+    image: "",
   },
   {
     match: ["ayurveda", "yoga", "wellness"],
     icon: <Flower2 size={20} />,
-    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1000&auto=format&fit=crop",
+    image: "",
   },
   {
     match: ["taj", "golden triangle"],
     icon: <Landmark size={20} />,
-    image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1000&auto=format&fit=crop",
+    image: "",
   },
   {
     match: ["spiritual", "temple", "pilgrim"],
     icon: <Sparkles size={20} />,
-    image: "https://images.unsplash.com/photo-1599661046827-dacff0c0f09a?q=80&w=1000&auto=format&fit=crop",
+    image: "",
   },
   {
     match: ["nature", "wildlife"],
     icon: <Mountain size={20} />,
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop",
+    image: "",
   },
   {
     match: ["beach", "lake"],
     icon: <Waves size={20} />,
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1000&auto=format&fit=crop",
+    image: "",
   },
 ];
 
@@ -114,23 +118,103 @@ export default async function TravelExperiencesPage() {
       (j.travelExperiences || []).some((e: any) => e.id === id)
     ).length;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://arivoholidays.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Travel Experiences",
+            "item": "https://arivoholidays.com/travel-experiences"
+          }
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "name": "Hand-picked Travel Experiences in India",
+        "numberOfItems": real.length,
+        "itemListElement": real.map((e: any, idx: number) => ({
+          "@type": "ListItem",
+          "position": idx + 1,
+          "name": e.title,
+          "url": `https://arivoholidays.com/travel-experiences/${e.slug}`
+        }))
+      }
+    ]
+  };
+
+  const defaultFaqs = [
+    {
+      question: "What are Travel Experiences at Arivo Holidays?",
+      answer: "Travel Experiences are theme-based tour packages categorized by your trip style — such as Honeymoon, Heritage & Culture, Wellness & Yoga, Wildlife Safaris, and Pilgrimage Tours across India."
+    },
+    {
+      question: "Can I combine two different experiences in a single trip?",
+      answer: "Yes! All our tour itineraries are 100% customizable. You can easily combine experiences like Honeymoon + Wildlife or Heritage + Wellness. Our experts will craft a custom schedule for you."
+    },
+    {
+      question: "How do I get a custom itinerary for a specific experience?",
+      answer: "Simply click 'Plan My Custom Trip' on any experience page or contact our travel experts via WhatsApp or Instant Quote form to receive a detailed day-by-day plan."
+    }
+  ];
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
+      {/* ===== SEO JSON-LD SCHEMA ===== */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      {/* ===== BREADCRUMB (TOP) ===== */}
+      <nav aria-label="Breadcrumb" className="border-b border-slate-200 bg-white shadow-sm">
+        <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 py-3 flex items-center gap-1.5 text-[14px] text-slate-500">
+          <Link href="/" className="hover:text-[#2E8B8B] transition-colors shrink-0 font-medium">
+            Home
+          </Link>
+          <ChevronRight size={14} className="text-slate-300 shrink-0" />
+          <span className="text-[#1C1C1C] font-semibold">Travel Experiences</span>
+        </div>
+      </nav>
+
       <main className="flex-1 px-6 py-12 md:py-16 max-w-[1600px] mx-auto w-full">
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        {/* ===== HERO / HEADER ===== */}
+        <div className="text-center max-w-3xl mx-auto mb-14">
           <span className="accent-label inline-flex items-center gap-1.5">
-            <Sparkles size={12} /> Curated by Arivo
+            <Sparkles size={12} /> Curated Travel Themes
           </span>
-          <h1 className="font-heading text-2xl md:text-4xl font-extrabold text-[#1C1C1C] tracking-tight mt-4 leading-tight">
-            Travel Experiences
+          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#1C1C1C] tracking-tight mt-3 leading-tight">
+            Hand-Crafted Travel Experiences
           </h1>
-          <p className="mt-4 text-slate-500 text-base md:text-lg leading-relaxed">
-            From romantic honeymoons to soulful heritage trails — pick the vibe that matches you and let us craft the perfect trip.
+          <p className="mt-4 text-slate-600 text-base md:text-lg leading-relaxed">
+            From romantic honeymoons to soulful heritage trails and rejuvenating wellness retreats — choose your dream theme and let us design your custom itinerary.
           </p>
+
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <QuoteModal>
+              <button
+                type="button"
+                className="btn-primary px-7 py-3.5 text-sm font-bold tracking-wide flex items-center gap-2 cursor-pointer shadow-lg shadow-[#D4561A]/30 active:scale-95 transition-all"
+              >
+                <Sparkles size={16} />
+                <span>Plan My Custom Trip</span>
+              </button>
+            </QuoteModal>
+          </div>
         </div>
 
+        {/* ===== GRID LISTING ===== */}
         {real.length === 0 ? (
-          <p className="text-center text-slate-500 py-20">No travel experiences yet.</p>
+          <p className="text-center text-slate-500 py-20">No travel experiences found.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {real.map((e: any) => {
@@ -145,12 +229,11 @@ export default async function TravelExperiencesPage() {
                   className="group relative block overflow-hidden rounded-3xl bg-white border border-slate-100 shadow-[0_2px_16px_rgba(0,0,0,0.05)] hover:shadow-[0_24px_60px_rgba(46,139,139,0.18)] hover:-translate-y-1.5 transition-all duration-500"
                 >
                   <div className="relative h-64 md:h-72 w-full overflow-hidden">
-                    <img
+                    <FallbackImage
                       src={image}
                       alt={e.title}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/5" />
                     <div className="absolute top-4 left-4">
@@ -189,6 +272,11 @@ export default async function TravelExperiencesPage() {
             })}
           </div>
         )}
+
+        {/* ===== FAQ SECTION ===== */}
+        <div className="mt-20">
+          <FaqSection faqs={defaultFaqs} />
+        </div>
       </main>
     </div>
   );

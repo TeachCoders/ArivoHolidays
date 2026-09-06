@@ -90,17 +90,31 @@ export function getCountryByCode(code: string): Country | undefined {
 }
 
 export function detectCountryFromIP(): Promise<Country | null> {
+  return detectGeoFromIP().then((geo) => geo?.country || null);
+}
+
+export interface GeoMeta {
+  ip: string;
+  country: Country | null;
+  location: string;
+}
+
+export function detectGeoFromIP(): Promise<GeoMeta | null> {
   return fetch("https://api.ipify.org?format=json")
     .then((res) => res.json())
     .then((ipData) => {
-      if (!ipData.ip) return null;
-      return fetch(`https://ipapi.co/${ipData.ip}/json/`)
+      const ip = ipData?.ip;
+      if (!ip) return null;
+      return fetch(`https://ipapi.co/${ip}/json/`)
         .then((res) => res.json())
         .then((geo) => {
-          const country = getCountryByCode(geo.country_code);
-          return country || null;
+          if (!geo || geo.error || !geo.country_code) return { ip, country: null, location: "" };
+          const country = getCountryByCode(geo.country_code) || null;
+          const cityRegion = [geo.city, geo.region].filter(Boolean).join(", ");
+          const location = country && cityRegion ? `${cityRegion} (${country.name})` : cityRegion;
+          return { ip, country, location };
         })
-        .catch(() => null);
+        .catch(() => ({ ip, country: null, location: "" }));
     })
     .catch(() => null);
 }
@@ -108,4 +122,13 @@ export function detectCountryFromIP(): Promise<Country | null> {
 export function stripDialCode(phone: string, dialCode: string): string {
   const stripped = phone.replace(new RegExp(`^\\s*\\${dialCode}`), "").trim();
   return stripped === phone ? phone.replace(/^\+?\d[\d\s-]*/, "").trim() : stripped;
+}
+
+export function getCountryFlagEmoji(countryCode: string): string {
+  if (!countryCode || countryCode.length !== 2) return "🌐";
+  const codePoints = countryCode
+    .toUpperCase()
+    .split("")
+    .map((char) => 127397 + char.charCodeAt(0));
+  return String.fromCodePoint(...codePoints);
 }

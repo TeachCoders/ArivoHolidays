@@ -187,7 +187,7 @@ export default function SeasonClient() {
                   </td>
                   <td className="px-4 py-3">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{season.title}</p>
+                      <p className="text-sm font-medium text-gray-900">{season.seoTitle || "-"}</p>
 
                     </div>
                   </td>

@@ -20,6 +20,11 @@ export default function ReplayPlayer({ replay }: ReplayPlayerProps) {
     let disposed = false;
     const host = playerHostRef.current;
 
+    if (!replay.events || replay.events.length < 2) {
+      setReady(false);
+      return;
+    }
+
     (async () => {
       const [{ default: RRWebPlayer }] = await Promise.all([
         import("rrweb-player"),
@@ -63,16 +68,23 @@ export default function ReplayPlayer({ replay }: ReplayPlayerProps) {
     URL.revokeObjectURL(url);
   };
 
+  const hasEnoughEvents = !!replay.events && replay.events.length >= 2;
+
   return (
     <div className="space-y-3">
       <div
         ref={playerHostRef}
         className="mx-auto w-full overflow-hidden rounded-md border bg-slate-900 [&>*]:mx-auto"
-        style={{ minHeight: 420 }}
+        style={{ minHeight: hasEnoughEvents ? 420 : undefined }}
       />
-      {!ready && (
+      {hasEnoughEvents && !ready && (
         <p className="text-center text-sm text-gray-500 animate-pulse">
           Loading replay…
+        </p>
+      )}
+      {!hasEnoughEvents && (
+        <p className="text-center text-sm text-gray-500">
+          Not enough activity recorded to replay this session.
         </p>
       )}
       <div className="flex items-center justify-between text-xs text-gray-500">

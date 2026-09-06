@@ -219,7 +219,8 @@ function TravellerInfoTable({ lead, SERVICE_LABELS }: { lead: any; SERVICE_LABEL
   const rows: { label: string; value: React.ReactNode }[] = [
     { label: "Lead ID", value: <span key="lid" className="font-mono text-xs">{lead.travellerId || "---"}</span> },
     { label: "Page Reference", value: lead.pageReference ? <a key="pref" href={lead.pageReference} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline break-all text-xs">{lead.pageReference}</a> : "---" },
-    { label: "IP Address", value: lead.countryId ? <a key="ip" href={`https://ipinfo.io/${lead.countryId}/json`} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline font-mono text-xs">{lead.countryId}</a> : "---" },
+    { label: "IP Address", value: (lead.ipAddress || (typeof lead.countryId === "string" && (lead.countryId.includes(".") || lead.countryId.includes(":")) ? lead.countryId : "")) ? <a key="ip" href={`https://ipinfo.io/${lead.ipAddress || lead.countryId}/json`} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline font-mono text-xs">{lead.ipAddress || lead.countryId}</a> : "---" },
+    { label: "Filled From (Location)", value: <span key="fl" className="text-xs">{lead.location || lead.country || "---"}</span> },
     { label: "Traveller Name", value: lead.name || "---" },
     { label: "Traveller Email", value: lead.email || "---" },
     { label: "Traveller Mobile", value: lead.phone || "---" },

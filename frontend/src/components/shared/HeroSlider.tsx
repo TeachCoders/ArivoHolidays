@@ -11,23 +11,33 @@ interface HeroSliderProps {
 }
 
 export default function HeroSlider({ images, alt = "", interval = 5000 }: HeroSliderProps) {
+  const validImages = (images || []).filter(
+    (img) =>
+      img &&
+      !img.includes("unsplash.com") &&
+      !img.includes("via.placeholder.com") &&
+      !img.includes("placeholder.com")
+  );
+
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % images.length);
-  }, [images.length]);
+    if (validImages.length === 0) return;
+    setCurrent((prev) => (prev + 1) % validImages.length);
+  }, [validImages.length]);
 
   const prev = useCallback(() => {
-    setCurrent((prev) => (prev - 1 + images.length) % images.length);
-  }, [images.length]);
+    if (validImages.length === 0) return;
+    setCurrent((prev) => (prev - 1 + validImages.length) % validImages.length);
+  }, [validImages.length]);
 
   useEffect(() => {
-    if (images.length <= 1) return;
+    if (validImages.length <= 1) return;
     const timer = setInterval(next, interval);
     return () => clearInterval(timer);
-  }, [images.length, interval, next]);
+  }, [validImages.length, interval, next]);
 
-  if (images.length === 0) return null;
+  if (validImages.length === 0) return null;
 
   return (
     <div className="absolute inset-0 overflow-hidden">
@@ -35,7 +45,7 @@ export default function HeroSlider({ images, alt = "", interval = 5000 }: HeroSl
         className="absolute inset-0 flex transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${current * 100}%)` }}
       >
-        {images.map((img, i) => (
+        {validImages.map((img, i) => (
           <div key={i} className="relative w-full h-full shrink-0">
             <Image
               src={img}
@@ -49,7 +59,7 @@ export default function HeroSlider({ images, alt = "", interval = 5000 }: HeroSl
         ))}
       </div>
 
-      {images.length > 1 && (
+      {validImages.length > 1 && (
         <>
           <button
             onClick={prev}

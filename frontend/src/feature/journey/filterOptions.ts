@@ -1,10 +1,7 @@
 import type { Journey } from "@/feature/journey/type";
 
 export function journeyPackageHref(journey: Journey): string {
-  const countrySlug = journey.cities?.[0]?.state?.country?.slug;
-  return countrySlug
-    ? `/${countrySlug}/tour-packages/${journey.slug}`
-    : `/tour-packages/${journey.slug}`;
+  return `/tour-packages/${journey.slug}`;
 }
 
 export const DURATION_BUCKETS = [
@@ -71,3 +68,28 @@ export function journeyMatchesCities(j: Journey, selected: string[]) {
   const ids = new Set((j.cities ?? []).map((c) => String(c.id)));
   return selected.some((id) => ids.has(id));
 }
+
+export function seasonOptions(journeys: Journey[]) {
+  const map = new Map<string, { value: string; label: string; count: number }>();
+  for (const j of journeys) {
+    for (const m of j.months ?? []) {
+      const label = m.season ? `${m.title} (${m.season})` : m.title;
+      const entry = map.get(m.title);
+      if (entry) entry.count += 1;
+      else map.set(m.title, { value: m.title, label, count: 1 });
+    }
+  }
+  return [...map.values()].sort((a, b) => b.count - a.count);
+}
+
+export function journeyMatchesSeasons(j: Journey, selected: string[]) {
+  if (selected.length === 0) return true;
+  const seasonsAndMonths = new Set<string>();
+  for (const m of j.months ?? []) {
+    seasonsAndMonths.add(m.title.toLowerCase());
+    if (m.season) seasonsAndMonths.add(m.season.toLowerCase());
+    if (m.slug) seasonsAndMonths.add(m.slug.toLowerCase());
+  }
+  return selected.some((s) => seasonsAndMonths.has(s.toLowerCase()));
+}
+

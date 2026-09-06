@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Clock, MapPin, CheckCircle, ArrowRight, Star } from "lucide-react";
 import { travelExperienceIcon } from "@/components/shared/TravelExperiencePills";
+import { FallbackImage } from "@/components/shared/FallbackImage";
 
 export interface PackageCardItem {
   title: string;
@@ -36,17 +37,13 @@ export default function PackageCard({ item }: { item: PackageCardItem }) {
       className="group rounded-xl bg-white border border-brand-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden"
     >
       <div className="relative w-full h-52 overflow-hidden bg-brand-100">
-        {image ? (
-          <Image
-            src={image}
-            alt={title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-brand-teal to-brand-navy" />
-        )}
+        <FallbackImage
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          fallbackSrc="/logo-with-name.png"
+          theme="light"
+        />
 
         {duration && (
           <div className="absolute top-3 left-3 text-white text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1.5 bg-brand-navy/80 backdrop-blur-sm">

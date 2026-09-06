@@ -1,4 +1,5 @@
 import { guardSuperAdmin } from '@/lib/authGuard';
+import AnalyticsLayout from '@/components/analytics/AnalyticsLayout';
 import AnalyticsClient from '@/components/AnalyticsClient';
 
 /**
@@ -8,5 +9,12 @@ import AnalyticsClient from '@/components/AnalyticsClient';
  */
 export default async function AnalyticsPage() {
   await guardSuperAdmin();
-  return <AnalyticsClient />;
+  return (
+    <AnalyticsLayout
+      title="Overview"
+      subtitle="Sessions, lead flow, friction and live visitor activity"
+    >
+      <AnalyticsClient />
+    </AnalyticsLayout>
+  );
 }

@@ -116,7 +116,9 @@ export default function CarRequirementsForm({ leadId, lead }: Props) {
   const { mutate: sendEmailReq, isPending: sendingEmail } = useSendRequirementsEmailMutation();
   const { mutate: markReqSent } = useMarkRequirementsSentMutation();
   const requirementsUrl = `${API_BASE}/traveller-lead/${leadId}/requirements-preview`;
-  const waFooter = `\n\n📄 View full details: ${requirementsUrl}`;
+  const passwordText = lead?.defaultPassword ? `\n🔑 Password: ${lead.defaultPassword}` : "";
+  const portalLoginUrl = process.env.NEXT_PUBLIC_BOOKING_PORTAL_URL || "https://arivoholidays.com/my-trips";
+  const waFooter = `\n\n🆔 Traveller ID: ${lead?.travellerId || ""}${passwordText}\n🌐 Portal Login: ${portalLoginUrl}\n📄 View Details: ${requirementsUrl}`;
 
   // ─── VIEW MODE ────────────────────────────────────────────────────
   if (!isEditMode && hasData) {

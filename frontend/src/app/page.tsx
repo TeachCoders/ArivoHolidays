@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import type { State, PaginatedResponse as StatePage } from "@/feature/state/type";
 import type { City, PaginatedResponse as CityPage } from "@/feature/city/type";
 import type { Journey, PaginatedResponse as JourneyPage } from "@/feature/journey/type";
+import type { Season, PaginatedResponse as SeasonPage } from "@/feature/season/type";
 
 export const revalidate = 60;
 
@@ -21,10 +22,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [initialStates, initialCities, initialJourneys] = await Promise.all([
+  const [initialStates, initialCities, initialJourneys, initialSeasons] = await Promise.all([
     fetchPublicJson<StatePage<State>>("/state?limit=100&isActive=true"),
     fetchPublicJson<CityPage<City>>("/city?limit=1000&isActive=true"),
     fetchPublicJson<JourneyPage<Journey>>("/journey?limit=100&isActive=true"),
+    fetchPublicJson<SeasonPage<Season>>("/season?limit=100&isActive=true"),
   ]);
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-zinc-950 font-sans">
@@ -35,6 +37,7 @@ export default async function Home() {
           initialStates={initialStates}
           initialCities={initialCities}
           initialJourneys={initialJourneys}
+          initialSeasons={initialSeasons}
         />
       </main>
       <Footer />

@@ -24,6 +24,7 @@ export interface Season {
   isActive: boolean;
   displayOrder?: number;
   banner?: Banner | null;
+  faqs?: { id?: number; ques: string; ans: string }[];
 }
 
 export interface SeasonPayload {
@@ -46,6 +47,7 @@ export interface SeasonPayload {
   bannerTitle?: string;
   bannerTag?: string;
   bannerImages?: string[];
+  faqs?: { ques: string; ans: string }[];
 }
 
 export interface PaginatedResponse<T> {

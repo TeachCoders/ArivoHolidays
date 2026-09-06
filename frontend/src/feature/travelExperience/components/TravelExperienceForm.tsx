@@ -9,6 +9,7 @@ import FormActionButton from "@/components/shared/customBtns";
 import SeoFields from "@/components/shared/SeoFields";
 import BannerSection from "@/components/shared/BannerSection";
 import RichTextEditor from "@/components/shared/RichTextEditor";
+import FaqEditor, { FaqData } from "@/components/shared/FaqEditor";
 import {
   useCreateTravelExperience,
   useUpdateTravelExperience,
@@ -53,7 +54,32 @@ export default function TravelExperienceForm({ initialData, mode }: TravelExperi
   const [bannerImages, setBannerImages] = useState<string[]>(initialData?.banner?.images || []);
   const [bannerFiles, setBannerFiles] = useState<{ file: File; index: number }[]>([]);
   const [moreDescription, setMoreDescription] = useState(initialData?.moreDescription || "");
+  const [faqs, setFaqs] = useState<FaqData[]>(initialData?.faqs || []);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const initializedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (initialData && !initializedRef.current) {
+      initializedRef.current = true;
+      setFormData({
+        title: initialData.title || "",
+        slug: initialData.slug || "",
+        seoDescription: initialData.seoDescription || "",
+        overView: initialData.overView || "",
+        seoKeyword: initialData.seoKeyword || "",
+        seoTitle: initialData.seoTitle || "",
+        h1Title: initialData.h1Title || "",
+        thumbImg: initialData.thumbImg || "",
+        isActive: initialData.isActive ?? true,
+      });
+      setBannerTile(initialData.banner?.bannerTitle || "");
+      setBannerTag(initialData.banner?.bannerTag || "");
+      setBannerImages(initialData.banner?.images || []);
+      setMoreDescription(initialData.moreDescription || "");
+      setFaqs(initialData.faqs || []);
+    }
+  }, [initialData]);
 
   const isLoading = isCreating || isUpdating;
 
@@ -117,6 +143,7 @@ export default function TravelExperienceForm({ initialData, mode }: TravelExperi
       bannerTag: bannerTag.trim() || undefined,
       bannerImages: finalBannerImages.length > 0 ? finalBannerImages : undefined,
       moreDescription: moreDescription.trim() || undefined,
+      faqs,
     };
 
     if (mode === "edit" && initialData?.id) {
@@ -185,6 +212,8 @@ export default function TravelExperienceForm({ initialData, mode }: TravelExperi
           <label className="text-sm font-bold text-slate-700 uppercase tracking-wider block mb-2">More Description</label>
           <RichTextEditor content={moreDescription} onChange={(html) => setMoreDescription(html)} />
         </div>
+
+        <FaqEditor faqs={faqs} setFaqs={setFaqs} />
 
         <div className="flex items-center justify-between gap-3 pb-8">
           <label className="flex items-center gap-2 text-sm font-semibold text-slate-600">

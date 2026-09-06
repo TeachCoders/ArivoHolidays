@@ -14,8 +14,8 @@ export default function StateCard({
   const journeys = journeyCount ?? state.journeys?.length ?? 0;
   const country = countrySlug ?? state.country?.slug;
   const href = country
-    ? `/${country}/${state.slug}`
-    : `/${state.slug}`;
+    ? `/tour-packages/${country}/${state.slug}`
+    : `/tour-packages/${state.slug}`;
 
   return (
     <DestinationCard
@@ -23,9 +23,9 @@ export default function StateCard({
       image={state.thumbImg}
       subtitle={
         <span className="inline-flex items-center justify-center gap-1.5">
-          <span>{cities} Cities</span>
+          <span>{cities} {cities === 1 ? "City" : "Cities"}</span>
           <span className="opacity-60">•</span>
-          <span>{journeys} Tours</span>
+          <span>{journeys} {journeys === 1 ? "Tour" : "Tours"}</span>
         </span>
       }
       href={href}

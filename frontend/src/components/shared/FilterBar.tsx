@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { Check, ChevronDown, X, SlidersHorizontal } from "lucide-react";
 import * as Popover from "@radix-ui/react-popover";
 import { cn } from "@/lib/utils";
@@ -68,6 +68,13 @@ function FilterSelect({ section: s }: { section: FilterSection }) {
   const [open, setOpen] = useState(false);
   const selectedCount = s.selected.length;
 
+  useEffect(() => {
+    if (!open) return;
+    const handleScroll = () => setOpen(false);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [open]);
+
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
@@ -105,7 +112,7 @@ function FilterSelect({ section: s }: { section: FilterSection }) {
         <Popover.Content
           align="start"
           sideOffset={8}
-          className="z-50 w-64 rounded-2xl bg-white p-0 outline-none ring-1 ring-slate-200/70 shadow-lg"
+          className="z-40 min-w-[300px] sm:min-w-[340px] max-w-[420px] w-auto rounded-2xl bg-white p-0 outline-none ring-1 ring-slate-200/70 shadow-xl border border-slate-100"
         >
           <div className="flex items-center justify-between px-4 py-3.5 border-b border-slate-100">
             <span className="text-sm font-bold text-[#1C1C1C] flex items-center gap-2">
@@ -123,7 +130,7 @@ function FilterSelect({ section: s }: { section: FilterSection }) {
             )}
           </div>
 
-          <div className="max-h-64 overflow-y-auto p-2 space-y-0.5">
+          <div className="max-h-72 overflow-y-auto p-2 space-y-0.5">
             {s.options.length === 0 && (
               <p className="text-xs text-[#999] px-3 py-2">No options available</p>
             )}
@@ -139,13 +146,13 @@ function FilterSelect({ section: s }: { section: FilterSection }) {
                     s.onChange(next);
                   }}
                   className={cn(
-                    "flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-sm cursor-pointer transition-colors",
+                    "flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-sm cursor-pointer transition-colors",
                     checked
                       ? "bg-slate-50 text-[#1C1C1C] font-semibold"
                       : "text-[#555] hover:bg-slate-50"
                   )}
                 >
-                  <span className="flex items-center gap-2.5 min-w-0">
+                  <span className="flex items-center gap-2.5 min-w-0 pr-2">
                     <span
                       className={cn(
                         "flex items-center justify-center w-[18px] h-[18px] rounded border transition-colors shrink-0",
@@ -154,10 +161,10 @@ function FilterSelect({ section: s }: { section: FilterSection }) {
                     >
                       {checked && <Check size={11} strokeWidth={3.5} />}
                     </span>
-                    <span className="truncate">{opt.label}</span>
+                    <span className="text-sm font-medium leading-snug whitespace-normal">{opt.label}</span>
                   </span>
                   {opt.count !== undefined && (
-                    <span className="text-[11px] font-semibold text-slate-400 tabular-nums">
+                    <span className="text-[11px] font-semibold text-slate-400 tabular-nums shrink-0 ml-auto">
                       {opt.count}
                     </span>
                   )}

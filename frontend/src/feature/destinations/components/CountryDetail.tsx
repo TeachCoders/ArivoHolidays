@@ -2,7 +2,7 @@
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   MapPin,
   ChevronRight,
@@ -10,6 +10,7 @@ import {
   Sparkles,
   ArrowRight,
   CalendarDays,
+  Sun,
   Building2,
   Languages,
   Coins,
@@ -22,21 +23,31 @@ import { useGetStates } from "@/feature/state/api/useState";
 import { useGetJourneys } from "@/feature/journey/api/useJourney";
 import DestinationSlider, { useSliderControl } from "@/components/shared/DestinationSlider";
 import HeroSlider from "@/components/shared/HeroSlider";
+import { FallbackImage } from "@/components/shared/FallbackImage";
 import RichContent from "@/components/shared/RichContent";
 import ToursSection from "@/components/shared/ToursSection";
 import FilterBar from "@/components/shared/FilterBar";
 import {
   travelExperienceOptions,
   durationOptions,
+  seasonOptions,
   journeyMatchesExperiences,
   journeyMatchesDuration,
+  journeyMatchesSeasons,
   journeyPackageHref,
 } from "@/feature/journey/filterOptions";
 import type { Country } from "@/feature/country/type";
 import type { State, PaginatedResponse as StatePage } from "@/feature/state/type";
 import type { Journey, PaginatedResponse as JourneyPage } from "@/feature/journey/type";
+import { QuoteModal } from "@/components/shared/QuoteModal";
 import StateCard from "./StateCard";
 import DestinationsSkeleton from "./DestinationsSkeleton";
+import FaqSection from "@/feature/home/components/FaqSection";
+
+function stripHtml(html?: string): string {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
 
 export default function CountryDetail({
   slug,
@@ -103,19 +114,62 @@ function CountryContent({
     ? states
     : states.filter((s) => journeyCountForState(s.id) > 0);
 
+  const [selectedStates, setSelectedStates] = useState<string[]>([]);
+  const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [expSelected, setExpSelected] = useState<string[]>([]);
+  const [seasonSelected, setSeasonSelected] = useState<string[]>([]);
   const [durSelected, setDurSelected] = useState<string[]>([]);
 
-  const filteredJourneys = countryJourneys.filter(
-    (j) =>
-      journeyMatchesExperiences(j, expSelected) &&
-      journeyMatchesDuration(j, durSelected)
-  );
+  const stateOptionsList = useMemo(() => {
+    const map = new Map<string, { value: string; label: string; count: number }>();
+    for (const s of displayedStates) {
+      const count = journeyCountForState(s.id);
+      if (count > 0) {
+        map.set(s.title, { value: s.title, label: s.title, count });
+      }
+    }
+    return [...map.values()].sort((a, b) => a.label.localeCompare(b.label));
+  }, [displayedStates, countryJourneys]);
 
-  const activeFilterCount = expSelected.length + durSelected.length;
+  const cityOptionsList = useMemo(() => {
+    const map = new Map<string, { value: string; label: string; count: number }>();
+    for (const j of countryJourneys) {
+      for (const c of j.cities ?? []) {
+        const entry = map.get(c.slug);
+        if (entry) entry.count += 1;
+        else map.set(c.slug, { value: c.slug, label: c.title, count: 1 });
+      }
+    }
+    return [...map.values()].sort((a, b) => b.count - a.count);
+  }, [countryJourneys]);
+
+  const filteredJourneys = countryJourneys.filter((j) => {
+    if (selectedStates.length > 0) {
+      const st = j.cities?.[0]?.state?.title;
+      if (!st || !selectedStates.includes(st)) return false;
+    }
+    if (selectedCities.length > 0) {
+      const slugs = new Set(selectedCities);
+      if (!(j.cities ?? []).some((c) => slugs.has(c.slug))) return false;
+    }
+    if (!journeyMatchesExperiences(j, expSelected)) return false;
+    if (!journeyMatchesSeasons(j, seasonSelected)) return false;
+    if (!journeyMatchesDuration(j, durSelected)) return false;
+    return true;
+  });
+
+  const activeFilterCount =
+    selectedStates.length +
+    selectedCities.length +
+    expSelected.length +
+    seasonSelected.length +
+    durSelected.length;
 
   const clearFilters = () => {
+    setSelectedStates([]);
+    setSelectedCities([]);
     setExpSelected([]);
+    setSeasonSelected([]);
     setDurSelected([]);
   };
 
@@ -143,6 +197,21 @@ function CountryContent({
     <FilterBar
       sections={[
         {
+          id: "state",
+          title: "State",
+          options: stateOptionsList,
+          selected: selectedStates,
+          onChange: setSelectedStates,
+        },
+        {
+          id: "city",
+          title: "Destination",
+          icon: <MapPin size={14} />,
+          options: cityOptionsList,
+          selected: selectedCities,
+          onChange: setSelectedCities,
+        },
+        {
           id: "experience",
           title: "Travel Experience",
           icon: <Sparkles size={14} />,
@@ -151,8 +220,16 @@ function CountryContent({
           onChange: setExpSelected,
         },
         {
-          id: "days",
-          title: "Days",
+          id: "season",
+          title: "Best Season / Month",
+          icon: <Sun size={14} />,
+          options: seasonOptions(countryJourneys),
+          selected: seasonSelected,
+          onChange: setSeasonSelected,
+        },
+        {
+          id: "duration",
+          title: "Duration",
           icon: <CalendarDays size={14} />,
           options: durationOptions(countryJourneys),
           selected: durSelected,
@@ -166,51 +243,123 @@ function CountryContent({
     />
   );
 
+  const graphNodes: any[] = [
+    {
+      "@type": "TouristDestination",
+      "name": displayTitle,
+      "description": stripHtml(country.seoDescription || country.overView || ""),
+      "image": heroImages[0] || country.thumbImg
+    },
+    {
+      "@type": "ItemList",
+      "name": `Top Tour Packages in ${displayTitle}`,
+      "itemListElement": countryJourneys.slice(0, 10).map((j, idx) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "name": j.title.split("|")[0].trim(),
+        "url": `https://arivoholidays.com${journeyPackageHref(j)}`
+      }))
+    }
+  ];
+
+  if (country.faqs && country.faqs.length > 0) {
+    graphNodes.push({
+      "@type": "FAQPage",
+      "mainEntity": country.faqs.map((f) => ({
+        "@type": "Question",
+        "name": stripHtml(f.ques),
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": stripHtml(f.ans)
+        }
+      }))
+    });
+  }
+
+  const countryJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": graphNodes
+  };
+
   return (
     <div>
+      {/* ===== SEO JSON-LD SCHEMA ===== */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(countryJsonLd),
+        }}
+      />
+
       {/* ===== HERO ===== */}
-      <section className="relative h-[480px] md:h-[560px] overflow-hidden bg-slate-900">
+      <section className="relative h-[460px] md:h-[520px] overflow-hidden bg-slate-900">
         {heroImages.length > 0 ? (
-          <HeroSlider images={heroImages} alt={displayTitle} />
+          <>
+            <HeroSlider images={heroImages} alt={displayTitle} />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-slate-950/20" />
+          </>
         ) : (
-          <div className="absolute inset-0 w-full h-full bg-slate-900 flex items-center justify-center">
-            <img src="/logo.png" alt="Arivo Holidays" className="w-48 h-48 opacity-10 object-contain grayscale" />
+          <div className="absolute inset-0">
+            <FallbackImage
+              src={country.thumbImg || country.banner?.images?.[0]}
+              alt={displayTitle}
+              fill
+              priority
+              className="object-cover object-center"
+              theme="dark"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-slate-950/30" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/20" />
 
-        <div className="relative z-10 max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 h-full flex flex-col justify-between py-8">
-          <div className="flex-1 flex flex-col items-center justify-center text-center">
-            {heroTag && (
-              <p className="max-w-2xl mx-auto mb-1 text-base sm:text-lg font-bold tracking-wider uppercase text-white leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
-                {heroTag}
-              </p>
-            )}
+        <div className="relative z-10 max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 h-full flex flex-col justify-center items-center py-8 text-center">
+          {heroTag && (
+            <p className="max-w-2xl mx-auto mb-2 text-base sm:text-lg font-bold tracking-wider uppercase text-white/90 leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+              {heroTag}
+            </p>
+          )}
 
-            <h2 className="font-heading text-5xl md:text-6xl lg:text-7xl font-black uppercase text-white leading-tight tracking-wider drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
-              {heroTitle}
-            </h2>
+          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase text-white leading-tight tracking-wider drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
+            {heroTitle}
+          </h1>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-              <a href="#tours" className="btn-primary px-7 py-3 text-sm font-medium tracking-wide flex items-center gap-2">
-                Explore Tours
-                <ArrowRight size={16} />
-              </a>
-              <a href="#more" className="px-7 py-3 text-sm font-medium tracking-wide rounded-xl border border-white/30 text-white bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-200">
-                About {displayTitle}
-              </a>
-            </div>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            <QuoteModal>
+              <button
+                type="button"
+                className="btn-primary px-7 py-3.5 text-sm font-bold tracking-wide flex items-center gap-2 cursor-pointer shadow-lg shadow-[#D4561A]/30 active:scale-95 transition-all"
+              >
+                <Sparkles size={16} />
+                <span>Plan My {displayTitle} Trip</span>
+              </button>
+            </QuoteModal>
+
+            <a href="#tours" className="px-6 py-3.5 text-sm font-bold tracking-wide rounded-xl border border-white/40 text-white bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-200 flex items-center gap-2">
+              <span>Explore Packages</span>
+              <ArrowRight size={16} />
+            </a>
+
+            <a href="#more" className="px-6 py-3.5 text-sm font-medium tracking-wide rounded-xl border border-white/20 text-white/80 bg-black/20 backdrop-blur-md hover:bg-white/10 transition-all duration-200">
+              About {displayTitle}
+            </a>
           </div>
-
-          <nav className="flex flex-wrap items-center justify-center gap-1.5 text-white/70 text-sm pt-6">
-            <Link href="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <ChevronRight size={14} />
-            <span className="text-white/95">{displayTitle}</span>
-          </nav>
         </div>
       </section>
+
+      {/* ===== BREADCRUMB (BELOW HERO) ===== */}
+      <nav aria-label="Breadcrumb" className="border-b border-slate-200 bg-slate-50 shadow-sm">
+        <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 py-3 flex flex-wrap items-center gap-1.5 text-[14px] text-slate-500">
+          <Link href="/" className="hover:text-[#2E8B8B] transition-colors shrink-0 font-medium">
+            Home
+          </Link>
+          <ChevronRight size={14} className="text-slate-300 shrink-0" />
+          <Link href="/tour-packages" className="hover:text-[#2E8B8B] transition-colors shrink-0 font-medium">
+            Tour Packages
+          </Link>
+          <ChevronRight size={14} className="text-slate-300 shrink-0" />
+          <span className="text-[#1C1C1C] font-semibold">{displayTitle}</span>
+        </div>
+      </nav>
 
       {/* ===== SHORT DESCRIPTION + TOURS ===== */}
       <ToursSection
@@ -219,8 +368,7 @@ function CountryContent({
         h1Title={country.h1Title}
         overView={country.overView ?? undefined}
         emptyLabel={`No tours found in ${displayTitle} yet`}
-        showCount={3}
-        filterBar={countryJourneys.length > 1 ? filterBar : undefined}
+        filterBar={countryJourneys.length > 0 ? filterBar : undefined}
         onClearFilters={clearFilters}
       />
 
@@ -237,7 +385,7 @@ function CountryContent({
               </span>
             </h2>
           </div>
-          {!statesLoading && !journeysLoading && canScroll && displayedStates.length > 1 && (
+          {!statesLoading && !journeysLoading && displayedStates.length > 4 && canScroll && (
             <div className="flex items-center gap-2">
               <button
                 onClick={slidePrev}
@@ -263,6 +411,17 @@ function CountryContent({
           <div className="text-center py-14">
             <MapPin size={40} className="mx-auto text-slate-300 mb-3" />
             <p className="text-slate-500">No states with tours found in {displayTitle}</p>
+          </div>
+        ) : displayedStates.length <= 4 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {displayedStates.map((s) => (
+              <StateCard
+                key={s.id}
+                state={s}
+                countrySlug={country.slug}
+                journeyCount={journeyCountForState(s.id)}
+              />
+            ))}
           </div>
         ) : (
           <DestinationSlider
@@ -307,7 +466,7 @@ function CountryContent({
               )}
             </div>
 
-            <aside className="space-y-6 lg:sticky lg:top-24 self-start">
+            <aside className="space-y-6 lg:sticky lg:top-28 z-10 self-start">
               {facts.length > 0 && (
                 <div className="rounded-2xl border border-slate-100 bg-white p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                   <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#2E8B8B] mb-5">
@@ -355,9 +514,22 @@ function CountryContent({
                             <span className="mt-[2px] w-[26px] h-[26px] shrink-0 rounded-full bg-slate-100 text-[#1C1C1C] text-[11px] font-black flex items-center justify-center group-hover:bg-[#2E8B8B] group-hover:text-white transition-colors shadow-sm">
                               {i + 1}
                             </span>
-                            <span className="text-[15px] font-bold text-[#333] leading-snug group-hover:text-[#1C1C1C] transition-colors">
-                              {j.title}
-                            </span>
+                            <div className="flex-1 min-w-0">
+                              <span className="text-[14.5px] font-bold text-[#333] leading-snug group-hover:text-[#2E8B8B] transition-colors block truncate">
+                                {j.title.split("|")[0].trim()}
+                              </span>
+                              <div className="flex items-center gap-2 mt-0.5 text-[11.5px] font-semibold text-slate-500">
+                                <span>{j.duration || (j.noDays > 0 ? `${j.noDays} Days` : "")}</span>
+                                {((j.discountPrice ?? 0) > 0 || (j.pricePerPerson ?? 0) > 0) ? (
+                                  <>
+                                    <span>•</span>
+                                    <span className="text-[#D4561A] font-extrabold">
+                                      ₹{((j.discountPrice || j.pricePerPerson) as number).toLocaleString("en-IN")}
+                                    </span>
+                                  </>
+                                ) : null}
+                              </div>
+                            </div>
                           </Link>
                         </li>
                       ))}
@@ -368,6 +540,9 @@ function CountryContent({
           </div>
         </div>
       </section>
+
+      {/* ===== FAQ SECTION ===== */}
+      <FaqSection faqs={country.faqs} />
     </div>
   );
 }

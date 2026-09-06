@@ -162,7 +162,7 @@ export const AllDestinations: React.FC<AllDestinationsProps> = ({
                       )}
                     </div>
                     <Link
-                      href={`/${country.slug}`}
+                      href={`/tour-packages/${country.slug}`}
                       className="hidden sm:flex items-center gap-2 text-sm font-bold text-[#D4561A] hover:text-[#b34713] transition-colors group"
                     >
                       Explore Country
@@ -182,10 +182,10 @@ export const AllDestinations: React.FC<AllDestinationsProps> = ({
                           {/* State Header */}
                           <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-100">
                             <div className="flex items-center gap-4">
-                              <Link href={`/${country.slug}/${state.slug}`} className="w-14 h-14 rounded-xl bg-orange-50 border border-orange-100 text-[#D4561A] hover:bg-[#D4561A] hover:text-white transition-colors duration-300 flex items-center justify-center shrink-0">
+                              <Link href={`/tour-packages/${country.slug}/${state.slug}`} className="w-14 h-14 rounded-xl bg-orange-50 border border-orange-100 text-[#D4561A] hover:bg-[#D4561A] hover:text-white transition-colors duration-300 flex items-center justify-center shrink-0">
                                  <Building2 className="w-6 h-6" />
                               </Link>
-                              <Link href={`/${country.slug}/${state.slug}`}>
+                              <Link href={`/tour-packages/${country.slug}/${state.slug}`}>
                                 <h3 className="text-2xl font-bold text-[#1C1C1C] hover:text-[#D4561A] transition-colors">
                                   {state.title}
                                 </h3>
@@ -193,7 +193,7 @@ export const AllDestinations: React.FC<AllDestinationsProps> = ({
                             </div>
                             
                             <Link 
-                                href={`/${country.slug}/${state.slug}`}
+                                href={`/tour-packages/${country.slug}/${state.slug}`}
                                 className="btn-primary hidden sm:inline-flex group items-center justify-center gap-2 px-6 py-2.5 text-[14px]"
                             >
                                 View Tour Packages 
@@ -208,7 +208,7 @@ export const AllDestinations: React.FC<AllDestinationsProps> = ({
                                 {stateCities.map((city) => (
                                   <Link
                                     key={city.id}
-                                    href={`/${country.slug}/${state.slug}/${city.slug}`}
+                                    href={`/tour-packages/${country.slug}/${state.slug}/${city.slug}`}
                                     className="group/city relative rounded-2xl md:rounded-[20px] overflow-hidden aspect-[4/3] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 block bg-slate-100"
                                   >
                                     {city.thumbImg ? (
@@ -252,7 +252,7 @@ export const AllDestinations: React.FC<AllDestinationsProps> = ({
                             {/* Mobile View State Link */}
                             <div className="mt-8 sm:hidden">
                                <Link 
-                                  href={`/${country.slug}/${state.slug}`}
+                                  href={`/tour-packages/${country.slug}/${state.slug}`}
                                   className="btn-primary flex items-center justify-center w-full gap-2 text-[15px] py-4"
                                >
                                  View {state.title} Packages
@@ -271,7 +271,7 @@ export const AllDestinations: React.FC<AllDestinationsProps> = ({
                   {/* Mobile Country Link */}
                   <div className="mt-6 sm:hidden">
                     <Link
-                      href={`/${country.slug}`}
+                      href={`/tour-packages/${country.slug}`}
                       className="flex items-center justify-center gap-2 text-sm font-bold text-[#D4561A] bg-orange-50 hover:bg-orange-100 transition-colors px-4 py-3 rounded-xl"
                     >
                       Explore All of {country.title}

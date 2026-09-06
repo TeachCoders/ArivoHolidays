@@ -1,45 +1,119 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
+import {
+  CheckCircle2,
+  PhoneCall,
+  MessageCircle,
+  Home,
+  Clock,
+  Sparkles,
+} from "lucide-react";
 
-type Props = { searchParams: Promise<{ ref?: string }> };
+export const metadata: Metadata = {
+  title: "Thank You | Arivo Holiday - Inquiry Received",
+  description:
+    "Thank you for contacting Arivo Holiday. Your travel inquiry has been received and our destination specialists will contact you shortly.",
+};
 
-export default async function ThankYouPage({ searchParams }: Props) {
-  const { ref } = await searchParams;
-  const reference = ref ? decodeURIComponent(ref) : "";
+const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+91 98765 43210";
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178";
+const CLEAN_PHONE = SALES_PHONE.replace(/[^0-9+]/g, "");
 
+export default async function ThankYouPage() {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-16 font-sans">
-      <div className="w-full max-w-lg text-center">
-        <div className="bg-white border border-slate-200 rounded-3xl p-10 shadow-xl shadow-slate-200/60">
-          <span className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#D4561A]/10 mb-5">
-            <CheckCircle2 size={36} className="text-[#D4561A]" />
-          </span>
-          <span className="inline-block text-[10px] font-bold tracking-[0.3em] uppercase text-[#2E8B8B] mb-2">
-            Submission Received
-          </span>
-          <h1 className="text-2xl font-bold text-[#1C1C1C] mb-3">Thank You!</h1>
-          <p className="text-slate-500 text-sm leading-relaxed mb-6">
-            Your tour enquiry has been submitted successfully. One of our travel experts
-            will get back to you within 24 hours to plan your perfect trip.
-          </p>
-
-          {reference && (
-            <div className="rounded-xl bg-[#FFF4EE] border border-[#D4561A]/15 px-4 py-3 mb-6">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#D4561A] mb-1">
-                Enquiry From
+    <div className="min-h-screen bg-[#f8f9fa] font-sans text-slate-800 py-12 md:py-20 px-4 flex items-center justify-center">
+      <div className="max-w-3xl w-full mx-auto space-y-8">
+        {/* Main Clean Card */}
+        <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-md space-y-8 text-center sm:text-left">
+          {/* Header Section without dark background */}
+          <div className="flex flex-col sm:flex-row items-center gap-6 pb-8 border-b border-slate-100">
+            <div className="w-20 h-20 rounded-3xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0 shadow-xs">
+              <CheckCircle2 size={44} />
+            </div>
+            <div className="space-y-1 text-center sm:text-left">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/60 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-1">
+                <Sparkles size={12} />
+                <span>Submission Successful</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading">
+                Thank You for Choosing Arivo Holiday!
+              </h1>
+              <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
+                Your travel inquiry has been received. Our destination specialists are working on your custom plan and will connect with you shortly.
               </p>
-              <a href={reference} className="text-sm text-[#555] hover:text-[#D4561A] underline break-all">
-                {reference}
+            </div>
+          </div>
+
+          {/* What Happens Next Section */}
+          <div className="space-y-5 pt-2">
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 font-heading flex items-center justify-center sm:justify-start gap-2">
+              <Clock size={20} className="text-[#2E8B8B]" />
+              <span>What Happens Next?</span>
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 space-y-2">
+                <div className="w-8 h-8 rounded-xl bg-[#2E8B8B]/10 text-[#2E8B8B] flex items-center justify-center font-bold text-sm">
+                  1
+                </div>
+                <h4 className="font-bold text-slate-900 text-sm">Inquiry Review</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Our destination expert analyzes your preferences, dates, and budget.
+                </p>
+              </div>
+
+              <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 space-y-2">
+                <div className="w-8 h-8 rounded-xl bg-[#D4561A]/10 text-[#D4561A] flex items-center justify-center font-bold text-sm">
+                  2
+                </div>
+                <h4 className="font-bold text-slate-900 text-sm">Tailored Proposal</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  We draft a personalized itinerary with hotels, cabs, and transparent costs.
+                </p>
+              </div>
+
+              <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 space-y-2">
+                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">
+                  3
+                </div>
+                <h4 className="font-bold text-slate-900 text-sm">Direct Contact</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  We connect via Phone / WhatsApp to fine-tune every detail according to your needs.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+              <a
+                href={`tel:${CLEAN_PHONE}`}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#2E8B8B] hover:bg-[#246e6e] text-white font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2"
+              >
+                <PhoneCall size={18} />
+                <span>Call Sales ({SALES_PHONE})</span>
+              </a>
+
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2"
+              >
+                <MessageCircle size={18} />
+                <span>Chat on WhatsApp</span>
               </a>
             </div>
-          )}
 
-          <Link
-            href="/"
-            className="btn-primary w-full inline-flex items-center justify-center active:scale-[0.98] font-bold text-sm uppercase tracking-widest py-3 rounded-xl transition-all duration-150"
-          >
-            Back to Home
-          </Link>
+            <Link
+              href="/"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition-all flex items-center justify-center gap-2"
+            >
+              <Home size={18} />
+              <span>Back to Home</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

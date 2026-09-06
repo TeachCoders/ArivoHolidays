@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, MapPin, Sparkles, X } from "lucide-react";
 import { useJourneyFilters } from "@/feature/journey/api/useJourney";
 import { travelExperienceIcon } from "@/components/shared/TravelExperiencePills";
+import { emitSearchRefinement } from "@/lib/analyticsSearchEvents";
 
 interface CityOption {
   id: number;
@@ -80,6 +81,11 @@ export default function HeroSearchBar() {
     if (selectedCities.length > 0) params.set("city", selectedCities.join(","));
     if (selectedExperiences.length > 0) params.set("exp", selectedExperiences.join(","));
     const qs = params.toString();
+    emitSearchRefinement({
+      searchQuery: query.trim(),
+      destination: selectedCities.join(","),
+      filtersApplied: selectedExperiences,
+    });
     router.push(qs ? `/tour-packages?${qs}` : "/tour-packages");
   };
 

@@ -6,20 +6,20 @@ import { itemListSchema } from "@/lib/jsonLd";
 import { fetchPackages, type PublicTourPackage } from "@/feature/tourPackages/public-server";
 
 export const metadata: Metadata = {
-  title: "Tour Packages | Arivo Holiday",
+  title: "Tour Packages",
   description:
     "Discover handcrafted travel experiences — best selling and all-inclusive holiday tour packages at guaranteed best prices.",
   alternates: { canonical: "/packages" },
   openGraph: {
     type: "website",
-    title: "Tour Packages | Arivo Holiday",
+    title: "Tour Packages",
     description:
       "Discover handcrafted travel experiences — best selling and all-inclusive holiday tour packages at guaranteed best prices.",
     url: "/packages",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tour Packages | Arivo Holiday",
+    title: "Tour Packages",
     description:
       "Discover handcrafted travel experiences — best selling and all-inclusive holiday tour packages at guaranteed best prices.",
   },

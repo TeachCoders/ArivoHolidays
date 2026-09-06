@@ -177,7 +177,7 @@ export default function CmsPageClient() {
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-600">{page.h1Title ? page.h1Title : <SeoPendingBadge />}</td>
                       <td className="px-4 py-3">
-                        <p className="text-sm font-medium text-gray-900">{page.title}</p>
+                        <p className="text-sm font-medium text-gray-900">{page.seoTitle || "-"}</p>
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-600">/{page.slug}</td>
                       <td className="px-4 py-3 text-center">

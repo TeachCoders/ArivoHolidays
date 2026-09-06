@@ -198,7 +198,7 @@ export default function CountryClient() {
               cellClassName: "px-4 py-3",
               render: (country) => (
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{country.title}</p>
+                  <p className="text-sm font-medium text-gray-900">{country.seoTitle || "-"}</p>
 
                 </div>
               ),
@@ -273,7 +273,7 @@ export default function CountryClient() {
               cellClassName: "px-4 py-3",
               render: (country) => (
                 <div className="flex items-center justify-center gap-1">
-                  <Link href={`/${country.slug}`} target="_blank" className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors" title="View Public Page">
+                  <Link href={`/tour-packages/${country.slug}`} target="_blank" className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors" title="View Public Page">
                     <Eye size={14} />
                   </Link>
                   {canEdit && (

@@ -11,6 +11,7 @@ import BannerSection from "@/components/shared/BannerSection";
 import EntityFields from "@/components/shared/EntityFields";
 import type { EntityField } from "@/components/shared/EntityFields";
 import RichTextEditor from "@/components/shared/RichTextEditor";
+import FaqEditor, { FaqData } from "@/components/shared/FaqEditor";
 import {
   useCreateCity,
   useUpdateCity,
@@ -76,6 +77,7 @@ export default function CityForm({ initialData, mode }: CityFormProps) {
   const [bannerImages, setBannerImages] = useState<string[]>(initialData?.banner?.images || []);
   const [bannerFiles, setBannerFiles] = useState<{ file: File; index: number }[]>([]);
   const [moreDescription, setMoreDescription] = useState(initialData?.moreDescription || "");
+  const [faqs, setFaqs] = useState<FaqData[]>(initialData?.faqs || []);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const initializedRef = React.useRef(false);
@@ -105,6 +107,7 @@ export default function CityForm({ initialData, mode }: CityFormProps) {
       setBannerTag(initialData.banner?.bannerTag || "");
       setBannerImages(initialData.banner?.images || []);
       setMoreDescription(initialData.moreDescription || "");
+      setFaqs(initialData.faqs || []);
     }
   }, [initialData]);
 
@@ -180,6 +183,7 @@ export default function CityForm({ initialData, mode }: CityFormProps) {
       bannerTag: bannerTag.trim() || undefined,
       bannerImages: finalBannerImages,
       moreDescription: moreDescription.trim() || undefined,
+      faqs,
     };
 
     if (mode === "edit" && initialData?.id) {
@@ -287,6 +291,8 @@ export default function CityForm({ initialData, mode }: CityFormProps) {
           <label className="text-sm font-bold text-slate-700 uppercase tracking-wider block mb-2">More Description</label>
           <RichTextEditor content={moreDescription} onChange={(html) => setMoreDescription(html)} />
         </div>
+
+        <FaqEditor faqs={faqs} setFaqs={setFaqs} />
 
         <div className="flex items-center justify-between gap-3 pb-8">
           <div className="flex items-center gap-5">

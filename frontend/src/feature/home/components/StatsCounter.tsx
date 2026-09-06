@@ -12,9 +12,9 @@ interface StatItem {
 }
 
 const STATS: StatItem[] = [
-  { icon: <Users className="w-6 h-6" />, label: "Happy Travellers", value: 50000, suffix: "+" },
-  { icon: <MapPin className="w-6 h-6" />, label: "Destinations Covered", value: 120, suffix: "+" },
-  { icon: <Award className="w-6 h-6" />, label: "Packages Delivered", value: 8500, suffix: "+" },
+  { icon: <Users className="w-6 h-6" />, label: "Happy Guests", value: 500, suffix: "+" },
+  { icon: <MapPin className="w-6 h-6" />, label: "Destinations Covered", value: 50, suffix: "+" },
+  { icon: <Award className="w-6 h-6" />, label: "Tours Conducted", value: 650, suffix: "+" },
   { icon: <Star className="w-6 h-6" />, label: "Average Rating", value: 4.9, suffix: "/5" },
 ];
 

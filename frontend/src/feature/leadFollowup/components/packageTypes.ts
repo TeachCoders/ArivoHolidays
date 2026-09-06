@@ -44,7 +44,12 @@ export const DEFAULT_EXCLUDES = [
 
 // ── Default Notes ──
 export const DEFAULT_NOTES =
-  "• Hotel rooms subject to availability at time of confirmation.\n• Rates valid for the mentioned travel dates only — may change without prior notice.\n• Standard Check-in: 2:00 PM | Standard Check-out: 11:00 AM. Early check-in / late check-out subject to availability.\n• AC in vehicles not available in hill stations above 7,000 ft.\n• Company is not responsible for any delay or loss due to natural calamity or government restrictions.\n• Any extra km / night / service not included in the package will be charged extra.";
+  "Hotel rooms subject to availability at time of confirmation.\n" +
+  "Rates valid for the mentioned travel dates only — may change without prior notice.\n" +
+  "Standard Check-in: 2:00 PM | Standard Check-out: 11:00 AM. Early check-in / late check-out subject to availability.\n" +
+  "AC in vehicles not available in hill stations above 7,000 ft.\n" +
+  "Company is not responsible for any delay or loss due to natural calamity or government restrictions.\n" +
+  "Any extra km / night / service not included in the package will be charged extra.";
 
 // ── Default Cancellation Policy (Industry Standard) ──
 export const DEFAULT_CANCELLATION_POLICY =
