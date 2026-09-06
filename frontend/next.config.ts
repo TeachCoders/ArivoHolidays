@@ -45,7 +45,33 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     const backendUrl = process.env.API_BASE_URL || "http://localhost:5000";
+    // Public image folders live in Supabase Storage "public" bucket. In
+    // production nginx serves these via the site's own domain; locally we
+    // proxy the same folders to the Supabase CDN so images render in dev too.
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://khgopfgebkkdlnwwoanx.supabase.co";
+    const cdn = `${supabaseUrl}/storage/v1/object/public/public`;
+    const cdnFolders = [
+      "content",
+      "india-tour",
+      "indai",
+      "india",
+      "spiritual",
+      "wildlife",
+      "taj-mahal",
+      "desert-safari",
+      "golden-triangle",
+      "heritage-and-culture",
+      "hill-station",
+      "honeymoon",
+      "ayurveda-yoga",
+      "quotations",
+      "3-days-delhit-agra-jaipur-tirp-golden-triangle",
+    ];
     return [
+      ...cdnFolders.map((folder) => ({
+        source: `/${folder}/:path*`,
+        destination: `${cdn}/${folder}/:path*`,
+      })),
       {
         source: "/api/:path*",
         destination: `${backendUrl}/:path*`,

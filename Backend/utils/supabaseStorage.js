@@ -3,6 +3,7 @@ import { logger } from "./logger.js";
 const SUPABASE_URL = (process.env.SUPABASE_URL || "").replace(/\/+$/, "");
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const STORAGE_BACKEND = process.env.STORAGE_BACKEND || "";
+const BUCKET = "public";
 
 // Enabled only when STORAGE_BACKEND=supabase AND both Supabase values are set.
 // Local development (no env) keeps the old disk-based uploads untouched.
@@ -38,7 +39,9 @@ export async function uploadToSupabaseStorage({ key, buffer, contentType }) {
       logger.error("Supabase storage upload failed", { key, status: res.status, text });
       return null;
     }
-    return `${SUPABASE_URL}/storage/v1/object/public/${key}`;
+    // Return a domain-agnostic relative path. The app/nginx resolves it to the
+    // site's own domain and serves it from Supabase CDN via reverse proxy.
+    return `/${key}`;
   } catch (error) {
     logger.error("Supabase storage upload error", { key, message: error.message });
     return null;
@@ -51,12 +54,13 @@ export async function uploadToSupabaseStorage({ key, buffer, contentType }) {
  */
 export async function deleteSupabaseObject(keyOrUrl) {
   if (!isSupabaseStorageEnabled()) return false;
-  const key = keyOrUrl.includes("/storage/v1/object/public/")
-    ? keyOrUrl.split("/storage/v1/object/public/")[1]
-    : keyOrUrl;
+  const marker = "/storage/v1/object/public/";
+  let key = String(keyOrUrl || "");
+  if (key.includes(marker)) key = key.substring(key.indexOf(marker) + marker.length);
+  if (key.startsWith(`${BUCKET}/`)) key = key.substring(BUCKET.length + 1);
   if (!key) return false;
   try {
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/public/${key}`, {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${key}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${SERVICE_ROLE_KEY}` },
     });

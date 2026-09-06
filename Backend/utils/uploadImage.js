@@ -86,22 +86,27 @@ export const uploadImage = (folderName = "images") => {
 
     filename: (req, file, cb) => {
       const userFilename = req.body?.filename;
+      const rawName = userFilename || file.originalname;
+      const safeName = rawName
+        .toLowerCase()
+        .replace(/[^a-z0-9._-]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "")
+        .replace(/^(.+?)\.[a-z0-9]+$/, "$1");
+      const ext = CONVERTIBLE_MIMETYPES.includes(file.mimetype) ? ".webp" : path.extname(file.originalname) || ".webp";
+      const safeFolder = sanitizeFolder(req.body?.folder) || folderName;
+      const uploadPath = path.join("public", safeFolder);
+      const baseName = safeName && safeName !== "." ? safeName : "image";
 
-      if (userFilename) {
-        const safeName = userFilename
-          .toLowerCase()
-          .replace(/[^a-z0-9._-]/g, "-")
-          .replace(/-+/g, "-")
-          .replace(/^-|-$/g, "");
-        const ext = CONVERTIBLE_MIMETYPES.includes(file.mimetype) ? ".webp" : path.extname(file.originalname) || ".webp";
-        const uniquePrefix = Date.now() + "-" + crypto.randomBytes(4).toString("hex");
-        cb(null, uniquePrefix + "-" + safeName + ext);
-      } else {
-        const uniqueName = Date.now() + "-" + crypto.randomBytes(4).toString("hex");
-        const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const ext = CONVERTIBLE_MIMETYPES.includes(file.mimetype) ? ".webp" : path.extname(file.originalname) || ".webp";
-        cb(null, uniqueName + "-" + safeName);
+      // Clean, readable filename. If the name already exists, append -1, -2 …
+      // so uploads never silently overwrite an existing image.
+      let candidate = baseName + ext;
+      let counter = 1;
+      while (fs.existsSync(path.join(uploadPath, candidate))) {
+        candidate = `${safeName}-${counter}${ext}`;
+        counter++;
       }
+      cb(null, candidate);
     },
   });
 
