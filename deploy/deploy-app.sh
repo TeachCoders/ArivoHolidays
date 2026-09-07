@@ -29,6 +29,10 @@ pm2 delete arivo-backend >/dev/null 2>&1 || true
 log "3/5 Frontend: production build"
 cd "$APP_DIR/frontend"
 export NODE_OPTIONS="--max-old-space-size=2048"
+# BFF: client calls same-origin /api — browser ke Network tab me API subdomain
+# (api.arivoholidays.com) kabhi na dikhe. (NEXT_PUBLIC_ vars ko .env.local
+# override nahi kar sakti kyunki ye pehle se process.env me set hai.)
+export NEXT_PUBLIC_API_BASE_URL="/api"
 npm run build
 
 log "4/5 PM2 start (backend :5000, frontend :3000)"
