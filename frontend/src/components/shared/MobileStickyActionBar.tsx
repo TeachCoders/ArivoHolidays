@@ -21,7 +21,7 @@ export default function MobileStickyActionBar() {
 
         {/* WhatsApp Button */}
         <a
-          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi Arivo Holidayss, I want to inquire about a custom holiday tour package.")}`}
+          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi Arivo Holidays, I want to inquire about a custom holiday tour package.")}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600 hover:text-white transition-all active:scale-95"

@@ -3,7 +3,7 @@ import AnalyticsLayout from '@/components/analytics/AnalyticsLayout';
 import TrafficSourcesPanel from '@/components/analytics/TrafficSourcesPanel';
 
 export const metadata = {
-  title: 'Traffic Sources | Arivo Holidayss',
+  title: 'Traffic Sources | Arivo Holidays',
 };
 
 export default async function TrafficSourcesPage() {

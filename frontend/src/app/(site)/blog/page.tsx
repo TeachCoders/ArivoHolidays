@@ -11,12 +11,12 @@ import { FallbackImage } from "@/components/shared/FallbackImage";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Travel Blog — Guides, Itineraries & India Tour Tips | Arivo Holidays",
+  title: "Travel Blog — Guides, Itineraries and India Tour Tips | Arivo Holidays",
   description:
     "Explore expert travel guides, holiday itineraries, budgeting tips, and hidden destination insights for India tours — curated by Arivo Holidays.",
   alternates: { canonical: "/blog" },
   openGraph: {
-    title: "Travel Blog — Guides, Itineraries & India Tour Tips | Arivo Holidays",
+title: "Travel Blog — Guides, Itineraries and India Tour Tips | Arivo Holidays",
     description:
       "Explore expert travel guides, holiday itineraries, budgeting tips, and hidden destination insights for India tours — curated by Arivo Holidays.",
     url: "/blog",

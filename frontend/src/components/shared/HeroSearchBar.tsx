@@ -27,6 +27,18 @@ interface Suggestion {
   item: ExpOption | CityOption;
 }
 
+const FALLBACK_POPULAR_CITIES: CityOption[] = [
+  { id: -1, slug: "jaipur", title: "Jaipur", stateTitle: null },
+  { id: -2, slug: "goa", title: "Goa", stateTitle: null },
+  { id: -3, slug: "manali", title: "Manali", stateTitle: null },
+  { id: -4, slug: "kerala", title: "Kerala", stateTitle: null },
+];
+
+const FALLBACK_POPULAR_EXPERIENCES: ExpOption[] = [
+  { id: -1, slug: "honeymoon", title: "Honeymoon" },
+  { id: -2, slug: "adventure", title: "Adventure" },
+];
+
 export default function HeroSearchBar() {
   const router = useRouter();
   const { cities, experiences, isLoading } = useJourneyFilters();
@@ -92,8 +104,8 @@ export default function HeroSearchBar() {
   const cityLabel = (slug: string) => cities.find((c) => c.slug === slug)?.title || slug;
   const expLabel = (title: string) => title;
 
-  const popularCities = cities.slice(0, 4);
-  const popularExps = experiences.slice(0, 2);
+  const popularCities = (cities.length > 0 ? cities : FALLBACK_POPULAR_CITIES).slice(0, 4);
+  const popularExps = (experiences.length > 0 ? experiences : FALLBACK_POPULAR_EXPERIENCES).slice(0, 2);
 
   return (
     <div className="w-full max-w-4xl mx-auto">

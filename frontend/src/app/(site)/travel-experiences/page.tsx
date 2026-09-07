@@ -154,7 +154,7 @@ export default async function TravelExperiencesPage() {
 
   const defaultFaqs = [
     {
-      question: "What are Travel Experiences at Arivo Holidayss?",
+      question: "What are Travel Experiences at Arivo Holidays?",
       answer: "Travel Experiences are theme-based tour packages categorized by your trip style — such as Honeymoon, Heritage & Culture, Wellness & Yoga, Wildlife Safaris, and Pilgrimage Tours across India."
     },
     {

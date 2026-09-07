@@ -2,15 +2,14 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { API_BASE } from "@/lib/apiClient";
 import HeroSearchBar from "@/components/shared/HeroSearchBar";
 import { FallbackImage } from "@/components/shared/FallbackImage";
 
 const SLIDES = [
-  { image: `${API_BASE}/content/rajasthan-tours-holiday-1.webp`, alt: "Rajasthan heritage tour" },
-  { image: `${API_BASE}/content/srinagar-holiday-1.webp`, alt: "Srinagar Kashmir holiday" },
-  { image: `${API_BASE}/content/jaipur-holiday-1.webp`, alt: "Jaipur royal heritage" },
-  { image: `${API_BASE}/content/manali-holiday-1.webp`, alt: "Manali Himachal holiday" },
+  { image: "/content/rajasthan-tours-holiday-1.webp", alt: "Rajasthan heritage tour" },
+  { image: "/content/srinagar-holiday-1.webp", alt: "Srinagar Kashmir holiday" },
+  { image: "/content/jaipur-holiday-1.webp", alt: "Jaipur royal heritage" },
+  { image: "/content/manali-holiday-1.webp", alt: "Manali Himachal holiday" },
 ];
 
 export const HeroSection: React.FC = () => {

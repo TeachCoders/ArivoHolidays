@@ -16,8 +16,8 @@ import type { Season, PaginatedResponse as SeasonPage } from "@/feature/season/t
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Arivo Holidays | Customized Holiday Tour Packages & Cab Rentals",
-  description: "Book customized holiday tour packages, luxury stays, verified cabs, and local tour guides at guaranteed best prices across Kashmir, Kerala, Himachal, Rajasthan & international destinations.",
+  title: "Arivo Holidays | Customized Holiday Tour Packages and Cab Rentals",
+  description: "Book customized holiday tour packages, luxury stays, verified cabs, and local tour guides at guaranteed best prices across Kashmir, Kerala, Himachal, Rajasthan and international destinations.",
   alternates: { canonical: "/" },
 };
 

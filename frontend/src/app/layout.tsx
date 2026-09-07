@@ -19,10 +19,10 @@ const nunito = Nunito_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Arivo Holidays | Customized Holiday Tour Packages & Cab Rentals",
+    default: "Arivo Holidays | Customized Holiday Tour Packages and Cab Rentals",
     template: "%s | Arivo Holidays",
   },
-  description: "Book customized holiday tour packages, luxury stays, verified cabs, and local tour guides across Kashmir, Kerala, Himachal, Rajasthan & international destinations.",
+  description: "Book customized holiday tour packages, luxury stays, verified cabs, and local tour guides across Kashmir, Kerala, Himachal, Rajasthan and international destinations.",
   openGraph: {
     type: "website",
     siteName: "Arivo Holidays",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Arivo Holidays",
-    description: "Customized holiday tour packages & cab rentals across India.",
+    description: "Customized holiday tour packages and cab rentals across India.",
     images: ["/og-image.png"],
   },
   icons: {

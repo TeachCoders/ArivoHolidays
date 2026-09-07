@@ -13,7 +13,7 @@ import type { TravelExperience } from "@/feature/travelExperience/type";
 import { stripTourSuffix, pickPriorityLinks, type NavChild } from "@/lib/utils";
 import { QuoteModal } from "./QuoteModal";
 import { RequestCallbackModal } from "./RequestCallbackModal";
-import { DestinationMegaMenu, DestinationTreeCountry } from "./DestinationMegaMenu";
+import { DestinationMegaMenu, DestinationTreeCountry, DestinationTreeState } from "./DestinationMegaMenu";
 
 const DEFAULT_DESTINATION_LINKS: NavChild[] = [
   { href: "/tour-packages/india", label: "India" },
@@ -26,6 +26,50 @@ const DEFAULT_DESTINATION_LINKS: NavChild[] = [
   { href: "/tour-packages/india/ladakh", label: "Ladakh" },
   { href: "/tour-packages/india/delhi", label: "Delhi NCR" },
 ];
+
+const DEFAULT_TOUR_LINKS: NavChild[] = [
+  { href: "/tour-packages/india/rajasthan", label: "Rajasthan" },
+  { href: "/tour-packages/india/jammu-and-kashmir", label: "Kashmir" },
+  { href: "/tour-packages/india/kerala", label: "Kerala" },
+  { href: "/tour-packages/india/himachal-pradesh", label: "Himachal Pradesh" },
+  { href: "/tour-packages/india/uttarakhand", label: "Uttarakhand" },
+  { href: "/tour-packages/india/goa", label: "Goa" },
+  { href: "/tour-packages/india/uttar-pradesh", label: "Uttar Pradesh" },
+  { href: "/tour-packages/india/ladakh", label: "Ladakh" },
+];
+
+const DEFAULT_EXPERIENCE_LINKS: NavChild[] = [
+  { href: "/travel-experiences/honeymoon", label: "Honeymoon" },
+  { href: "/travel-experiences/adventure", label: "Adventure" },
+  { href: "/travel-experiences/heritage-and-culture", label: "Heritage & Culture" },
+  { href: "/travel-experiences/wildlife", label: "Wildlife" },
+  { href: "/travel-experiences/hill-station", label: "Hill Stations" },
+  { href: "/travel-experiences/ayurveda-yoga", label: "Ayurveda & Wellness" },
+  { href: "/travel-experiences/desert-safari", label: "Desert Safari" },
+  { href: "/travel-experiences/golden-triangle", label: "Golden Triangle" },
+];
+
+function buildDefaultDestinationTree(): DestinationTreeCountry[] {
+  const states: DestinationTreeState[] = DEFAULT_DESTINATION_LINKS.filter(
+    (l) => l.href !== "/tour-packages/india"
+  ).map((l, i) => ({
+    id: i + 1,
+    title: l.label,
+    slug: l.href.split("/").pop() || "",
+    href: l.href,
+    displayOrder: i,
+    cities: [],
+  }));
+  return [
+    {
+      id: 1,
+      title: "India",
+      slug: "india",
+      href: "/tour-packages/india",
+      states,
+    },
+  ];
+}
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
@@ -128,29 +172,35 @@ export const Header: React.FC = () => {
     return result;
   }, [states, journeys]);
 
-  const tourLinks = useMemo(
-    () =>
-      pickPriorityLinks<Journey>(
-        journeys,
-        (j) => j.displayOrder ?? 0,
-        (j) => {
-          return {
-            href: `/tour-packages/${j.slug}`,
-            label: stripTourSuffix(j.h1Title || j.title),
-          };
-        }
-      ),
-    [journeys]
-  );
+  const tourLinks = useMemo(() => {
+    const links = pickPriorityLinks<Journey>(
+      journeys,
+      (j) => j.displayOrder ?? 0,
+      (j) => {
+        return {
+          href: `/tour-packages/${j.slug}`,
+          label: stripTourSuffix(j.h1Title || j.title),
+        };
+      }
+    );
+    return links.length > 0 ? links : DEFAULT_TOUR_LINKS;
+  }, [journeys]);
 
   const experienceLinks = useMemo(
-    () =>
-      pickPriorityLinks<TravelExperience>(
+    () => {
+      const links = pickPriorityLinks<TravelExperience>(
         travelExperiences,
         (e) => e.displayOrder ?? 0,
         (e) => ({ href: `/travel-experiences/${e.slug}`, label: stripTourSuffix(e.h1Title || e.title) })
-      ),
+      );
+      return links.length > 0 ? links : DEFAULT_EXPERIENCE_LINKS;
+    },
     [travelExperiences]
+  );
+
+  const safeDestinationTree = useMemo<DestinationTreeCountry[]>(
+    () => (destinationTree.length > 0 ? destinationTree : buildDefaultDestinationTree()),
+    [destinationTree]
   );
 
   type NavLink = {
@@ -158,7 +208,7 @@ export const Header: React.FC = () => {
     label: string;
     isDestinationMega?: boolean;
     tree?: DestinationTreeCountry[];
-    children?: any[];
+    children?: NavChild[];
     dropdownStyle?: string;
     dropdownColumns?: number;
     seeAllHref?: string;
@@ -173,7 +223,7 @@ export const Header: React.FC = () => {
         href: "/tour-packages/india",
         label: "Destinations",
         isDestinationMega: true,
-        tree: destinationTree,
+        tree: safeDestinationTree,
       },
       {
         href: "/tour-packages",
@@ -208,7 +258,7 @@ export const Header: React.FC = () => {
       },
       { href: "/blog", label: "Blog" },
     ],
-    [destinationTree, tourLinks, experienceLinks]
+    [safeDestinationTree, tourLinks, experienceLinks]
   );
 
   useEffect(() => {

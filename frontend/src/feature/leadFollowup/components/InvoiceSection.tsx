@@ -1207,7 +1207,7 @@ export default function packagesection({
             <div>
               <img
                 src="/logo-with-name.png"
-                alt="Arivo Holidayss"
+                alt="Arivo Holidays"
                 className="h-14 w-auto object-contain mb-2"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';

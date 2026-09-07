@@ -404,7 +404,7 @@ export default function AdLandingPageForm({ mode = "create", initialData }: AdLa
                 maxImages={10}
                 folderPath={seoData.slug ? `${seoData.slug}/lp-gallery` : "lp-gallery"}
               />
-              <p className="text-xs text-slate-400 mt-1">Upload multiple attraction, activity, or sightseeing photos to display in the &apos;Why Book With Arivo Holidayss&apos; photo gallery slider.</p>
+              <p className="text-xs text-slate-400 mt-1">Upload multiple attraction, activity, or sightseeing photos to display in the &apos;Why Book With Arivo Holidays&apos; photo gallery slider.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">

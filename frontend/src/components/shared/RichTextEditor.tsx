@@ -9,7 +9,7 @@ import TiptapImage from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
 import {
-  Bold, Italic, Underline as UnderlineIcon, Strikethrough,
+  Bold, Italic, Underline as UnderlineIcon, Strikethrough, Link2,
   Heading1, Heading2, Heading3, Heading4,
   List, ListOrdered, ImagePlus, Undo2, Redo2, Upload,
   Pilcrow, Minus, X, Check, Crop,
@@ -73,6 +73,20 @@ const EditorShortcuts = Extension.create({
     return {
       "Mod-Alt-h": () => this.editor.commands.setHorizontalRule(),
       "Mod-Shift-x": () => this.editor.commands.toggleStrike(),
+      "Mod-k": ({ editor }) => {
+        const previousUrl = (editor.getAttributes("link").href as string | undefined) || "";
+        const url = window.prompt(previousUrl ? "Edit link URL:" : "Paste link URL:", previousUrl);
+        if (url === null) return true;
+        if (url.trim() === "") {
+          editor.chain().focus().extendMarkRange("link").unsetLink().run();
+        } else {
+          const href = /^(https?:|mailto:|tel:|#|\/)/i.test(url.trim())
+            ? url.trim()
+            : `https://${url.trim()}`;
+          editor.chain().focus().extendMarkRange("link").setLink({ href }).run();
+        }
+        return true;
+      },
     };
   },
 });
@@ -117,6 +131,7 @@ export default function RichTextEditor({
         heading: { levels: [1, 2, 3, 4] },
         bulletList: { keepMarks: true, keepAttributes: false },
         orderedList: { keepMarks: true, keepAttributes: false },
+        link: { openOnClick: false },
       }),
       Underline,
       EditorShortcuts,
@@ -256,6 +271,21 @@ export default function RichTextEditor({
     if (url && editor) editor.chain().focus().setImage({ src: url }).run();
   };
 
+  const toggleLink = () => {
+    if (!editor) return;
+    const previousUrl = (editor.getAttributes("link").href as string | undefined) || "";
+    const url = window.prompt(previousUrl ? "Edit link URL:" : "Paste link URL:", previousUrl);
+    if (url === null) return;
+    if (url.trim() === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+    const href = /^(https?:|mailto:|tel:|#|\/)/i.test(url.trim())
+      ? url.trim()
+      : `https://${url.trim()}`;
+    editor.chain().focus().extendMarkRange("link").setLink({ href }).run();
+  };
+
   if (!editor) return null;
 
   return (
@@ -265,6 +295,7 @@ export default function RichTextEditor({
         <ToolbarButton onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")} title="Italic (Ctrl+I)"><Italic size={14} /></ToolbarButton>
         <ToolbarButton onClick={() => editor.chain().focus().toggleUnderline().run()} active={editor.isActive("underline")} title="Underline (Ctrl+U)"><UnderlineIcon size={14} /></ToolbarButton>
         <ToolbarButton onClick={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive("strike")} title="Strikethrough (Ctrl+Shift+X)"><Strikethrough size={14} /></ToolbarButton>
+        <ToolbarButton onClick={toggleLink} active={editor.isActive("link")} title="Link (Ctrl+K)"><Link2 size={14} /></ToolbarButton>
         <div className="w-px h-5 bg-slate-200 mx-1" />
         <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} active={editor.isActive("heading", { level: 1 })} title="Heading 1 (Ctrl+Alt+1)"><Heading1 size={14} /></ToolbarButton>
         <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} active={editor.isActive("heading", { level: 2 })} title="Heading 2 (Ctrl+Alt+2)"><Heading2 size={14} /></ToolbarButton>
@@ -292,6 +323,7 @@ export default function RichTextEditor({
         <BubbleButton onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")} title="Italic (Ctrl+I)"><Italic size={14} /></BubbleButton>
         <BubbleButton onClick={() => editor.chain().focus().toggleUnderline().run()} active={editor.isActive("underline")} title="Underline (Ctrl+U)"><UnderlineIcon size={14} /></BubbleButton>
         <BubbleButton onClick={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive("strike")} title="Strikethrough (Ctrl+Shift+X)"><Strikethrough size={14} /></BubbleButton>
+        <BubbleButton onClick={toggleLink} active={editor.isActive("link")} title="Link (Ctrl+K)"><Link2 size={14} /></BubbleButton>
         <div className="w-px h-5 bg-slate-200 mx-1" />
         <BubbleButton onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} active={editor.isActive("heading", { level: 2 })} title="Heading 2 (Ctrl+Alt+2)"><Heading2 size={14} /></BubbleButton>
         <BubbleButton onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} active={editor.isActive("heading", { level: 3 })} title="Heading 3 (Ctrl+Alt+3)"><Heading3 size={14} /></BubbleButton>
@@ -357,6 +389,7 @@ export default function RichTextEditor({
         .rte-editor .tiptap em { font-style: italic; }
         .rte-editor .tiptap u { text-decoration: underline; }
         .rte-editor .tiptap s { text-decoration: line-through; }
+        .rte-editor .tiptap a { color: #2563eb; text-decoration: underline; }
         .rte-editor .tiptap blockquote { border-left: 3px solid #6366f1; padding-left: 1rem; margin: 0.5rem 0; color: #64748b; font-style: italic; }
         .rte-editor .tiptap hr { border: none; border-top: 2px solid #e2e8f0; margin: 1rem 0; }
       `}</style>

@@ -11,9 +11,9 @@ import { QuoteModal } from "@/components/shared/QuoteModal";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Tour Packages in India & Worldwide | Arivo Holidayss",
+  title: "Tour Packages in India and Worldwide | Arivo Holidays",
   description:
-    "Explore hand-crafted tour packages across India and worldwide destinations. Filter by state, city, travel experience, season & duration. Book your dream trip with Arivo Holidayss.",
+    "Explore hand-crafted tour packages across India and worldwide destinations. Filter by state, city, travel experience, season & duration. Book your dream trip with Arivo Holidays.",
   alternates: { canonical: "/tour-packages" },
 };
 

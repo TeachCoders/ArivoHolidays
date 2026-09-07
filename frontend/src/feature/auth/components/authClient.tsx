@@ -42,7 +42,7 @@ export function AuthClient() {
               </div>             
            
             <h1 className="text-4xl font-extrabold leading-tight mb-4">
-              Arivo Holidayss<br />
+              Arivo Holidays<br />
             
             </h1>
              </div>

@@ -35,7 +35,7 @@ function PackageImageWithFallback({ src, alt }: { src?: string; alt?: string }) 
   return (
     <FallbackImage
       src={src}
-      alt={alt || "Arivo Holidayss Package"}
+      alt={alt || "Arivo Holidays Package"}
       className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
       fallbackSrc="/logo-with-name.png"
       theme="dark"

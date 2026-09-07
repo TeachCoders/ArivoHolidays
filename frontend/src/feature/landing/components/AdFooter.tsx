@@ -115,7 +115,7 @@ export default function AdFooter({ destinationName = "Holidays" }: AdFooterProps
 
         {/* Bottom Copyright Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#777]">
-          <p>© {new Date().getFullYear()} Arivo Holidayss. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} Arivo Holidays. All Rights Reserved.</p>
           <div className="flex items-center gap-6 text-[#a8a8a8]">
             <span className="hover:text-white transition cursor-pointer">Privacy Policy</span>
             <span className="hover:text-white transition cursor-pointer">Terms of Service</span>

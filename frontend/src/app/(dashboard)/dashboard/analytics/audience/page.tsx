@@ -3,7 +3,7 @@ import AnalyticsLayout from '@/components/analytics/AnalyticsLayout';
 import DevicesBreakdown from '@/components/analytics/DevicesBreakdown';
 
 export const metadata = {
-  title: 'Devices | Arivo Holidayss',
+  title: 'Devices | Arivo Holidays',
 };
 
 export default async function DevicesPage() {

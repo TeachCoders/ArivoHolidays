@@ -37,7 +37,7 @@ const TravelerMoments: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[220px]">
           {moments.map((item, idx) => {
             const isLarge = idx === 0 || idx === 3;
-            const altText = [item.caption, item.location].filter(Boolean).join(' at ') || 'Arivo Holidayss traveler moment';
+            const altText = [item.caption, item.location].filter(Boolean).join(' at ') || 'Arivo Holidays traveler moment';
             return (
               <div
                 key={item.id}
