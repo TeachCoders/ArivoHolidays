@@ -73,23 +73,15 @@ const EditorShortcuts = Extension.create({
     return {
       "Mod-Alt-h": () => this.editor.commands.setHorizontalRule(),
       "Mod-Shift-x": () => this.editor.commands.toggleStrike(),
-      "Mod-k": ({ editor }) => {
-        const previousUrl = (editor.getAttributes("link").href as string | undefined) || "";
-        const url = window.prompt(previousUrl ? "Edit link URL:" : "Paste link URL:", previousUrl);
-        if (url === null) return true;
-        if (url.trim() === "") {
-          editor.chain().focus().extendMarkRange("link").unsetLink().run();
-        } else {
-          const href = /^(https?:|mailto:|tel:|#|\/)/i.test(url.trim())
-            ? url.trim()
-            : `https://${url.trim()}`;
-          editor.chain().focus().extendMarkRange("link").setLink({ href }).run();
-        }
+      "Mod-k": () => {
+        window.dispatchEvent(new CustomEvent(OPEN_LINK_DIALOG_EVENT));
         return true;
       },
     };
   },
 });
+
+const OPEN_LINK_DIALOG_EVENT = "rte:open-link-dialog";
 
 function BubbleButton({ onClick, active, title, children }: {
   onClick: () => void;
@@ -124,6 +116,10 @@ export default function RichTextEditor({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const [linkModalOpen, setLinkModalOpen] = useState(false);
+  const [linkModalUrl, setLinkModalUrl] = useState("");
+  const [linkModalNewTab, setLinkModalNewTab] = useState(false);
+  const [linkModalRel, setLinkModalRel] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -131,7 +127,10 @@ export default function RichTextEditor({
         heading: { levels: [1, 2, 3, 4] },
         bulletList: { keepMarks: true, keepAttributes: false },
         orderedList: { keepMarks: true, keepAttributes: false },
-        link: { openOnClick: false },
+        link: {
+          openOnClick: false,
+          HTMLAttributes: { target: null, rel: null, class: null },
+        },
       }),
       Underline,
       EditorShortcuts,
@@ -143,6 +142,48 @@ export default function RichTextEditor({
       onChange(editor.getHTML());
     },
   });
+
+  const openLinkModal = useCallback(() => {
+    if (!editor) return;
+    const attrs = editor.getAttributes("link") as { href?: string; target?: string; rel?: string };
+    setLinkModalUrl(attrs.href || "");
+    setLinkModalNewTab(attrs.target === "_blank");
+    setLinkModalRel(attrs.rel?.includes("noopener noreferrer nofollow") ?? false);
+    setLinkModalOpen(true);
+  }, [editor]);
+
+  useEffect(() => {
+    const handleOpenLinkDialog = () => openLinkModal();
+    window.addEventListener(OPEN_LINK_DIALOG_EVENT, handleOpenLinkDialog);
+    return () => window.removeEventListener(OPEN_LINK_DIALOG_EVENT, handleOpenLinkDialog);
+  }, [openLinkModal]);
+
+  const applyLink = () => {
+    if (!editor) return;
+    const url = linkModalUrl.trim();
+    setLinkModalOpen(false);
+    if (!url) {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+    const href = /^(https?:|mailto:|tel:|#|\/)/i.test(url) ? url : `https://${url}`;
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({
+        href,
+        target: linkModalNewTab ? "_blank" : null,
+        rel: linkModalRel ? "noopener noreferrer nofollow" : null,
+      })
+      .run();
+  };
+
+  const removeLink = () => {
+    if (!editor) return;
+    setLinkModalOpen(false);
+    editor.chain().focus().extendMarkRange("link").unsetLink().run();
+  };
 
   const drawCanvas = useCallback((img: HTMLImageElement, crop: { x: number; y: number; w: number; h: number }) => {
     const canvas = canvasRef.current;
@@ -271,21 +312,6 @@ export default function RichTextEditor({
     if (url && editor) editor.chain().focus().setImage({ src: url }).run();
   };
 
-  const toggleLink = () => {
-    if (!editor) return;
-    const previousUrl = (editor.getAttributes("link").href as string | undefined) || "";
-    const url = window.prompt(previousUrl ? "Edit link URL:" : "Paste link URL:", previousUrl);
-    if (url === null) return;
-    if (url.trim() === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-      return;
-    }
-    const href = /^(https?:|mailto:|tel:|#|\/)/i.test(url.trim())
-      ? url.trim()
-      : `https://${url.trim()}`;
-    editor.chain().focus().extendMarkRange("link").setLink({ href }).run();
-  };
-
   if (!editor) return null;
 
   return (
@@ -295,7 +321,7 @@ export default function RichTextEditor({
         <ToolbarButton onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")} title="Italic (Ctrl+I)"><Italic size={14} /></ToolbarButton>
         <ToolbarButton onClick={() => editor.chain().focus().toggleUnderline().run()} active={editor.isActive("underline")} title="Underline (Ctrl+U)"><UnderlineIcon size={14} /></ToolbarButton>
         <ToolbarButton onClick={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive("strike")} title="Strikethrough (Ctrl+Shift+X)"><Strikethrough size={14} /></ToolbarButton>
-        <ToolbarButton onClick={toggleLink} active={editor.isActive("link")} title="Link (Ctrl+K)"><Link2 size={14} /></ToolbarButton>
+        <ToolbarButton onClick={openLinkModal} active={editor.isActive("link")} title="Link (Ctrl+K)"><Link2 size={14} /></ToolbarButton>
         <div className="w-px h-5 bg-slate-200 mx-1" />
         <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} active={editor.isActive("heading", { level: 1 })} title="Heading 1 (Ctrl+Alt+1)"><Heading1 size={14} /></ToolbarButton>
         <ToolbarButton onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} active={editor.isActive("heading", { level: 2 })} title="Heading 2 (Ctrl+Alt+2)"><Heading2 size={14} /></ToolbarButton>
@@ -323,7 +349,7 @@ export default function RichTextEditor({
         <BubbleButton onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")} title="Italic (Ctrl+I)"><Italic size={14} /></BubbleButton>
         <BubbleButton onClick={() => editor.chain().focus().toggleUnderline().run()} active={editor.isActive("underline")} title="Underline (Ctrl+U)"><UnderlineIcon size={14} /></BubbleButton>
         <BubbleButton onClick={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive("strike")} title="Strikethrough (Ctrl+Shift+X)"><Strikethrough size={14} /></BubbleButton>
-        <BubbleButton onClick={toggleLink} active={editor.isActive("link")} title="Link (Ctrl+K)"><Link2 size={14} /></BubbleButton>
+        <BubbleButton onClick={openLinkModal} active={editor.isActive("link")} title="Link (Ctrl+K)"><Link2 size={14} /></BubbleButton>
         <div className="w-px h-5 bg-slate-200 mx-1" />
         <BubbleButton onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} active={editor.isActive("heading", { level: 2 })} title="Heading 2 (Ctrl+Alt+2)"><Heading2 size={14} /></BubbleButton>
         <BubbleButton onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} active={editor.isActive("heading", { level: 3 })} title="Heading 3 (Ctrl+Alt+3)"><Heading3 size={14} /></BubbleButton>
@@ -332,6 +358,111 @@ export default function RichTextEditor({
         <BubbleButton onClick={() => editor.chain().focus().toggleBulletList().run()} active={editor.isActive("bulletList")} title="Bullet List (Ctrl+Shift+8)"><List size={14} /></BubbleButton>
         <BubbleButton onClick={() => editor.chain().focus().toggleOrderedList().run()} active={editor.isActive("orderedList")} title="Numbered List (Ctrl+Shift+7)"><ListOrdered size={14} /></BubbleButton>
       </BubbleMenu>
+
+      {linkModalOpen && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/70 flex items-center justify-center p-4"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setLinkModalOpen(false);
+          }}
+        >
+          <div
+            className="bg-white rounded-2xl w-full max-w-md shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-brand-neutral-border">
+              <div className="flex items-center gap-2">
+                <Link2 size={18} className="text-brand-primary" />
+                <span className="font-bold text-brand-neutral-dark text-sm">Link</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setLinkModalOpen(false)}
+                aria-label="Close link dialog"
+                className="p-1 rounded text-brand-neutral-muted hover:bg-brand-neutral-light hover:text-brand-neutral transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="px-5 py-4 space-y-4">
+              <div>
+                <label className="block text-[12px] font-semibold text-brand-neutral-muted mb-1.5">
+                  URL
+                </label>
+                <input
+                  autoFocus
+                  type="text"
+                  value={linkModalUrl}
+                  onChange={(e) => setLinkModalUrl(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && applyLink()}
+                  placeholder="https://example.com ya /tour-packages/india/rajasthan"
+                  className="w-full rounded-lg border border-brand-neutral-border bg-brand-neutral-light/50 px-3 py-2 text-sm text-brand-neutral-dark placeholder:text-slate-400 focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                />
+                <p className="text-[11px] text-slate-400 mt-1">
+                  Apne page ke link ke liye relative path (jaise /about-us) likhen — rel/target nahi lagta.
+                </p>
+              </div>
+
+              <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={linkModalNewTab}
+                  onChange={(e) => setLinkModalNewTab(e.target.checked)}
+                  className="mt-0.5 accent-brand-primary"
+                />
+                <span className="text-sm text-brand-neutral leading-snug">
+                  Open in a new tab{" "}
+                  <code className="text-[11px] bg-brand-neutral-light px-1 rounded">
+                    {"target=\"_blank\""}
+                  </code>
+                </span>
+              </label>
+
+              <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={linkModalRel}
+                  onChange={(e) => setLinkModalRel(e.target.checked)}
+                  className="mt-0.5 accent-brand-primary"
+                />
+                <span className="text-sm text-brand-neutral leading-snug">
+                  External link — add{" "}
+                  <code className="text-[11px] bg-brand-neutral-light px-1 rounded">
+                    {"rel=\"noopener noreferrer nofollow\""}
+                  </code>
+                </span>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between px-5 py-3 border-t border-brand-neutral-border bg-brand-neutral-light rounded-b-2xl gap-2">
+              <button
+                type="button"
+                onClick={removeLink}
+                className="px-3 py-2 rounded-lg text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
+              >
+                Remove Link
+              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setLinkModalOpen(false)}
+                  className="px-4 py-2 rounded-lg text-sm font-semibold text-brand-neutral bg-slate-200 hover:bg-slate-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={applyLink}
+                  className="btn-primary px-4 py-2 text-sm flex items-center gap-1 shadow"
+                >
+                  <Check size={16} /> Apply
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {cropOpen && cropSrc && (
         <div className="fixed inset-0 z-[100] bg-black/70 flex items-center justify-center p-4" onMouseUp={handleMouseUp}>

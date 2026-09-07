@@ -256,7 +256,6 @@ export const Header: React.FC = () => {
         dropdownColumns: 1,
         dropdownTitle: "About Company",
       },
-      { href: "/blog", label: "Blog" },
     ],
     [safeDestinationTree, tourLinks, experienceLinks]
   );
@@ -402,7 +401,7 @@ export const Header: React.FC = () => {
                 type="button"
                 className="btn-primary px-5 py-2.5 text-xs font-bold tracking-wide flex items-center gap-1.5 shadow-sm transition-all hover:scale-105 active:scale-95 cursor-pointer"
               >
-                <span>Get Detailed Quote</span>
+                <span>Build My Trip</span>
               </button>
             </QuoteModal>
           </div>
