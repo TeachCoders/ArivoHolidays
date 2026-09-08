@@ -13,7 +13,7 @@ export const organizationSchema: Record<string, unknown> = {
   name: "Arivo Holidays",
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
-  telephone: process.env.NEXT_PUBLIC_SALES_PHONE || "+919876543210",
+  telephone: process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005",
   email: "support@arivoholidays.com",
   address: {
     "@type": "PostalAddress",

@@ -30,7 +30,7 @@ const GREETING_KEYWORDS = ["hi", "hello", "hey", "hii", "hiii", "namaste", "nama
 const THANKS_KEYWORDS = ["thank", "thanks", "thnks", "shukriya", "dhanyavad", "thx", "thanks you"];
 const BYE_KEYWORDS = ["bye", "goodbye", "tata", "alvida", "bye bye", "tc", "take care"];
 
-const WHATSAPP_NUMBER = (process.env.CHAT_PARTNER_NUMBER || "919876543210").replace(/[\s+\-()]/g, "");
+const WHATSAPP_NUMBER = (process.env.CHAT_PARTNER_NUMBER || "918447273005").replace(/[\s+\-()]/g, "");
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=Hi!%20I%20need%20help%20with%20my%20trip%20planning.`;
 
 const WHATSAPP_HANDOFF = `Chat directly with our travel expert on WhatsApp:\n${WHATSAPP_LINK}`;

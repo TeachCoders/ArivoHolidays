@@ -5,8 +5,8 @@ import { MessageCircle, Phone, X } from "lucide-react";
 import { RequestCallbackModal } from "./RequestCallbackModal";
 
 const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210";
-const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+919876543210";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918447273005";
+const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005";
 
 export const WhatsAppButton: React.FC = () => {
   const [showTooltip, setShowTooltip] = useState(false);
