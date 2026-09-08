@@ -60,10 +60,10 @@ async function resolveSlug(slug: string[]): Promise<Resolved> {
 
   if (slug.length === 1) {
     const segment = slug[0];
-    const country = await fetchBySlug<Country>("/country/by-slug", segment);
-    if (country) return { type: "country", country };
     const journey = await fetchBySlug<Journey>("/journey/by-slug", segment);
     if (journey) return { type: "journey", journey };
+    const country = await fetchBySlug<Country>("/country/by-slug", segment);
+    if (country) return { type: "country", country };
     const cms = await fetchBySlug<CmsPage>("/cms/by-slug", segment);
     if (cms) return { type: "cms", cms };
     return { type: "notfound" };

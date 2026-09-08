@@ -43,12 +43,20 @@ pm2 save
 pm2 startup systemd -u root --hp /root >/dev/null 2>&1 || true
 
 log "5/5 Nginx + SSL"
+# Scanner-block snippet ko hamesha sync karo (nginx.conf ko overwrite mat karo —
+# usme certbot SSL/redirect blocks ho sakte hain).
+cp "$APP_DIR/deploy/block-scanners.conf" /etc/nginx/block-scanners.conf
 if [ ! -f "/etc/nginx/sites-available/arivoholidays" ]; then
   cp "$APP_DIR/deploy/nginx.conf" /etc/nginx/sites-available/arivoholidays
   ln -sf /etc/nginx/sites-available/arivoholidays /etc/nginx/sites-enabled/arivoholidays
   rm -f /etc/nginx/sites-enabled/default
-  nginx -t && systemctl reload nginx
+else
+  # Pehle se install hain → sirf include line inject karo (certbot SSL blocks safe rahenge).
+  if ! grep -q "block-scanners" /etc/nginx/sites-available/arivoholidays; then
+    sed -i 's#\(server_name [^;]*;\)#\1\n    include /etc/nginx/block-scanners.conf;#' /etc/nginx/sites-available/arivoholidays
+  fi
 fi
+nginx -t && systemctl reload nginx
 sleep 2 && pm2 restart all >/dev/null 2>&1 || true
 
 if [ -z "$OWNER_EMAIL" ]; then
