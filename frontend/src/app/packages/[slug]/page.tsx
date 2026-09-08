@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Package, Star, MapPin, Clock, Users, CheckCircle2, XCircle, Hotel, Car, Navigation, ArrowLeft } from "lucide-react";
 import JsonLd from "@/components/shared/JsonLd";
-import { breadcrumbSchema, productSchema } from "@/lib/jsonLd";
+import { breadcrumbSchema, touristTripSchema } from "@/lib/jsonLd";
 import RichContent from "@/components/shared/RichContent";
 import { fetchPackageBySlug } from "@/feature/tourPackages/public-server";
 import { stripHtml } from "@/lib/utils";
@@ -86,15 +86,10 @@ export default async function PackageDetailPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-slate-50">
       <JsonLd
-        data={productSchema({
+        data={touristTripSchema({
           name: pkg.name,
           description: pkg.shortDescription || pkg.description || undefined,
           image: bannerUrl || undefined,
-          price: pkg.pricePerPerson ?? 0,
-          originalPrice:
-            pkg.discountPrice && pkg.discountPrice > (pkg.pricePerPerson || 0)
-              ? pkg.discountPrice
-              : undefined,
           url: `/packages/${pkg.slug}`,
         })}
       />

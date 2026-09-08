@@ -8,6 +8,7 @@ import Heading from "@/components/shared/heading";
 import FormActionButton from "@/components/shared/customBtns";
 import SeoFields from "@/components/shared/SeoFields";
 import RichTextEditor from "@/components/shared/RichTextEditor";
+import FaqEditor, { FaqData } from "@/components/shared/FaqEditor";
 import {
   useCreateCmsPage,
   useUpdateCmsPage,
@@ -47,6 +48,7 @@ export default function CmsPageForm({ initialData, mode }: CmsPageFormProps) {
   });
 
   const [moreDescription, setMoreDescription] = useState(initialData?.moreDescription || "");
+  const [faqs, setFaqs] = useState<FaqData[]>(initialData?.faqs || []);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const isLoading = isCreating || isUpdating;
@@ -81,6 +83,7 @@ export default function CmsPageForm({ initialData, mode }: CmsPageFormProps) {
       seoTitle: formData.seoTitle.trim() || undefined,
       h1Title: formData.h1Title.trim() || undefined,
       moreDescription: moreDescription.trim() || undefined,
+      faqs,
       isActive: formData.isActive,
     };
 
@@ -140,6 +143,8 @@ export default function CmsPageForm({ initialData, mode }: CmsPageFormProps) {
           </label>
           <RichTextEditor content={moreDescription} onChange={(html) => setMoreDescription(html)} />
         </div>
+
+        <FaqEditor faqs={faqs} setFaqs={setFaqs} />
 
         <div className="flex items-center justify-between gap-3 pb-8">
           <label className="flex items-center gap-2 text-sm font-semibold text-slate-600">

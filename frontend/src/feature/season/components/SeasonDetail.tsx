@@ -21,7 +21,6 @@ import {
   journeyMatchesCities,
   journeyPackageHref,
 } from "@/feature/journey/filterOptions";
-import { stripHtml } from "@/lib/utils";
 import type { Season } from "@/feature/season/type";
 import type { Journey, PaginatedResponse } from "@/feature/journey/type";
 import { useGetSeasons } from "@/feature/season/api/useSeason";
@@ -124,71 +123,8 @@ export default function SeasonDetail({
     />
   );
 
-  const graphNodes: any[] = [
-    {
-      "@type": "TouristDestination",
-      "name": initialSeason.title,
-      "description": stripHtml(initialSeason.seoDescription || initialSeason.overView || ""),
-      "image": heroImages[0] || initialSeason.thumbImg
-    },
-    {
-      "@type": "ItemList",
-      "name": `Top Tour Packages for ${initialSeason.title}`,
-      "itemListElement": seasonJourneys.slice(0, 10).map((j, idx) => ({
-        "@type": "ListItem",
-        "position": idx + 1,
-        "name": j.title.split("|")[0].trim(),
-        "url": `https://arivoholidays.com${journeyPackageHref(j)}`
-      }))
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://arivoholidays.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": initialSeason.title,
-          "item": `https://arivoholidays.com/season/${initialSeason.slug}`
-        }
-      ]
-    }
-  ];
-
-  if (initialSeason.faqs && initialSeason.faqs.length > 0) {
-    graphNodes.push({
-      "@type": "FAQPage",
-      "mainEntity": initialSeason.faqs.map((f: any) => ({
-        "@type": "Question",
-        "name": stripHtml(f.ques),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": stripHtml(f.ans)
-        }
-      }))
-    });
-  }
-
-  const seasonJsonLd = {
-    "@context": "https://schema.org",
-    "@graph": graphNodes
-  };
-
   return (
     <div>
-      {/* ===== SEO JSON-LD SCHEMA ===== */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(seasonJsonLd),
-        }}
-      />
-
       {/* ===== HERO ===== */}
       <section className="relative h-[480px] md:h-[560px] overflow-hidden bg-slate-900">
         {heroImages.length > 0 ? (

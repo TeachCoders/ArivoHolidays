@@ -31,7 +31,7 @@ import {
   journeyMatchesCities,
   journeyPackageHref,
 } from "@/feature/journey/filterOptions";
-import { cn, stripHtml } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import DestinationsSkeleton from "@/feature/destinations/components/DestinationsSkeleton";
 import FaqSection from "@/feature/home/components/FaqSection";
 
@@ -139,77 +139,8 @@ function ExperienceContent({ experience }: { experience: any }) {
 
   const heroImages = experience.banner?.images?.length ? experience.banner.images : [];
 
-  const graphNodes: any[] = [
-    {
-      "@type": "TouristDestination",
-      "name": h1Title,
-      "description": stripHtml(experience.seoDescription || experience.overView || ""),
-      "image": heroImages[0] || experience.thumbImg
-    },
-    {
-      "@type": "ItemList",
-      "name": `Top Tour Packages for ${h1Title}`,
-      "itemListElement": experienceJourneys.slice(0, 10).map((j, idx) => ({
-        "@type": "ListItem",
-        "position": idx + 1,
-        "name": j.title.split("|")[0].trim(),
-        "url": `https://arivoholidays.com${journeyPackageHref(j)}`
-      }))
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://arivoholidays.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Travel Experiences",
-          "item": "https://arivoholidays.com/travel-experiences"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": h1Title,
-          "item": `https://arivoholidays.com/travel-experiences/${experience.slug}`
-        }
-      ]
-    }
-  ];
-
-  if (experience.faqs && experience.faqs.length > 0) {
-    graphNodes.push({
-      "@type": "FAQPage",
-      "mainEntity": experience.faqs.map((f: any) => ({
-        "@type": "Question",
-        "name": stripHtml(f.ques),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": stripHtml(f.ans)
-        }
-      }))
-    });
-  }
-
-  const experienceJsonLd = {
-    "@context": "https://schema.org",
-    "@graph": graphNodes
-  };
-
   return (
     <div>
-      {/* ===== SEO JSON-LD SCHEMA ===== */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(experienceJsonLd),
-        }}
-      />
-
       {/* ===== HERO ===== */}
       <section className="relative h-[480px] md:h-[560px] overflow-hidden bg-slate-900">
         {heroImages.length > 0 ? (

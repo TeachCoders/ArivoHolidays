@@ -145,54 +145,8 @@ function CityContent({
     />
   );
 
-  const graphNodes: any[] = [
-    {
-      "@type": "TouristDestination",
-      "name": city.title,
-      "description": stripHtml(city.seoDescription || city.overView || ""),
-      "image": heroImages[0] || city.thumbImg
-    },
-    {
-      "@type": "ItemList",
-      "name": `Top Tour Packages in ${city.title}`,
-      "itemListElement": cityJourneys.slice(0, 10).map((j, idx) => ({
-        "@type": "ListItem",
-        "position": idx + 1,
-        "name": j.title.split("|")[0].trim(),
-        "url": `https://arivoholidays.com${journeyPackageHref(j)}`
-      }))
-    }
-  ];
-
-  if (city.faqs && city.faqs.length > 0) {
-    graphNodes.push({
-      "@type": "FAQPage",
-      "mainEntity": city.faqs.map((f) => ({
-        "@type": "Question",
-        "name": stripHtml(f.ques),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": stripHtml(f.ans)
-        }
-      }))
-    });
-  }
-
-  const cityJsonLd = {
-    "@context": "https://schema.org",
-    "@graph": graphNodes
-  };
-
   return (
     <div>
-      {/* ===== SEO JSON-LD SCHEMA ===== */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(cityJsonLd),
-        }}
-      />
-
       {/* ===== HERO ===== */}
       <section className="relative h-[460px] md:h-[520px] overflow-hidden bg-slate-900">
         {heroImages.length > 0 ? (

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import TravelExperienceDetail from "@/feature/travelExperience/components/TravelExperienceDetail";
 import JsonLd from "@/components/shared/JsonLd";
-import { breadcrumbSchema } from "@/lib/jsonLd";
-import { fetchBySlug } from "@/feature/destinations/api/public-server";
+import { breadcrumbSchema, touristDestinationSchema, itemListSchema, faqSchema, graphSchema } from "@/lib/jsonLd";
+import { fetchBySlug, fetchPublicJson } from "@/feature/destinations/api/public-server";
 import { stripHtml, absoluteUrl } from "@/lib/utils";
+import { HOME_FAQS } from "@/lib/homeFaqs";
 import type { TravelExperience } from "@/feature/travelExperience/type";
+import type { Journey, PaginatedResponse as JourneyPage } from "@/feature/journey/type";
 
 export const revalidate = 60;
 
@@ -54,16 +56,44 @@ function canonicalFor(
 export default async function TravelExperiencePage({ params }: Props) {
   const { slug } = await params;
   const data = await fetchBySlug<TravelExperience>("/holidays/by-slug", slug);
-  const breadcrumbData = data
-    ? breadcrumbSchema([
+
+  let schema = null;
+  if (data) {
+    const journeys = await fetchPublicJson<JourneyPage<Journey>>("/journey?limit=100&isActive=true");
+    const relatedJourneys = (journeys?.data || []).filter((j) =>
+      (j.travelExperiences || []).some((e) => e.slug === data.slug)
+    );
+    const faqItems =
+      data.faqs && data.faqs.length > 0
+        ? data.faqs
+            .filter((f) => f?.ques && f?.ans)
+            .map((f) => ({ question: stripHtml(f.ques), answer: stripHtml(f.ans) }))
+        : HOME_FAQS;
+    schema = graphSchema([
+      touristDestinationSchema({
+        name: data.h1Title || data.title,
+        description: data.seoDescription || data.overView || undefined,
+        image: data.banner?.images?.[0] || data.thumbImg || undefined,
+        url: `/travel-experiences/${data.slug}`,
+      }),
+      itemListSchema(
+        relatedJourneys.slice(0, 10).map((j) => ({
+          name: j.title.split("|")[0].trim(),
+          url: `/tour-packages/${j.slug}`,
+        }))
+      ),
+      breadcrumbSchema([
         { name: "Home", path: "/" },
         { name: "Travel Experiences", path: "/travel-experiences" },
         { name: data.title, path: `/travel-experiences/${data.slug}` },
-      ])
-    : null;
+      ]),
+      faqSchema(faqItems),
+    ]);
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
-      {breadcrumbData && <JsonLd data={breadcrumbData} />}
+      {schema && <JsonLd data={schema} />}
       <main className="flex-1">
         <TravelExperienceDetail slug={slug} initialExperience={data} />
       </main>

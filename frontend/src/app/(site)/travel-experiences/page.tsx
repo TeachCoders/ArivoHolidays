@@ -15,9 +15,12 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { stripHtml } from "@/lib/utils";
-import { SERVER_API_BASE } from "@/feature/destinations/api/public-server";
+import { SERVER_API_BASE, fetchBySlug } from "@/feature/destinations/api/public-server";
 import { QuoteModal } from "@/components/shared/QuoteModal";
 import FaqSection from "@/feature/home/components/FaqSection";
+import type { CmsPage } from "@/feature/cms/type";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const revalidate = 60;
 
@@ -118,40 +121,6 @@ export default async function TravelExperiencesPage() {
       (j.travelExperiences || []).some((e: any) => e.id === id)
     ).length;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://arivoholidays.com/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Travel Experiences",
-            "item": "https://arivoholidays.com/travel-experiences"
-          }
-        ]
-      },
-      {
-        "@type": "ItemList",
-        "name": "Hand-picked Travel Experiences in India",
-        "numberOfItems": real.length,
-        "itemListElement": real.map((e: any, idx: number) => ({
-          "@type": "ListItem",
-          "position": idx + 1,
-          "name": e.title,
-          "url": `https://arivoholidays.com/travel-experiences/${e.slug}`
-        }))
-      }
-    ]
-  };
-
   const defaultFaqs = [
     {
       question: "What are Travel Experiences at Arivo Holidays?",
@@ -166,6 +135,57 @@ export default async function TravelExperiencesPage() {
       answer: "Simply click 'Plan My Custom Trip' on any experience page or contact our travel experts via WhatsApp or Instant Quote form to receive a detailed day-by-day plan."
     }
   ];
+
+  const cmsPage = await fetchBySlug<CmsPage>("/cms/by-slug", "travel-experiences");
+  const cmsFaqs = (cmsPage?.faqs || [])
+    .filter((f) => f?.ques && f?.ans)
+    .map((f) => ({ question: f.ques, answer: f.ans }));
+  const faqList = cmsFaqs.length > 0 ? cmsFaqs : defaultFaqs;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": `${SITE_URL}/`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Travel Experiences",
+            "item": `${SITE_URL}/travel-experiences`
+          }
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "name": "Hand-picked Travel Experiences in India",
+        "numberOfItems": real.length,
+        "itemListElement": real.map((e: any, idx: number) => ({
+          "@type": "ListItem",
+          "position": idx + 1,
+          "name": e.title,
+          "url": `${SITE_URL}/travel-experiences/${e.slug}`
+        }))
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": faqList.map((f) => ({
+          "@type": "Question",
+          "name": f.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": f.answer
+          }
+        }))
+      }
+    ]
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
@@ -275,7 +295,7 @@ export default async function TravelExperiencesPage() {
 
         {/* ===== FAQ SECTION ===== */}
         <div className="mt-20">
-          <FaqSection faqs={defaultFaqs} />
+          <FaqSection faqs={faqList} />
         </div>
       </main>
     </div>

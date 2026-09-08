@@ -184,54 +184,8 @@ function StateContent({ state, initialJourneys }: { state: State; initialJourney
     />
   );
 
-  const graphNodes: any[] = [
-    {
-      "@type": "TouristDestination",
-      "name": state.title,
-      "description": stripHtml(state.seoDescription || state.overView || ""),
-      "image": heroImages[0] || state.thumbImg
-    },
-    {
-      "@type": "ItemList",
-      "name": `Top Tour Packages in ${state.title}`,
-      "itemListElement": stateJourneys.slice(0, 10).map((j, idx) => ({
-        "@type": "ListItem",
-        "position": idx + 1,
-        "name": j.title.split("|")[0].trim(),
-        "url": `https://arivoholidays.com${journeyPackageHref(j)}`
-      }))
-    }
-  ];
-
-  if (state.faqs && state.faqs.length > 0) {
-    graphNodes.push({
-      "@type": "FAQPage",
-      "mainEntity": state.faqs.map((f) => ({
-        "@type": "Question",
-        "name": stripHtml(f.ques),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": stripHtml(f.ans)
-        }
-      }))
-    });
-  }
-
-  const stateJsonLd = {
-    "@context": "https://schema.org",
-    "@graph": graphNodes
-  };
-
   return (
     <div>
-      {/* ===== SEO JSON-LD SCHEMA ===== */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(stateJsonLd),
-        }}
-      />
-
       {/* ===== HERO ===== */}
       <section className="relative h-[460px] md:h-[520px] overflow-hidden bg-slate-900">
         {heroImages.length > 0 ? (

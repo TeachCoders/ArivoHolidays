@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SeasonDetail from "@/feature/season/components/SeasonDetail";
 import JsonLd from "@/components/shared/JsonLd";
-import { breadcrumbSchema, touristDestinationSchema } from "@/lib/jsonLd";
+import { breadcrumbSchema, touristDestinationSchema, itemListSchema, faqSchema, graphSchema } from "@/lib/jsonLd";
 import { fetchBySlug, fetchPublicJson } from "@/feature/destinations/api/public-server";
 import { stripHtml } from "@/lib/utils";
+import { HOME_FAQS } from "@/lib/homeFaqs";
 import type { Season } from "@/feature/season/type";
 import type { Journey, PaginatedResponse as JourneyPage } from "@/feature/journey/type";
 
@@ -60,24 +61,36 @@ export default async function SeasonPage({ params }: Props) {
 
   const initialJourneys = await fetchPublicJson<JourneyPage<Journey>>("/journey?limit=100&isActive=true");
 
-  const schema = [
+  const seasonFaqs =
+    season.faqs && season.faqs.length > 0
+      ? season.faqs
+          .filter((f) => f?.ques && f?.ans)
+          .map((f) => ({ question: stripHtml(f.ques), answer: stripHtml(f.ans) }))
+      : HOME_FAQS;
+
+  const schema = graphSchema([
     touristDestinationSchema({
       name: season.title,
       description: season.seoDescription || season.overView || undefined,
       image: season.thumbImg || undefined,
       url: `/season/${season.slug}`,
     }),
+    itemListSchema(
+      (initialJourneys?.data || []).slice(0, 10).map((j) => ({
+        name: j.title.split("|")[0].trim(),
+        url: `/tour-packages/${j.slug}`,
+      }))
+    ),
     breadcrumbSchema([
       { name: "Home", path: "/" },
       { name: season.title, path: `/season/${season.slug}` },
     ]),
-  ];
+    faqSchema(seasonFaqs),
+  ]);
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
-      {schema.map((s, i) => (
-        <JsonLd key={i} data={s} />
-      ))}
+      <JsonLd data={schema} />
       <main className="flex-1">
         <SeasonDetail slug={season.slug} initialSeason={season} initialJourneys={initialJourneys} />
       </main>

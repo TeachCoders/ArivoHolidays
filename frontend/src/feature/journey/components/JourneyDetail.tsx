@@ -39,114 +39,6 @@ import { cn, stripHtml } from "@/lib/utils";
 
 const JourneyLightbox = dynamic(() => import("./JourneyLightbox"), { ssr: false });
 
-function getJourneyJsonLd(journey: Journey, pageUrl: string) {
-  const schema: any[] = [];
-
-  const tripSchema = {
-    "@context": "https://schema.org",
-    "@type": "TouristTrip",
-    "name": journey.title,
-    "description": stripHtml(journey.seoDescription || journey.overView || journey.title),
-    "url": pageUrl,
-    "image": journey.banner?.images?.length
-      ? journey.banner.images
-      : journey.thumbImg
-        ? [journey.thumbImg]
-        : [],
-    "touristType": journey.travelExperiences?.map((e) => e.title) || [],
-    "offers": {
-      "@type": "Offer",
-      "price": journey.pricePerPerson || 0,
-      "priceCurrency": "INR",
-      "availability": "https://schema.org/InStock"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "184"
-    },
-    "itinerary":
-      journey.days?.map((d, idx) => ({
-        "@type": "City",
-        "name": `Day ${idx + 1}: ${d.day}`,
-        "description": stripHtml((d as any).description || (d as any).seoDescription || "")
-      })) || []
-  };
-  schema.push(tripSchema);
-
-  const cleanJourneyTitle = (journey.title || "").split("|")[0].trim();
-  const countrySlug = journey.cities?.[0]?.state?.country?.slug;
-  const countryTitle = journey.cities?.[0]?.state?.country?.title;
-  const stateSlug = journey.cities?.[0]?.state?.slug;
-  const stateTitle = journey.cities?.[0]?.state?.title;
-
-  const breadcrumbElements: any[] = [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://arivoholidays.com"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Tour Packages",
-      "item": "https://arivoholidays.com/tour-packages"
-    }
-  ];
-
-  let position = 3;
-  if (countrySlug && countryTitle) {
-    breadcrumbElements.push({
-      "@type": "ListItem",
-      "position": position++,
-      "name": countryTitle.replace(/\s*Tour$/i, ""),
-      "item": `https://arivoholidays.com/tour-packages/${countrySlug}`
-    });
-  }
-
-  if (stateSlug && stateTitle && countrySlug) {
-    breadcrumbElements.push({
-      "@type": "ListItem",
-      "position": position++,
-      "name": stateTitle,
-      "item": `https://arivoholidays.com/tour-packages/${countrySlug}/${stateSlug}`
-    });
-  }
-
-  breadcrumbElements.push({
-    "@type": "ListItem",
-    "position": position,
-    "name": cleanJourneyTitle,
-    "item": pageUrl
-  });
-
-  const breadcrumbList = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": breadcrumbElements
-  };
-  schema.push(breadcrumbList);
-
-  if (journey.faqs && journey.faqs.length > 0) {
-    const faqSchema = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": journey.faqs.map((f) => ({
-        "@type": "Question",
-        "name": stripHtml(f.ques),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": stripHtml(f.ans)
-        }
-      }))
-    };
-    schema.push(faqSchema);
-  }
-
-  return schema;
-}
-
 export default function JourneyDetail({ slug, initialJourney }: { slug: string; initialJourney?: Journey | null }) {
   const { journey, isLoading } = useJourneyBySlug(slug, initialJourney);
   const [openDays, setOpenDays] = useState<number[]>([1]);
@@ -217,14 +109,6 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
 
   return (
     <div className="pb-20 lg:pb-0">
-      {/* ===== SEO JSON-LD SCHEMA ===== */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(getJourneyJsonLd(journey, pageUrl)),
-        }}
-      />
-
       {/* ===== BREADCRUMB ===== */}
       <nav aria-label="Breadcrumb" className="border-b border-slate-200 bg-slate-50">
         <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 py-2.5 flex flex-wrap items-center gap-1.5 text-[14px] text-slate-500">

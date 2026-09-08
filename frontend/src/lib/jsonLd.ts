@@ -79,38 +79,45 @@ export function articleSchema(post: ArticleInput): Record<string, unknown> {
   };
 }
 
-interface ProductInput {
+interface TouristTripInput {
   name: string;
   description?: string;
   image?: string;
-  price: number;
-  originalPrice?: number;
   url: string;
+  itinerary?: { day: string; description?: string }[];
+  touristType?: string[];
 }
 
-export function productSchema(pkg: ProductInput): Record<string, unknown> {
-  const offer: Record<string, unknown> = {
-    "@type": "Offer",
-    price: pkg.price,
-    priceCurrency: "INR",
-    url: `${SITE_URL}${pkg.url}`,
-    availability: "https://schema.org/InStock",
+export function touristTripSchema(trip: TouristTripInput): Record<string, unknown> {
+  return {
+    "@type": "TouristTrip",
+    name: trip.name,
+    description: trip.description ? stripHtml(trip.description).slice(0, 160) : undefined,
+    image: absoluteImage(trip.image),
+    url: `${SITE_URL}${trip.url}`,
+    provider: {
+      "@type": "TravelAgency",
+      name: "Arivo Holidays",
+      url: SITE_URL,
+    },
+    ...(trip.touristType && trip.touristType.length > 0 ? { touristType: trip.touristType } : {}),
+    ...(trip.itinerary && trip.itinerary.length > 0
+      ? {
+          itinerary: trip.itinerary.map((d, idx) => ({
+            "@type": "City",
+            "@id": `${SITE_URL}${trip.url}#day-${idx + 1}`,
+            name: d.day,
+            description: d.description ? stripHtml(d.description).slice(0, 200) : undefined,
+          })),
+        }
+      : {}),
   };
-  if (pkg.originalPrice && pkg.originalPrice > pkg.price) {
-    offer.priceSpecification = {
-      "@type": "PriceSpecification",
-      price: pkg.price,
-      priceCurrency: "INR",
-      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().slice(0, 10),
-    };
-  }
+}
+
+export function graphSchema(nodes: Record<string, unknown>[]): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
-    "@type": "Product",
-    name: pkg.name,
-    description: pkg.description ? stripHtml(pkg.description).slice(0, 160) : undefined,
-    image: absoluteImage(pkg.image),
-    offers: offer,
+    "@graph": nodes,
   };
 }
 

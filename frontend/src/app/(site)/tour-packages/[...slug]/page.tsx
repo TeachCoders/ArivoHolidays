@@ -6,9 +6,10 @@ import CityDetail from "@/feature/destinations/components/CityDetail";
 import JourneyDetail from "@/feature/journey/components/JourneyDetail";
 import CmsFallbackPage from "@/feature/cms/components/CmsFallbackPage";
 import JsonLd from "@/components/shared/JsonLd";
-import { breadcrumbSchema, productSchema, faqSchema, touristDestinationSchema } from "@/lib/jsonLd";
+import { breadcrumbSchema, faqSchema, touristDestinationSchema, touristTripSchema, itemListSchema, graphSchema } from "@/lib/jsonLd";
 import { fetchBySlug, fetchPublicJson } from "@/feature/destinations/api/public-server";
 import { stripHtml } from "@/lib/utils";
+import { HOME_FAQS } from "@/lib/homeFaqs";
 import type { Country } from "@/feature/country/type";
 import type { State, PaginatedResponse as StatePage } from "@/feature/state/type";
 import type { City } from "@/feature/city/type";
@@ -31,6 +32,15 @@ function journeySlugCanonical(slug: string, stored?: string | null): string {
     ? stored.slice(stored.indexOf("/", stored.indexOf("://") + 3))
     : stored;
   return base.startsWith("/tour-packages/") ? base : derived;
+}
+
+function resolveFaqItems(faqs?: { ques: string; ans: string }[]): { question: string; answer: string }[] {
+  if (faqs && faqs.length > 0) {
+    return faqs
+      .filter((f) => f?.ques && f?.ans)
+      .map((f) => ({ question: stripHtml(f.ques), answer: stripHtml(f.ans) }));
+  }
+  return HOME_FAQS.map((f) => ({ question: f.question, answer: f.answer }));
 }
 
 export const revalidate = 60;
@@ -233,25 +243,30 @@ export default async function TourPackageCatchAllPage({ params }: Props) {
         fetchPublicJson<JourneyPage<Journey>>("/journey?limit=100&isActive=true"),
       ]);
 
-      const schema = [
+      const schema = graphSchema([
         touristDestinationSchema({
           name: country.title,
           description: country.seoDescription || country.overView || undefined,
           image: country.thumbImg || undefined,
           url: `/tour-packages/${country.slug}`,
         }),
+        itemListSchema(
+          (initialJourneys?.data || []).slice(0, 10).map((j) => ({
+            name: j.title.split("|")[0].trim(),
+            url: `/tour-packages/${j.slug}`,
+          }))
+        ),
         breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Tour Packages", path: "/tour-packages" },
           { name: country.title.replace(/\s*Tour$/i, ""), path: `/tour-packages/${country.slug}` },
         ]),
-      ];
+        faqSchema(resolveFaqItems(country.faqs)),
+      ]);
 
       return (
         <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
-          {schema.map((s, i) => (
-            <JsonLd key={i} data={s} />
-          ))}
+          <JsonLd data={schema} />
           <main className="flex-1">
             <CountryDetail
               slug={country.slug}
@@ -272,13 +287,22 @@ export default async function TourPackageCatchAllPage({ params }: Props) {
           : await fetchPublicJson<JourneyPage<Journey>>(
               "/journey?limit=100&isActive=true"
             );
-      const schema = [
+      const stateJourneys = state?.journeys?.length
+        ? state.journeys
+        : (initialJourneys?.data || []);
+      const schema = graphSchema([
         touristDestinationSchema({
           name: state.title,
           description: state.seoDescription || state.overView || undefined,
           image: state.thumbImg || undefined,
           url: `/tour-packages/${state.country?.slug}/${state.slug}`,
         }),
+        itemListSchema(
+          stateJourneys.slice(0, 10).map((j) => ({
+            name: j.title.split("|")[0].trim(),
+            url: `/tour-packages/${j.slug}`,
+          }))
+        ),
         breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Tour Packages", path: "/tour-packages" },
@@ -287,12 +311,11 @@ export default async function TourPackageCatchAllPage({ params }: Props) {
             : []),
           { name: state.title, path: `/tour-packages/${state.country?.slug}/${state.slug}` },
         ]),
-      ];
+        faqSchema(resolveFaqItems(state.faqs)),
+      ]);
       return (
         <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
-          {schema.map((s, i) => (
-            <JsonLd key={i} data={s} />
-          ))}
+          <JsonLd data={schema} />
           <main className="flex-1">
             <StateDetail slug={state.slug} initialState={state} initialJourneys={initialJourneys} />
           </main>
@@ -305,13 +328,19 @@ export default async function TourPackageCatchAllPage({ params }: Props) {
       const initialJourneys = await fetchPublicJson<JourneyPage<Journey>>(
         "/journey?limit=100&isActive=true"
       );
-      const schema = [
+      const schema = graphSchema([
         touristDestinationSchema({
           name: city.title,
           description: city.seoDescription || city.overView || undefined,
           image: city.thumbImg || undefined,
           url: `/tour-packages/${city.state?.country?.slug}/${city.state?.slug}/${city.slug}`,
         }),
+        itemListSchema(
+          (initialJourneys?.data || []).slice(0, 10).map((j) => ({
+            name: j.title.split("|")[0].trim(),
+            url: `/tour-packages/${j.slug}`,
+          }))
+        ),
         breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Tour Packages", path: "/tour-packages" },
@@ -323,12 +352,11 @@ export default async function TourPackageCatchAllPage({ params }: Props) {
             : []),
           { name: city.title, path: `/tour-packages/${city.state?.country?.slug}/${city.state?.slug}/${city.slug}` },
         ]),
-      ];
+        faqSchema(resolveFaqItems(city.faqs)),
+      ]);
       return (
         <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
-          {schema.map((s, i) => (
-            <JsonLd key={i} data={s} />
-          ))}
+          <JsonLd data={schema} />
           <main className="flex-1">
             <CityDetail citySlug={city.slug} initialCity={city} initialJourneys={initialJourneys} />
           </main>
@@ -339,34 +367,46 @@ export default async function TourPackageCatchAllPage({ params }: Props) {
     case "journey": {
       const { journey } = resolved;
       const canonical = journeySlugCanonical(journey.slug, journey.canonical);
+      const journeyFaqs = resolveFaqItems(journey.faqs);
+      const breadcrumbItems: { name: string; path: string }[] = [
+        { name: "Home", path: "/" },
+        { name: "Tour Packages", path: "/tour-packages" },
+      ];
+      const firstCity = journey.cities?.[0];
+      if (firstCity?.state?.country?.slug && firstCity.state.country.title) {
+        breadcrumbItems.push({
+          name: firstCity.state.country.title.replace(/\s*Tour$/i, ""),
+          path: `/tour-packages/${firstCity.state.country.slug}`,
+        });
+      }
+      if (firstCity?.state?.slug && firstCity.state.title && firstCity.state.country?.slug) {
+        breadcrumbItems.push({
+          name: firstCity.state.title,
+          path: `/tour-packages/${firstCity.state.country.slug}/${firstCity.state.slug}`,
+        });
+      }
+      breadcrumbItems.push({ name: journey.title, path: canonical });
+
       const schema = journey
-        ? [
-            productSchema({
+        ? graphSchema([
+            touristTripSchema({
               name: journey.title,
               description: journey.seoDescription || journey.overView || undefined,
-              image: journey.thumbImg || undefined,
-              price: journey.discountPrice ?? journey.pricePerPerson ?? 0,
-              originalPrice:
-                journey.discountPrice && journey.discountPrice < (journey.pricePerPerson || 0)
-                  ? journey.pricePerPerson
-                  : undefined,
+              image: journey.banner?.images?.[0] || journey.thumbImg || undefined,
               url: canonical,
+              touristType: journey.travelExperiences?.map((e) => e.title) || [],
+              itinerary: journey.days?.map((d) => ({
+                day: `Day ${d.day}`,
+                description: d.seoDescription || undefined,
+              })),
             }),
-            breadcrumbSchema([
-              { name: "Home", path: "/" },
-              { name: "Tour Packages", path: "/tour-packages" },
-              { name: journey.title, path: canonical },
-            ]),
-            ...(journey.faqs && journey.faqs.length > 0
-              ? [faqSchema(journey.faqs.map(f => ({ question: f.ques, answer: f.ans })))]
-              : []),
-          ]
-        : [];
+            breadcrumbSchema(breadcrumbItems),
+            faqSchema(journeyFaqs),
+          ])
+        : null;
       return (
         <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
-          {schema.map((data, i) => (
-            <JsonLd key={i} data={data} />
-          ))}
+          {schema && <JsonLd data={schema} />}
           <main className="flex-1">
             <JourneyDetail slug={journey.slug} initialJourney={journey} />
           </main>

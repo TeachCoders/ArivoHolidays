@@ -44,11 +44,6 @@ import StateCard from "./StateCard";
 import DestinationsSkeleton from "./DestinationsSkeleton";
 import FaqSection from "@/feature/home/components/FaqSection";
 
-function stripHtml(html?: string): string {
-  if (!html) return "";
-  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-}
-
 export default function CountryDetail({
   slug,
   initialCountry,
@@ -243,54 +238,8 @@ function CountryContent({
     />
   );
 
-  const graphNodes: any[] = [
-    {
-      "@type": "TouristDestination",
-      "name": displayTitle,
-      "description": stripHtml(country.seoDescription || country.overView || ""),
-      "image": heroImages[0] || country.thumbImg
-    },
-    {
-      "@type": "ItemList",
-      "name": `Top Tour Packages in ${displayTitle}`,
-      "itemListElement": countryJourneys.slice(0, 10).map((j, idx) => ({
-        "@type": "ListItem",
-        "position": idx + 1,
-        "name": j.title.split("|")[0].trim(),
-        "url": `https://arivoholidays.com${journeyPackageHref(j)}`
-      }))
-    }
-  ];
-
-  if (country.faqs && country.faqs.length > 0) {
-    graphNodes.push({
-      "@type": "FAQPage",
-      "mainEntity": country.faqs.map((f) => ({
-        "@type": "Question",
-        "name": stripHtml(f.ques),
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": stripHtml(f.ans)
-        }
-      }))
-    });
-  }
-
-  const countryJsonLd = {
-    "@context": "https://schema.org",
-    "@graph": graphNodes
-  };
-
   return (
     <div>
-      {/* ===== SEO JSON-LD SCHEMA ===== */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(countryJsonLd),
-        }}
-      />
-
       {/* ===== HERO ===== */}
       <section className="relative h-[460px] md:h-[520px] overflow-hidden bg-slate-900">
         {heroImages.length > 0 ? (

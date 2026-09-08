@@ -9,6 +9,7 @@ export interface CmsPage {
   seoTitle?: string;
   h1Title?: string;
   thumbImg?: string;
+  faqs?: { id?: number; ques: string; ans: string }[];
   isActive: boolean;
   displayOrder?: number;
   createdAt?: string;
@@ -25,6 +26,7 @@ export interface CmsPagePayload {
   seoTitle?: string;
   h1Title?: string;
   thumbImg?: string;
+  faqs?: { id?: number; ques: string; ans: string }[];
   isActive?: boolean;
   displayOrder?: number;
 }
