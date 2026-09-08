@@ -6,6 +6,7 @@ import { AppProviders } from "@/components/providers/app-provider";
 import { SentryErrorBoundary } from "@/components/shared/sentry-error-boundary";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || "GTM-MHMD6R9X";
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-BJQ7L9MPX3";
 import JsonLd from "@/components/shared/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/jsonLd";
 import { ChatWidgetWrapper } from "@/components/shared/ChatWidgetWrapper";
@@ -63,6 +64,19 @@ export default function RootLayout({
       className={cn("h-full antialiased", nunito.variable, "font-sans")}
     >
       <head>
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', '${GA_ID}');`,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
