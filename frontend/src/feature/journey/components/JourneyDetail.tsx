@@ -64,8 +64,8 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
   };
 
   const WHATSAPP_NUMBER =
-    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178";
-  const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005";
+    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210";
+  const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+919876543210";
 
   if (isLoading) return <PageLoader size="page" />;
   if (!journey) return notFound();

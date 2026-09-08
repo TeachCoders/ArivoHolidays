@@ -229,8 +229,8 @@ export default function TravellerPortalPage() {
             <div className="mt-8 pt-6 border-t border-slate-100 text-center">
               <p className="text-xs text-slate-400">
                 Need assistance? Call Arivo Concierge at{" "}
-                <a href="tel:+919876543210" className="text-[#2E8B8B] font-bold hover:underline">
-                  +91 9876543210
+                <a href={`tel:${(process.env.NEXT_PUBLIC_SALES_PHONE || "+919876543210").replace(/[^0-9+]/g, "")}`} className="text-[#2E8B8B] font-bold hover:underline">
+                  {process.env.NEXT_PUBLIC_SALES_PHONE || "+91 98765 43210"}
                 </a>
               </p>
             </div>

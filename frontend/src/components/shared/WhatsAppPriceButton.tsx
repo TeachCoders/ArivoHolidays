@@ -11,7 +11,7 @@ interface WhatsAppPriceButtonProps {
 }
 
 const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178";
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210";
 
 export const WhatsAppPriceButton: React.FC<WhatsAppPriceButtonProps> = ({
   packageName,

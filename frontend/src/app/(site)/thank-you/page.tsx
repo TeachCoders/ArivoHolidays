@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+91 98765 43210";
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178";
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210";
 const CLEAN_PHONE = SALES_PHONE.replace(/[^0-9+]/g, "");
 
 export default async function ThankYouPage() {

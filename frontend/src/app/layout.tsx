@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { AppProviders } from "@/components/providers/app-provider";
 import { SentryErrorBoundary } from "@/components/shared/sentry-error-boundary";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || "GTM-MHMD6R9X";
 import JsonLd from "@/components/shared/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/jsonLd";
 import { ChatWidgetWrapper } from "@/components/shared/ChatWidgetWrapper";
@@ -61,7 +62,26 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full antialiased", nunito.variable, "font-sans")}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans text-[#1C1C1C]">
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <JsonLd data={organizationSchema} />
         <JsonLd data={websiteSchema} />
         <AppProviders>

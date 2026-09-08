@@ -20,7 +20,7 @@ import { logger } from "../utils/logger.js";
 
 // Recipient WhatsApp number: defaults to the already-configured partner number.
 const whatsappTo = () =>
-  (process.env.WHATSAPP_TO || process.env.CHAT_PARTNER_NUMBER || "919136739178").replace(/[^0-9]/g, "");
+  (process.env.WHATSAPP_TO || process.env.CHAT_PARTNER_NUMBER || "919876543210").replace(/[^0-9]/g, "");
 
 const whatsappEnabled = () =>
   Boolean(

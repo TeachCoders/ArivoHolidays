@@ -8,6 +8,8 @@ interface AdFooterProps {
 }
 
 export default function AdFooter({ destinationName = "Holidays" }: AdFooterProps) {
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210";
+  const salesPhone = process.env.NEXT_PUBLIC_SALES_PHONE || "+919876543210";
   return (
     <footer className="relative bg-[#1C1C1C] text-[#999] pt-14 pb-24 lg:pb-12 border-t border-white/10 overflow-hidden">
       {/* Subtle top accent line matching main site footer */}
@@ -29,7 +31,7 @@ export default function AdFooter({ destinationName = "Holidays" }: AdFooterProps
             </p>
             <div className="pt-2">
               <a
-                href="https://wa.me/919876543210"
+                href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-400 text-xs font-bold transition shadow-sm"
@@ -72,8 +74,8 @@ export default function AdFooter({ destinationName = "Holidays" }: AdFooterProps
                 </div>
                 <div>
                   <div className="text-[10px] text-[#777] uppercase font-bold tracking-wider">24/7 Helpline</div>
-                  <a href="tel:+919876543210" className="font-bold text-white hover:text-[#2E8B8B] transition">
-                    +91 98765 43210
+                  <a href={`tel:${salesPhone.replace(/[^0-9+]/g, "")}`} className="font-bold text-white hover:text-[#2E8B8B] transition">
+                    {salesPhone}
                   </a>
                 </div>
               </li>
