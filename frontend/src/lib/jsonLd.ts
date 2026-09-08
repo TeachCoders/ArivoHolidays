@@ -100,6 +100,14 @@ export function touristTripSchema(trip: TouristTripInput): Record<string, unknow
       name: "Arivo Holidays",
       url: SITE_URL,
     },
+    offers: {
+      "@type": "Offer",
+      name: "Customised holiday quote",
+      description: "Price on request — personalised itinerary and custom quote within 24 hours.",
+      priceCurrency: "INR",
+      availability: "https://schema.org/InStock",
+      url: `${SITE_URL}${trip.url}`,
+    },
     ...(trip.touristType && trip.touristType.length > 0 ? { touristType: trip.touristType } : {}),
     ...(trip.itinerary && trip.itinerary.length > 0
       ? {
