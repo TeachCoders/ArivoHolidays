@@ -1,4 +1,4 @@
-import { MessageCircle } from "lucide-react";
+import WhatsAppIcon from "./WhatsAppIcon";
 
 interface WhatsAppShareBtnProps {
   phone: string;
@@ -33,7 +33,7 @@ export default function WhatsAppShareBtn({ phone, message, label = "Share on Wha
           : "bg-green-600 text-white hover:bg-green-700 cursor-pointer"
       } ${className}`}
     >
-      <MessageCircle className="h-3.5 w-3.5" />
+      <WhatsAppIcon className="h-3.5 w-3.5" />
       {label}
     </a>
   );

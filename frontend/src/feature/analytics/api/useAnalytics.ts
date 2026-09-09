@@ -81,15 +81,28 @@ export const useLiveNow = () => {
   return { data: query.data ?? null, isLoading: query.isLoading, error: query.error };
 };
 
-export const useReplaySessions = (enabled = true) => {
+export const useReplaySessions = (opts?: {
+  page?: number;
+  pageSize?: number;
+  kind?: "all" | "humans" | "bots";
+  enabled?: boolean;
+}) => {
+  const page = opts?.page ?? 1;
+  const pageSize = opts?.pageSize ?? 20;
+  const kind = opts?.kind ?? "all";
+  const enabled = opts?.enabled ?? true;
   const query = useQuery({
-    queryKey: ["replay-sessions"],
-    queryFn: getReplaySessions,
+    queryKey: ["replay-sessions", page, pageSize, kind],
+    queryFn: () => getReplaySessions({ page, pageSize, kind }),
     enabled,
     staleTime: 30 * 1000,
   });
   return {
-    sessions: query.data ?? [],
+    sessions: query.data?.sessions ?? [],
+    totals: query.data?.totals ?? { all: 0, humans: 0, bots: 0 },
+    page: query.data?.page ?? page,
+    pageSize,
+    totalPages: query.data?.totalPages ?? 1,
     isLoading: query.isLoading,
     error: query.error,
   };

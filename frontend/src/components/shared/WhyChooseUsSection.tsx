@@ -76,18 +76,18 @@ export const WhyChooseUsSection: React.FC<WhyChooseUsSectionProps> = ({ images =
   ];
 
   return (
-    <section className="py-20 bg-white shadow-[inset_0_15px_20px_-15px_rgba(0,0,0,0.06)] overflow-hidden">
-      <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10">
+    <section className="py-12 md:py-20 bg-white shadow-[inset_0_15px_20px_-15px_rgba(0,0,0,0.06)] overflow-hidden">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10">
         
         <div className={`grid grid-cols-1 ${showGallery ? "lg:grid-cols-2 gap-12 lg:gap-20" : "gap-12"} items-center`}>
           
           {/* Left Column: Heading & 4 Text Features */}
           <div>
             <SectionLabel>Why Book With Us</SectionLabel>
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mt-2 mb-6">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mt-2 mb-4 md:mb-6">
               Your Preferred & Reliable Travel Partner
             </h2>
-            <p className="text-slate-600 text-lg mb-10 leading-relaxed">
+            <p className="text-slate-600 text-base md:text-lg mb-6 md:mb-10 leading-relaxed">
               Unlike huge travel portals that treat you like a booking number, we focus on delivering personalized, high-quality local experiences with complete transparency.
             </p>
             

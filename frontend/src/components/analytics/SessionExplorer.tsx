@@ -134,10 +134,26 @@ function AnalysisPanel({ sessionId }: { sessionId: string }) {
 }
 
 export default function SessionExplorer() {
-  const { sessions, isLoading, error } = useReplaySessions();
   const { stats } = useAnalyticsStats();
   const [openId, setOpenId] = useState<string | null>(null);
+  const [kind, setKind] = useState<"all" | "humans" | "bots">("all");
+  const [page, setPage] = useState(1);
+  const { sessions, totals, page: currentPage, totalPages, isLoading, error } = useReplaySessions({ page, kind });
   const { replay, isLoading: replayLoading } = useReplay(openId);
+
+  const switchKind = (next: "all" | "humans" | "bots") => {
+    setKind(next);
+    setPage(1);
+    setOpenId(null);
+  };
+
+  const BOT_LABEL: Record<string, string> = {
+    search_crawler: "Search crawler",
+    ai_crawler: "AI crawler",
+    other_bot: "Bot/scraper",
+    cloud_ip: "Cloud IP",
+    multi_ua: "Multi-UA device farm",
+  };
 
   return (
     <section className="rounded-xl border border-gray-100 bg-white shadow-sm">
@@ -146,18 +162,42 @@ export default function SessionExplorer() {
           <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Session-wise Replays & Analysis</h3>
           {stats && (
             <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-              {sessions.length} recorded / {stats.totalSessions} total tracked
+              {totals.all} recorded / {stats.totalSessions} total tracked
             </span>
           )}
         </div>
         <p className="mt-0.5 text-xs text-gray-400">Guest visitors only (logged-in users are never recorded) · public pages · inputs masked</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {(
+            [
+              ["all", `All (${totals.all})`],
+              ["humans", `Humans (${totals.humans})`],
+              ["bots", `Bots (${totals.bots})`],
+            ] as const
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => switchKind(key)}
+              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
+                kind === key
+                  ? "bg-gray-900 text-white shadow-sm"
+                  : key === "bots"
+                    ? "bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </header>
 
       {isLoading && <div className="p-6 text-gray-500 animate-pulse">Loading sessions…</div>}
       {error && <div className="m-6 rounded-md border border-red-100 bg-red-50 p-3 text-sm text-red-600">Failed to load sessions.</div>}
       {!isLoading && !error && sessions.length === 0 && (
         <div className="p-8 text-center text-sm text-gray-500">
-          No recordings yet. Browse the public site while logged out — batches arrive every ~5 seconds.
+          {kind === "bots" ? "No bot sessions on record. Nice." : "No recordings yet. Browse the public site while logged out — batches arrive every ~5 seconds."}
         </div>
       )}
 
@@ -169,6 +209,7 @@ export default function SessionExplorer() {
                 <th className="px-4 py-2.5 font-medium">Started</th>
                 <th className="px-4 py-2.5 font-medium">User</th>
                 <th className="px-4 py-2.5 font-medium">Country</th>
+                <th className="px-4 py-2.5 font-medium">Type</th>
                 <th className="px-4 py-2.5 font-medium">Device</th>
                 <th className="px-4 py-2.5 font-medium">Visitor</th>
                 <th className="px-4 py-2.5 text-right font-medium">Actions</th>
@@ -189,6 +230,18 @@ export default function SessionExplorer() {
                         )}
                       </td>
                       <td className="px-4 py-2.5">{s.country || "—"}</td>
+                      <td className="px-4 py-2.5">
+                        {s.isBot ? (
+                          <span
+                            title={BOT_LABEL[s.botSource || "other_bot"]}
+                            className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-700"
+                          >
+                            🤖 Bot
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700">Human</span>
+                        )}
+                      </td>
                       <td className="px-4 py-2.5">{s.deviceType || "—"}</td>
                       <td className="px-4 py-2.5 font-mono text-xs text-gray-400">{(s.visitorId || s.sessionId).slice(0, 8)}…</td>
                       <td className="whitespace-nowrap px-4 py-2.5 text-right">
@@ -199,7 +252,7 @@ export default function SessionExplorer() {
                     </tr>
                     {isOpen && (
                       <tr>
-                        <td colSpan={6} className="border-b border-indigo-100 p-0">
+                        <td colSpan={7} className="border-b border-indigo-100 p-0">
                           <div className="bg-slate-50/80 px-4 py-4">
                             <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
                               <div className="lg:col-span-2">
@@ -229,6 +282,38 @@ export default function SessionExplorer() {
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {!isLoading && !error && totalPages > 1 && (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 px-6 py-3">
+          <span className="text-xs text-gray-500">
+            Page {currentPage} of {totalPages} · {(currentPage - 1) * 20 + sessions.length} of {kind === "bots" ? totals.bots : kind === "humans" ? totals.humans : totals.all} shown
+          </span>
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={currentPage <= 1}
+              onClick={() => {
+                setPage(currentPage - 1);
+                setOpenId(null);
+              }}
+            >
+              ← Prev
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={currentPage >= totalPages}
+              onClick={() => {
+                setPage(currentPage + 1);
+                setOpenId(null);
+              }}
+            >
+              Next →
+            </Button>
+          </div>
         </div>
       )}
     </section>

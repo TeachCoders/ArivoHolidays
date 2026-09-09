@@ -187,7 +187,7 @@ function StateContent({ state, initialJourneys }: { state: State; initialJourney
   return (
     <div>
       {/* ===== HERO ===== */}
-      <section className="relative h-[460px] md:h-[520px] overflow-hidden bg-slate-900">
+      <section className="relative h-[300px] sm:h-[380px] md:h-[520px] overflow-hidden bg-slate-900">
         {heroImages.length > 0 ? (
           <>
             <HeroSlider images={heroImages} alt={state.title} />
@@ -207,34 +207,34 @@ function StateContent({ state, initialJourneys }: { state: State; initialJourney
           </div>
         )}
 
-        <div className="relative z-10 max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 h-full flex flex-col justify-center items-center py-8 text-center">
+        <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 md:px-10 h-full flex flex-col justify-center items-center py-6 sm:py-8 text-center">
           {heroTag && (
-            <p className="max-w-2xl mx-auto mb-2 text-base sm:text-lg font-bold tracking-wider uppercase text-white/90 leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+            <p className="max-w-2xl mx-auto mb-2 text-sm sm:text-lg font-bold tracking-wider uppercase text-white/90 leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
               {heroTag}
             </p>
           )}
 
-          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase text-white leading-tight tracking-wider drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
+          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase text-white leading-tight tracking-wider drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
             {heroTitle}
           </h1>
 
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-4 sm:mt-7 flex flex-wrap items-center justify-center gap-3">
             <QuoteModal>
               <button
                 type="button"
-                className="btn-primary px-7 py-3.5 text-sm font-bold tracking-wide flex items-center gap-2 cursor-pointer shadow-lg shadow-[#D4561A]/30 active:scale-95 transition-all"
+                className="btn-primary px-4 py-2.5 sm:px-7 sm:py-3.5 text-xs sm:text-sm font-bold tracking-wide flex items-center gap-2 cursor-pointer shadow-lg shadow-[#D4561A]/30 active:scale-95 transition-all"
               >
                 <Sparkles size={16} />
                 <span>Plan My {state.title} Trip</span>
               </button>
             </QuoteModal>
 
-            <a href="#tours" className="px-6 py-3.5 text-sm font-bold tracking-wide rounded-xl border border-white/40 text-white bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-200 flex items-center gap-2">
+            <a href="#tours" className="px-3 py-2.5 sm:px-6 sm:py-3.5 text-xs sm:text-sm font-bold tracking-wide rounded-xl border border-white/40 text-white bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-200 flex items-center gap-2">
               <span>Explore Packages</span>
               <ArrowRight size={16} />
             </a>
 
-            <a href="#more" className="px-6 py-3.5 text-sm font-medium tracking-wide rounded-xl border border-white/20 text-white/80 bg-black/20 backdrop-blur-md hover:bg-white/10 transition-all duration-200">
+            <a href="#more" className="px-3 py-2.5 sm:px-6 sm:py-3.5 text-xs sm:text-sm font-medium tracking-wide rounded-xl border border-white/20 text-white/80 bg-black/20 backdrop-blur-md hover:bg-white/10 transition-all duration-200">
               About {state.title}
             </a>
           </div>
@@ -279,9 +279,9 @@ function StateContent({ state, initialJourneys }: { state: State; initialJourney
       />
 
       {/* ===== CITIES ===== */}
-      <section id="cities" className="w-full bg-white py-16 md:py-20 border-t border-slate-200/60">
+      <section id="cities" className="w-full bg-white py-12 md:py-20 border-t border-slate-200/60">
         <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10">
-        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
+        <div className="flex items-end justify-between mb-6 md:mb-10 flex-wrap gap-4">
           <div>
             <span className="accent-label">Discover</span>
             <h2 className="h3 text-[#1C1C1C] mt-2">
@@ -357,12 +357,12 @@ function StateContent({ state, initialJourneys }: { state: State; initialJourney
       </section>
 
       {/* ===== MORE DESCRIPTION (ALL INFO) ===== */}
-      <section id="more" className="bg-[#f8f8f8] border-y border-slate-200/60 py-16 md:py-20">
+      <section id="more" className="bg-[#f8f8f8] border-y border-slate-200/60 py-12 md:py-20">
         <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             <div className="lg:col-span-2">
               <span className="accent-label">Know More</span>
-              <h2 className="h3 text-[#1C1C1C] mt-2 mb-8">Everything About {state.title}</h2>
+              <h2 className="h3 text-[#1C1C1C] mt-2 mb-5 md:mb-8">Everything About {state.title}</h2>
 
               {state.seoDescription && (
                 <RichContent html={state.seoDescription} />

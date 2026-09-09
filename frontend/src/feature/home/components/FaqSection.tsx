@@ -29,8 +29,8 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
     : HOME_FAQS;
 
   return (
-    <section id="faq" className="py-20 bg-slate-50 relative shadow-[inset_0_15px_20px_-15px_rgba(0,0,0,0.06)]">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+    <section id="faq" className="py-12 md:py-20 bg-slate-50 relative shadow-[inset_0_15px_20px_-15px_rgba(0,0,0,0.06)]">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
         {/* Section Header */}
         <div>
           <SectionLabel icon={<HelpCircle className="w-4 h-4" />}>Got Questions?</SectionLabel>
@@ -51,14 +51,9 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
               >
                 <button
                   onClick={() => toggleFaq(faq.id)}
-                  className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left cursor-pointer focus:outline-none"
+                  className="w-full flex items-center justify-between gap-4 px-4 py-4 md:px-6 md:py-5 text-left cursor-pointer focus:outline-none"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    {faq.category && (
-                      <span className="text-xs font-semibold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-md shrink-0 border border-teal-200/60">
-                        {faq.category}
-                      </span>
-                    )}
                     <span className={`text-[16px] sm:text-[17px] font-bold transition-colors leading-snug ${
                       isOpen ? "text-[#2E8B8B]" : "text-slate-900"
                     }`}>
@@ -73,7 +68,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 text-slate-600 text-sm sm:text-base leading-relaxed border-t border-slate-100 pt-4">
+                  <div className="px-4 pb-4 md:px-6 md:pb-6 text-slate-600 text-sm sm:text-base leading-relaxed border-t border-slate-100 pt-4">
                     {faq.answer}
                   </div>
                 )}
@@ -82,7 +77,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
           })}
         </div>
         {/* Still Have Questions CTA Banner */}
-        <div className="mt-8 rounded-2xl bg-gradient-to-r from-[#1C1C1C] via-[#243333] to-[#1C1C1C] text-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-lg border border-slate-800">
+        <div className="mt-6 md:mt-8 rounded-2xl bg-gradient-to-r from-[#1C1C1C] via-[#243333] to-[#1C1C1C] text-white p-5 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-lg border border-slate-800">
           <div className="flex items-center gap-4 text-center sm:text-left">
             <div className="w-12 h-12 rounded-full bg-[#2E8B8B]/20 border border-[#2E8B8B]/40 flex items-center justify-center shrink-0">
               <MessageSquare size={22} className="text-[#2E8B8B]" />

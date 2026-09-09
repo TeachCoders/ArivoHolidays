@@ -133,13 +133,13 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
         <div className="absolute inset-0 opacity-[0.07]" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%23D4561A' stroke-width='0.8'%3E%3Crect x='0' y='0' width='200' height='200' fill='none'/%3E%3Cpath d='M90 60 L100 20 L110 60 M85 62 L80 75 L120 75 L115 62 M75 75 L75 90 L125 90 L125 75 M100 20 L100 14 M96 38 L100 25 L104 38 M80 90 L80 120 L120 120 L120 90 M85 120 L85 125 L115 125 L115 120 M100 90 L100 120'/%3E%3Ccircle cx='100' cy='72' r='4'/%3E%3Cpath d='M60 155 Q60 145 65 140 Q60 135 55 140 Q60 145 60 155 M52 160 L60 155 L68 160 M50 168 L52 160 L48 170 M68 160 L72 168 L64 170 M55 140 L48 135 M65 140 L72 135 M55 150 L52 155 M65 150 L68 155 M60 155 L60 168 M55 168 L65 168'/%3E%3Ccircle cx='60' cy='135' r='5'/%3E%3Ccircle cx='40' cy='40' r='15'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3Ccircle cx='40' cy='40' r='5'/%3E%3Cpath d='M40 25 L40 15 M40 55 L40 65 M25 40 L15 40 M55 40 L65 40'/%3E%3Ccircle cx='160' cy='160' r='12'/%3E%3Ccircle cx='160' cy='160' r='7'/%3E%3Ccircle cx='160' cy='160' r='3'/%3E%3Cpath d='M160 148 L160 140 M160 172 L160 180 M148 160 L140 160 M172 160 L180 160'/%3E%3C/g%3E%3C/svg%3E")`
         }} />
-        <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 py-8 md:py-12 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 py-5 md:py-10 relative z-10">
 
           {/* Header Info Block */}
-          <div className="mb-8">
+          <div className="mb-5">
 
             {pageH1 && (
-              <h1 className="font-heading text-2xl lg:text-3xl xl:text-4xl font-extrabold tracking-tight text-[#1C1C1C] mb-4 leading-[1.3]">
+              <h1 className="font-heading text-2xl lg:text-3xl xl:text-4xl font-extrabold tracking-tight text-[#1C1C1C] mb-3 leading-[1.3]">
                 {durationText && (
                   <span className="text-[#2E8B8B]">{durationText}</span>
                 )}
@@ -182,10 +182,10 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
                 <div className="flex flex-col h-full">
                   <div
                     className={cn(
-                      "grid gap-3 md:gap-4 lg:h-full w-full",
-                      heroImages.length === 1 ? "grid-cols-1 grid-rows-1 md:h-[440px]" :
-                        heroImages.length === 2 ? "grid-cols-1 grid-rows-2 h-[350px] md:h-[440px]" :
-                          "grid-cols-2 grid-rows-2 h-[350px] md:h-[440px]" // 3 or 4+ images
+                      "grid gap-2 md:gap-3 lg:h-full w-full",
+                      heroImages.length === 1 ? "grid-cols-1 grid-rows-1 md:h-[380px]" :
+                        heroImages.length === 2 ? "grid-cols-1 grid-rows-2 h-[260px] md:h-[380px]" :
+                          "grid-cols-2 grid-rows-2 h-[260px] md:h-[380px]" // 3 or 4+ images
                     )}
                   >
                     {/* Image 1 */}
@@ -265,7 +265,7 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
                   </div>
                 </div>
               ) : (
-                <div className="h-[320px] md:h-[420px] bg-[#1C1C1C] rounded-3xl" />
+                <div className="h-[260px] md:h-[380px] bg-[#1C1C1C] rounded-3xl" />
               )}
             </section>
 
@@ -387,7 +387,7 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
                     </div>
                   )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                  <div className="grid grid-cols-2 gap-3 w-full">
                     {/* WhatsApp CTA Button */}
                     <a
                       href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -395,7 +395,7 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-[#2E8B8B] hover:bg-[#247070] active:scale-95 text-white text-[14.5px] font-bold shadow-md shadow-[#2E8B8B]/20 transition-all text-center"
+                      className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-xl bg-[#2E8B8B] hover:bg-[#247070] active:scale-95 text-white text-[12.5px] sm:text-[14.5px] font-bold shadow-md shadow-[#2E8B8B]/20 transition-all text-center"
                     >
                       <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.659-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
@@ -407,9 +407,9 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
                     <QuoteModal>
                       <button
                         type="button"
-                        className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-[#D4561A] hover:bg-[#b84513] active:scale-95 text-white text-[14.5px] font-bold shadow-md shadow-[#D4561A]/20 transition-all text-center cursor-pointer"
+                        className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 sm:px-4 sm:py-3.5 rounded-xl bg-[#D4561A] hover:bg-[#b84513] active:scale-95 text-white text-[12.5px] sm:text-[14.5px] font-bold shadow-md shadow-[#D4561A]/20 transition-all text-center cursor-pointer"
                       >
-                        <CalendarDays size={18} className="shrink-0" />
+                        <CalendarDays size={16} className="shrink-0" />
                         <span>Book Now</span>
                       </button>
                     </QuoteModal>
@@ -439,18 +439,18 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
         </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-[9fr_5fr] gap-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 py-10 md:py-16 grid grid-cols-1 lg:grid-cols-[9fr_5fr] gap-6 lg:gap-8">
         {/* ===== MAIN ===== */}
-        <div className="space-y-12">
+        <div className="space-y-8 md:space-y-12">
           {journey.highlights && journey.highlights.length > 0 && (
             <section>
               <span className="accent-label">Highlights</span>
-              <h2 className="h3 text-[#1C1C1C] mt-3 mb-6">Key Experiences</h2>
-              <div className="bg-[#2E8B8B]/5 rounded-3xl p-7 md:p-9 border border-[#2E8B8B]/10">
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-7">
+              <h2 className="h3 text-[#1C1C1C] mt-2 mb-3">Key Experiences</h2>
+              <div className="bg-[#2E8B8B]/5 rounded-3xl p-5 md:p-6 border border-[#2E8B8B]/10">
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                   {journey.highlights.map((h, i) => (
-                    <li key={i} className="flex items-start gap-3.5 text-base font-medium text-[#1C1C1C] leading-[1.6]">
-                      <BadgeCheck size={22} className="shrink-0 mt-0.5 text-[#2E8B8B]" />
+                    <li key={i} className="flex items-start gap-2.5 text-[14.5px] font-medium text-[#1C1C1C] leading-[1.5]">
+                      <BadgeCheck size={18} className="shrink-0 mt-0.5 text-[#2E8B8B]" />
                       <span>{h}</span>
                     </li>
                   ))}
@@ -463,7 +463,7 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
             <section>
               <span className="accent-label">Overview</span>
               <h2 className="h3 text-[#1C1C1C] mt-3 mb-6">About This Tour</h2>
-              <div className="bg-white rounded-3xl p-7 md:p-9 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-base text-slate-600 leading-[1.8]">
+              <div className="bg-white rounded-3xl p-5 md:p-9 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-base text-slate-600 leading-[1.8]">
                 <RichContent html={journey.overView} />
               </div>
             </section>
@@ -471,7 +471,7 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
 
           {journey.days && journey.days.length > 0 && (
             <section>
-              <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
+              <div className="flex flex-wrap items-end justify-between gap-4 mb-5 md:mb-8">
                 <div>
                   <span className="accent-label">Itinerary</span>
                   <h2 className="h3 text-[#1C1C1C] mt-2">Day-by-Day Itinerary</h2>
@@ -484,7 +484,7 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
                   {openDays.length === journey.days.length ? "Collapse All" : "Expand All"}
                 </button>
               </div>
-              <div className="relative bg-white rounded-3xl p-6 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+              <div className="relative bg-white rounded-3xl p-4 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
                 {journey.days.map((day, i) => (
                   <DayItem
                     key={day.id}
@@ -507,7 +507,7 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
           {(journey.inclusions?.length ?? 0) > 0 || (journey.exclusions?.length ?? 0) > 0 ? (
             <div className="grid grid-cols-1 gap-6 lg:gap-8">
               {(journey.inclusions?.length ?? 0) > 0 && (
-                <div className="bg-emerald-50/40 border border-emerald-100 rounded-3xl p-7 md:p-9 shadow-[0_8px_30px_rgb(16,185,129,0.04)]">
+                <div className="bg-emerald-50/40 border border-emerald-100 rounded-3xl p-5 md:p-9 shadow-[0_8px_30px_rgb(16,185,129,0.04)]">
                   <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-emerald-700 mb-6 flex items-center gap-2.5">
                     <CheckCircle2 size={18} className="text-emerald-500" /> What's Included
                   </h3>
@@ -521,7 +521,7 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
                 </div>
               )}
               {(journey.exclusions?.length ?? 0) > 0 && (
-                <div className="bg-red-50/40 border border-red-100 rounded-3xl p-7 md:p-9 shadow-[0_8px_30px_rgb(239,68,68,0.04)]">
+                <div className="bg-red-50/40 border border-red-100 rounded-3xl p-5 md:p-9 shadow-[0_8px_30px_rgb(239,68,68,0.04)]">
                   <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-red-700 mb-6 flex items-center gap-2.5">
                     <XCircle size={18} className="text-red-500" /> What's Excluded
                   </h3>
@@ -540,8 +540,8 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
           {(journey.whyChooseUs?.length ?? 0) > 0 && (
             <section>
               <span className="accent-label">Why Choose Us</span>
-              <h2 className="h3 text-[#1C1C1C] mt-2 mb-6">Why Book With Us</h2>
-              <div className="relative rounded-3xl bg-gradient-to-br from-white via-[#F8FAFA] to-[#EBF3F3] p-8 md:p-10 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#2E8B8B]/10">
+              <h2 className="h3 text-[#1C1C1C] mt-2 mb-4 md:mb-6">Why Book With Us</h2>
+              <div className="relative rounded-3xl bg-gradient-to-br from-white via-[#F8FAFA] to-[#EBF3F3] p-6 md:p-10 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#2E8B8B]/10">
                 {/* Background Watermark Icon */}
                 <div className="absolute -top-8 -right-4 opacity-[0.05] pointer-events-none rotate-12">
                   <ShieldCheck className="w-56 h-56 md:w-64 md:h-64 text-[#2E8B8B]" />
@@ -566,7 +566,7 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
           {(journey.faqs?.length ?? 0) > 0 && (
             <section>
               <span className="accent-label">FAQs</span>
-              <h2 className="h3 text-[#1C1C1C] mt-2 mb-6">Frequently Asked Questions</h2>
+              <h2 className="h3 text-[#1C1C1C] mt-2 mb-4 md:mb-6">Frequently Asked Questions</h2>
               <div className="space-y-3">
                 {(journey.faqs ?? []).map((f) => (
                   <FaqItem key={f.id} q={f.ques} a={f.ans} />
@@ -618,11 +618,11 @@ export default function JourneyDetail({ slug, initialJourney }: { slug: string; 
 
       {/* ===== KNOW MORE (RAJASTHAN-STYLE FULL SECTION) ===== */}
       {(journey.seoDescription || journey.moreDescription) && (
-        <section id="know-more" className="bg-[#f8f8f8] border-y border-slate-200/60 py-16 md:py-20">
+        <section id="know-more" className="bg-[#f8f8f8] border-y border-slate-200/60 py-12 md:py-20">
           <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10">
             <div className="max-w-5xl">
               <span className="accent-label">Know More</span>
-              <h2 className="h3 text-[#1C1C1C] mt-2 mb-8">Everything About {journey.title}</h2>
+              <h2 className="h3 text-[#1C1C1C] mt-2 mb-5 md:mb-8">Everything About {journey.title}</h2>
 
               {journey.seoDescription && (
                 <RichContent html={journey.seoDescription} />
@@ -708,13 +708,13 @@ function DayItem({
   onToggle: () => void;
 }) {
   return (
-    <div className="relative pl-8 md:pl-12 py-4 md:py-5 first:pt-0 last:pb-0 group">
+    <div className="relative pl-0 md:pl-12 py-4 md:py-5 first:pt-0 last:pb-0 group">
       {/* Timeline Line */}
-      <div className="absolute left-[11px] md:left-[15px] top-0 bottom-0 w-[2px] bg-slate-200 group-last:bottom-auto group-last:h-full" />
+      <div className="hidden md:block absolute left-[15px] top-0 bottom-0 w-[2px] bg-slate-200 group-last:bottom-auto group-last:h-full" />
 
       {/* Timeline Dot */}
-      <div className="absolute left-0 md:left-0 top-3 md:top-4 w-6 h-6 md:w-8 md:h-8 rounded-full bg-white border-[3px] border-[#2E8B8B] flex items-center justify-center shadow-sm z-10 transition-colors duration-300 group-hover:border-[#D4561A]">
-        <span className="text-[10px] md:text-xs font-black text-[#2E8B8B] transition-colors duration-300 group-hover:text-[#D4561A]">{index}</span>
+      <div className="hidden md:flex absolute left-0 top-4 w-8 h-8 rounded-full bg-white border-[3px] border-[#2E8B8B] items-center justify-center shadow-sm z-10 transition-colors duration-300 group-hover:border-[#D4561A]">
+        <span className="text-xs font-black text-[#2E8B8B] transition-colors duration-300 group-hover:text-[#D4561A]">{index}</span>
       </div>
 
       <div className="w-full">

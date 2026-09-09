@@ -285,7 +285,7 @@ export const ChatWidget: React.FC = () => {
   if (hidden) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end">
+    <div className="fixed bottom-20 md:bottom-6 right-6 z-[60] flex flex-col items-end">
       {open && (
         <div className="w-[calc(100vw-3rem)] max-w-[400px] mb-3 rounded-[2rem] overflow-hidden bg-[#f5f5f5] shadow-2xl shadow-black/20 border border-white/50 animate-in fade-in zoom-in-95 duration-200 flex flex-col h-[75vh] max-h-[700px]">
           {/* Header */}
@@ -498,7 +498,7 @@ export const ChatWidget: React.FC = () => {
 
       {/* Tooltip popup when chat is closed */}
       {showTooltip && !open && !hidden && (
-        <div className="relative bg-white rounded-2xl shadow-xl border border-zinc-200 px-4 py-3 max-w-[220px] mb-3 animate-in fade-in slide-in-from-bottom-2">
+        <div className="relative hidden md:block bg-white rounded-2xl shadow-xl border border-zinc-200 px-4 py-3 max-w-[220px] mb-3 animate-in fade-in slide-in-from-bottom-2">
           <button
             onClick={(e) => { e.stopPropagation(); setShowTooltip(false); }}
             aria-label="Dismiss chat tip"

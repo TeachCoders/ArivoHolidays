@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Mail, Phone, MapPin, ShieldCheck, CreditCard } from "lucide-react";
+import WhatsAppIcon from "@/components/shared/WhatsAppIcon";
 import { useGetStates } from "@/feature/state/api/useState";
 import { useGetTravelExperiences } from "@/feature/travelExperience/api/useTravelExperience";
 import type { State } from "@/feature/state/type";
@@ -78,8 +79,12 @@ export const Footer: React.FC = () => {
     destinationLinks.length > 0 ? destinationLinks : TOP_DESTINATIONS;
   const footerThemes = experienceLinks.length > 0 ? experienceLinks : TRAVEL_THEMES;
 
+  const salesPhone = process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005";
+  const salesPhoneDigits = salesPhone.replace(/[^0-9]/g, "");
+  const salesPhoneDisplay = `+${salesPhoneDigits.slice(0, 2)} ${salesPhoneDigits.slice(2, 7)} ${salesPhoneDigits.slice(7)}`;
+
   if (isOfferPage) {
-    return (
+  return (
       <footer className="relative bg-[#1C1C1C] text-[#999] pt-12 pb-8 overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#2E8B8B]/40 to-transparent" />
         <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 flex flex-col items-center justify-center text-center">
@@ -102,7 +107,7 @@ export const Footer: React.FC = () => {
   }
 
   return (
-    <footer className="relative bg-[#1C1C1C] text-[#999] pt-16 pb-8 overflow-hidden">
+    <footer className="relative bg-[#1C1C1C] text-[#999] pt-16 pb-24 md:pb-8 overflow-hidden">
       {/* Subtle top accent line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#2E8B8B]/40 to-transparent" />
 
@@ -181,10 +186,10 @@ export const Footer: React.FC = () => {
                   <Phone className="w-4 h-4 text-[#2E8B8B]" />
                 </div>
                 <a
-                  href="tel:+918447273005"
+                  href={`tel:${salesPhone}`}
                   className="text-[#a8a8a8] hover:text-white transition-colors font-medium"
                 >
-                  +91 84472 73005
+                  {salesPhoneDisplay}
                 </a>
               </div>
               <div className="flex items-center gap-3">
@@ -196,6 +201,19 @@ export const Footer: React.FC = () => {
                   className="text-[#a8a8a8] hover:text-white transition-colors"
                 >
                   support@arivoholidays.com
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center shrink-0">
+                  <WhatsAppIcon className="w-4 h-4 text-[#2E8B8B]" />
+                </div>
+                <a
+                  href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178"}?text=${encodeURIComponent("Hi Arivo Holidays, I want to inquire about a holiday tour package.")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#a8a8a8] hover:text-white transition-colors"
+                >
+                  Chat on WhatsApp
                 </a>
               </div>
             </div>

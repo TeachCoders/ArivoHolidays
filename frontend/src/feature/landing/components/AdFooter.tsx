@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Phone, Mail, MapPin, ShieldCheck, HeartHandshake, Award, MessageCircle } from "lucide-react";
+import { Phone, Mail, MapPin, ShieldCheck, HeartHandshake, Award } from "lucide-react";
+import WhatsAppIcon from "@/components/shared/WhatsAppIcon";
 
 interface AdFooterProps {
   destinationName?: string;
@@ -36,7 +37,7 @@ export default function AdFooter({ destinationName = "Holidays" }: AdFooterProps
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-400 text-xs font-bold transition shadow-sm"
               >
-                <MessageCircle size={16} /> Chat on WhatsApp
+                <WhatsAppIcon className="w-4 h-4" /> Chat on WhatsApp
               </a>
             </div>
           </div>

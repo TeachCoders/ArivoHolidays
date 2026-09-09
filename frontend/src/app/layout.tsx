@@ -10,6 +10,8 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-BJQ7L9MPX3";
 import JsonLd from "@/components/shared/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/jsonLd";
 import { ChatWidgetWrapper } from "@/components/shared/ChatWidgetWrapper";
+import WhatsAppWidget from "@/components/shared/WhatsAppWidget";
+import MobileStickyActionBar from "@/components/shared/MobileStickyActionBar";
 import UserActivityTracker from "@/components/shared/UserActivityTracker";
 
 const nunito = Nunito_Sans({
@@ -103,6 +105,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             {children}
           </SentryErrorBoundary>
           <ChatWidgetWrapper />
+          <WhatsAppWidget />
+          <MobileStickyActionBar />
           <UserActivityTracker />
         </AppProviders>
       </body>

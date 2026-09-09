@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { PhoneCall, MessageCircle, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { PhoneCall, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
 import apiClient from "@/lib/apiClient";
 import { detectGeoFromIP } from "@/feature/leads/data/countries";
 import { successToast, errorToast } from "@/components/shared/tost";
+import WhatsAppIcon from "@/components/shared/WhatsAppIcon";
 
 interface MobileStickyBarProps {
   destinationName?: string;
@@ -65,9 +66,9 @@ export default function MobileStickyBar({
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 p-3 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] flex items-center gap-2">
         <button
           onClick={() => setShowModal(true)}
-          className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition shadow-lg shadow-emerald-600/20"
+          className="flex-1 py-3 bg-[#2E8B8B] hover:bg-[#266f6f] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition shadow-lg shadow-[#2E8B8B]/20"
         >
-          <MessageCircle size={16} />
+          <WhatsAppIcon className="h-4 w-4" />
           <span>Price on WhatsApp</span>
         </button>
 

@@ -63,6 +63,51 @@ function parseUserAgent(ua = '') {
   return { browser, os, device };
 }
 
+// ── Bot / crawler detection for the replay VIP list ─────────────────────
+// Two signals decide whether a session is automated traffic:
+//   1. User-Agent mentions a crawler/scraper/monitor/AI tool (bots brand themselves).
+//   2. IP sits in a well-known cloud/datacenter range where no real end user lives
+//      (Googlebot rendering, Lighthouse, uptime monitors, scrapers, VPN exits).
+function detectSessionBot(userAgent = '', ip = '') {
+  const ua = String(userAgent || '').toLowerCase();
+  const find = (list) => list.find((t) => ua.includes(t));
+
+  const search = find(['googlebot', 'bingbot', 'yandexbot', 'yandex/', 'duckduckbot', 'baiduspider', 'slurp', 'googleother', 'adsbot-google', 'mediapartners-google', 'page-speed-insights', 'lighthouse']);
+  if (search) return { isBot: true, botSource: 'search_crawler' };
+
+  const ai = find(['gptbot', 'claudebot', 'bytespider', 'perplexity', 'anthropic', 'openai', 'cohere', 'ai2bot', 'chatgpt']);
+  if (ai) return { isBot: true, botSource: 'ai_crawler' };
+
+  const tool = find(['bot', 'crawl', 'spider', 'scrape', 'scrapy', 'headless', 'phantomjs',
+    'uptimerobot', 'pingdom', 'gtmetrix', 'screaming frog', 'ahrefs', 'semrush', 'majestic',
+    'wayback', 'archive.org', 'facebookexternalhit', 'linkedinbot', 'twitterbot', 'curl/',
+    'wget/', 'python-requests', 'go-http-client', 'node-fetch', 'okhttp', 'postmanruntime',
+    'newrelic', 'datadog', 'monitoring', 'watchdog']);
+  if (tool) return { isBot: true, botSource: 'other_bot' };
+
+  if (isCloudIp(ip)) return { isBot: true, botSource: 'cloud_ip' };
+
+  return { isBot: false, botSource: null };
+}
+
+// Curated cloud/datacenter first-octets + exact Googlebot render ranges.
+// Conservative: Indian residential ISPs (and most home broadband) are untouched,
+// which is what the replay list is really meant to surface.
+function isCloudIp(ip = '') {
+  if (!ip) return false;
+  const p = ip.split('.').map(Number);
+  if (p.length !== 4 || p.some((n) => Number.isNaN(n))) return false;
+  const [a, b] = p;
+  if (a === 66 && b === 249) return true; // Googlebot / Google render farm
+  const cloud = new Set([
+    3, 13, 18, 20, 34, 35, 40, 44, 45, 50, 52, 54, 72, 88,
+    96, 104, 129, 135, 137, 138, 140, 141, 146, 149, 151, 152,
+    157, 158, 159, 165, 167, 172, 173, 174, 175, 176, 177, 191,
+    195, 205, 207, 209, 213, 216, 217, 146, 23,
+  ]);
+  return cloud.has(a);
+}
+
 // Best-effort IP → country resolution (fire-and-forget, cached per IP).
 // Uses ip-api.com (free, no key). Returns null on localhost/private IPs or any error.
 const ipCountryCache = new Map();
@@ -883,23 +928,48 @@ router.post('/replay', replayLimiter, async (req, res) => {
 /**
  * GET /analytics/replay-sessions  (super admin)
  * Sessions that have recorded replays, newest first.
+ * Query: ?page=1&pageSize=20&kind=all|humans|bots
+ * Response: { sessions, totals: { all, humans, bots }, page, pageSize, totalPages }
+ * Each session is tagged isBot/botSource so crawler & cloud traffic can be
+ * filtered out while browsing.
  */
 router.get('/replay-sessions', requireSuperAdmin, async (req, res) => {
   try {
-    const rows = await prisma.replayEvent.groupBy({
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const pageSize = Math.min(50, Math.max(1, parseInt(req.query.pageSize, 10) || 20));
+    const kind = ['all', 'humans', 'bots'].includes(req.query.kind) ? req.query.kind : 'all';
+
+    const groups = await prisma.replayEvent.groupBy({
       by: ['sessionId'],
       _count: { id: true },
       _min: { createdAt: true },
       _max: { createdAt: true },
       orderBy: { _max: { createdAt: 'desc' } },
-      take: 50,
     });
 
     const sessions = await prisma.userSession.findMany({
-      where: { id: { in: rows.map(r => r.sessionId) } },
-      select: { id: true, visitorId: true, userId: true, startedAt: true, endedAt: true, country: true, deviceType: true, userAgent: true },
+      where: { id: { in: groups.map(r => r.sessionId) } },
+      select: { id: true, visitorId: true, userId: true, startedAt: true, endedAt: true, country: true, deviceType: true, userAgent: true, ipAddress: true },
     });
     const sessionMap = new Map(sessions.map(s => [s.id, s]));
+
+    // Multi-UA signal: one IP serving many distinct user-agents (or many sessions)
+    // is a device-farm / scanner, never a real household. Used to catch robots that
+    // forge normal-looking browser UAs (e.g. the single-VPS Malaysia traffic).
+    const ipStats = new Map();
+    for (const s of sessions) {
+      const ip = s.ipAddress || '';
+      if (!ip) continue;
+      const st = ipStats.get(ip) || { sessions: 0, uas: new Set() };
+      st.sessions += 1;
+      if (s.userAgent) st.uas.add(s.userAgent);
+      ipStats.set(ip, st);
+    }
+    const isMultiUa = (ip) => {
+      const st = ipStats.get(ip);
+      if (!st) return false;
+      return st.uas.size >= 6 || (st.uas.size >= 3 && st.sessions >= 6);
+    };
 
     const userIds = [...new Set(sessions.map(s => s.userId).filter(Boolean))];
     const users = userIds.length
@@ -907,19 +977,39 @@ router.get('/replay-sessions', requireSuperAdmin, async (req, res) => {
       : [];
     const userMap = new Map(users.map(u => [u.id, u]));
 
-    res.json(rows.map(r => {
+    const rows = groups.map(r => {
       const s = sessionMap.get(r.sessionId);
+      const ua = s?.userAgent || '';
+      const ip = s?.ipAddress || '';
+      const bot = detectSessionBot(ua, ip);
+      const effectiveBot = bot.isBot ? bot : isMultiUa(ip) ? { isBot: true, botSource: 'multi_ua' } : bot;
       return {
+        ...effectiveBot,
         sessionId: r.sessionId,
         visitorId: s?.visitorId || null,
         country: s?.country || 'Unknown',
-        deviceType: s?.deviceType || parseUserAgent(s?.userAgent || '').device,
+        deviceType: s?.deviceType || parseUserAgent(ua).device,
         user: s?.userId ? (userMap.get(s.userId) || null) : null,
         batchCount: r._count.id,
         startedAt: s?.startedAt || r._min.createdAt,
         lastEventAt: r._max.createdAt,
       };
-    }));
+    });
+
+    const totals = {
+      all: rows.length,
+      humans: rows.filter(x => !x.isBot).length,
+      bots: rows.filter(x => x.isBot).length,
+    };
+
+    const filtered = kind === 'all' ? rows
+      : kind === 'bots' ? rows.filter(x => x.isBot)
+      : rows.filter(x => !x.isBot);
+    const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const clampedPage = Math.min(page, totalPages);
+    const paged = filtered.slice((clampedPage - 1) * pageSize, clampedPage * pageSize);
+
+    res.json({ sessions: paged, totals, page: clampedPage, pageSize, totalPages });
   } catch (err) {
     console.error('[ANALYTICS] replay-sessions error', err);
     res.status(500).json({ error: 'internal error' });

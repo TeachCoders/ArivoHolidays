@@ -53,8 +53,8 @@ export default function ToursSection({
   };
 
   return (
-    <section id="tours" className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-10 py-16 md:py-20">
-      <div className="mb-14">
+    <section id="tours" className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 py-10 md:py-20">
+      <div className="mb-8 md:mb-14">
         {accentLabel && <span className="accent-label">{accentLabel}</span>}
         {h1Title && <h2 className="font-heading h2 text-[#1C1C1C] mt-3">{h1Title}</h2>}
         {overView && <RichContent html={overView} className="mt-4" />}

@@ -3,11 +3,11 @@ import Link from "next/link";
 import {
   CheckCircle2,
   PhoneCall,
-  MessageCircle,
   Home,
   Clock,
   Sparkles,
 } from "lucide-react";
+import WhatsAppIcon from "@/components/shared/WhatsAppIcon";
 
 export const metadata: Metadata = {
   title: "Thank You | Arivo Holidays - Inquiry Received",
@@ -101,7 +101,7 @@ export default async function ThankYouPage() {
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2"
               >
-                <MessageCircle size={18} />
+                <WhatsAppIcon className="w-[18px] h-[18px]" />
                 <span>Chat on WhatsApp</span>
               </a>
             </div>

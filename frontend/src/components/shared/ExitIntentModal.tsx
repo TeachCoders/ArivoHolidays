@@ -19,16 +19,16 @@ export default function ExitIntentModal() {
       return;
     }
 
-    const handleMouseLeave = (e: MouseEvent) => {
-      if (e.clientY <= 10 && !hasTriggered) {
+    // Show popup once the visitor stays on the page for 15+ seconds
+    const timer = setTimeout(() => {
+      if (!hasTriggered) {
         setOpen(true);
         setHasTriggered(true);
         sessionStorage.setItem("arivo_exit_intent_shown", "true");
       }
-    };
+    }, 15000);
 
-    document.addEventListener("mouseleave", handleMouseLeave);
-    return () => document.removeEventListener("mouseleave", handleMouseLeave);
+    return () => clearTimeout(timer);
   }, [hasTriggered]);
 
   const handleOpenChange = (isOpen: boolean) => {

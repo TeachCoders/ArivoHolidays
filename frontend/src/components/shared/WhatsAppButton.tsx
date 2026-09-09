@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { MessageCircle, Phone, X } from "lucide-react";
 import { RequestCallbackModal } from "./RequestCallbackModal";
+import WhatsAppIcon from "./WhatsAppIcon";
 
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178";
@@ -77,7 +78,7 @@ export const WhatsAppButton: React.FC = () => {
             className="flex items-center gap-2.5 bg-white rounded-full shadow-lg border border-zinc-200 pl-3 pr-5 py-2 hover:shadow-xl transition-all hover:scale-105 active:scale-95"
           >
             <span className="w-8 h-8 bg-[#25D366] rounded-full flex items-center justify-center text-white">
-              <MessageCircle className="w-4.5 h-4.5" />
+              <WhatsAppIcon className="w-4.5 h-4.5" />
             </span>
             <span className="text-xs font-bold text-slate-800">
               Quote on WhatsApp

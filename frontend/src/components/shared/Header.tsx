@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, PhoneCall } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
+import WhatsAppIcon from "@/components/shared/WhatsAppIcon";
 import { useGetStates } from "@/feature/state/api/useState";
 import { useGetJourneys } from "@/feature/journey/api/useJourney";
 import { useGetTravelExperiences } from "@/feature/travelExperience/api/useTravelExperience";
@@ -77,8 +79,11 @@ export const Header: React.FC = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [openDesktopDropdown, setOpenDesktopDropdown] = useState<string | null>(null);
-  const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(null);
+  const [openMenuKey, setOpenMenuKey] = useState<string | null>(null);
+  const [expandedCountries, setExpandedCountries] = useState<Record<number, boolean>>({});
+  const [expandedStates, setExpandedStates] = useState<Record<number, boolean>>({});
   const megaMenuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearMegaMenuCloseTimer = useCallback(() => {
@@ -94,6 +99,42 @@ export const Header: React.FC = () => {
       megaMenuCloseTimer.current = null;
     }, 120);
   }, []);
+
+  const handleMobileOpen = useCallback(() => {
+    setOpenMenuKey(null);
+    setExpandedCountries({});
+    setExpandedStates({});
+    setIsMobileMenuOpen(true);
+  }, []);
+
+  const handleMobileClose = useCallback(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
+
+  const toggleMenu = useCallback((key: string) => {
+    setOpenMenuKey((prev) => (prev === key ? null : key));
+  }, []);
+
+  const toggleCountryExpanded = useCallback((id: number) => {
+    setExpandedCountries((prev) => ({ ...prev, [id]: !prev[id] }));
+  }, []);
+
+  const toggleStateExpanded = useCallback((id: number) => {
+    setExpandedStates((prev) => ({ ...prev, [id]: !prev[id] }));
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isMobileMenuOpen]);
 
   const { states } = useGetStates({ limit: 100, isActive: "true" });
   const { journeys } = useGetJourneys({ limit: 100, isActive: "true" });
@@ -266,6 +307,156 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const renderMobileAccordion = navLinks.map((link) => {
+    const isDrill = link.isDestinationMega && link.tree && link.tree.length > 0;
+    const hasChildren = link.children && link.children.length > 0;
+    const isOpen = openMenuKey === link.href;
+
+    return (
+      <div key={link.href} className="border-b border-[#f2f2f2] last:border-0">
+        {!isDrill && !hasChildren ? (
+          <Link
+            href={link.href}
+            onClick={handleMobileClose}
+            className="flex w-full items-center justify-between px-2 py-3.5 text-[15px] font-semibold text-[#1C1C1C] transition-colors hover:bg-[#f6f7f8]"
+          >
+            {link.label}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={() => toggleMenu(link.href)}
+            aria-expanded={isOpen}
+            className="flex w-full items-center justify-between px-2 py-3.5 text-[15px] font-semibold text-[#1C1C1C] transition-colors hover:bg-[#f6f7f8]"
+          >
+            <span>{link.label}</span>
+            <ChevronDown
+              className={`h-5 w-5 text-[#999] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+            />
+          </button>
+        )}
+
+        <div
+          className={`grid transition-all duration-300 ease-in-out ${isOpen
+            ? "grid-rows-[1fr] opacity-100"
+            : "grid-rows-[0fr] opacity-0"
+            }`}
+        >
+          <div className="overflow-hidden">
+            <div className="pb-3">
+            {isDrill ? (
+              safeDestinationTree.map((country) => {
+                const isCountryOpen = !!expandedCountries[country.id];
+                return (
+                  <div key={country.id}>
+                    <button
+                      type="button"
+                      onClick={() => toggleCountryExpanded(country.id)}
+                      aria-expanded={isCountryOpen}
+                      className="flex w-full items-center justify-between px-4 py-2.5 text-[14px] font-semibold text-[#1C1C1C] transition-colors hover:bg-[#f6f7f8]"
+                    >
+                      <span>{country.title}</span>
+                      <ChevronDown
+                        className={`h-4 w-4 text-[#999] transition-transform duration-300 ${isCountryOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                    <div
+                      className={`grid transition-all duration-300 ease-in-out ${isCountryOpen
+                        ? "grid-rows-[1fr] opacity-100"
+                        : "grid-rows-[0fr] opacity-0"
+                        }`}
+                    >
+                      <div className="overflow-hidden">
+                        <div>
+                        <Link
+                          href={country.href}
+                          onClick={handleMobileClose}
+                          className="flex items-center gap-1 px-4 py-2 text-[13px] font-bold text-[#D4561A]"
+                        >
+                          View all {country.title} tours <span aria-hidden>→</span>
+                        </Link>
+                        {country.states.map((state) => {
+                          const isStateOpen = !!expandedStates[state.id];
+                          return (
+                            <div key={state.id}>
+                              <button
+                                type="button"
+                                onClick={() => toggleStateExpanded(state.id)}
+                                aria-expanded={isStateOpen}
+                                className="flex w-full items-center justify-between px-6 py-2.5 text-[14px] font-semibold text-[#2E8B8B] transition-colors hover:bg-[#f6f7f8]"
+                              >
+                                <span>{state.title}</span>
+                                <ChevronDown
+                                  className={`h-4 w-4 text-[#999] transition-transform duration-300 ${isStateOpen ? "rotate-180" : ""}`}
+                                />
+                              </button>
+                              <div
+                              className={`grid transition-all duration-300 ease-in-out ${isStateOpen
+                                ? "grid-rows-[1fr] opacity-100"
+                                : "grid-rows-[0fr] opacity-0"
+                                }`}
+                            >
+                              <div className="overflow-hidden">
+                                <div className="flex flex-col">
+                                  {state.cities.map((city) => (
+                                    <Link
+                                      key={city.id}
+                                      href={city.href}
+                                      onClick={handleMobileClose}
+                                      className="px-8 py-2 text-[13px] text-[#444] transition-colors hover:bg-[#f6f7f8] hover:text-[#2E8B8B]"
+                                    >
+                                      {city.title}
+                                    </Link>
+                                  ))}
+                                  <Link
+                                    href={state.href}
+                                    onClick={handleMobileClose}
+                                    className="flex items-center gap-1 px-6 py-2 text-[13px] font-bold text-[#D4561A]"
+                                  >
+                                    View all {state.title} tours <span aria-hidden>→</span>
+                                  </Link>
+                                </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <>
+                {link.children?.map((child) => (
+                  <Link
+                    key={child.href}
+                    href={child.href}
+                    onClick={handleMobileClose}
+                    className="block px-4 py-2.5 text-[14px] font-medium text-[#444] transition-colors hover:bg-[#f6f7f8] hover:text-[#1C1C1C]"
+                  >
+                    {child.label}
+                  </Link>
+                ))}
+                {link.seeAllHref && (
+                  <Link
+                    href={link.seeAllHref}
+                    onClick={handleMobileClose}
+                    className="flex items-center gap-1 px-4 py-2.5 text-[13px] font-bold text-[#D4561A]"
+                  >
+                    See All <span aria-hidden>→</span>
+                  </Link>
+                )}
+              </>
+            )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  });
+
   return (
     <header
       className={`relative sticky top-0 z-50 transition-[background-color,border-color,box-shadow,padding] duration-300 ${isScrolled
@@ -409,7 +600,7 @@ export const Header: React.FC = () => {
           {!isOfferPage && (
             <div className="flex md:hidden items-center">
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                onClick={() => (isMobileMenuOpen ? handleMobileClose() : handleMobileOpen())}
                 aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isMobileMenuOpen}
                 className="p-2 rounded-lg text-[#555] hover:bg-[#f5f5f5] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1C1C1C]/20"
@@ -425,142 +616,72 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile dropdown menu */}
-      {!isOfferPage && (
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-out ${isMobileMenuOpen ? "max-h-[520px] opacity-100" : "max-h-0 opacity-0"
-            }`}
-        >
-          <div className="border-t border-[#ececec] bg-white/95 backdrop-blur-md px-4 pt-3 pb-6 space-y-1">
-            {navLinks.map((link) =>
-              link.children ? (
-                <div key={link.href}>
-                  <button
-                    onClick={() =>
-                      setOpenMobileDropdown(
-                        openMobileDropdown === link.href ? null : link.href
-                      )
-                    }
-                    aria-expanded={openMobileDropdown === link.href}
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-base font-medium text-[#555] hover:text-[#1C1C1C] hover:bg-[#f8f8f8] transition-colors"
-                  >
-                    <span>{link.label}</span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${openMobileDropdown === link.href ? "rotate-180" : ""
-                        }`}
-                    />
-                  </button>
-                  <div
-                    className={`transition-all duration-300 ease-out ${openMobileDropdown === link.href
-                      ? "max-h-[70vh] opacity-100 overflow-y-auto"
-                      : "max-h-0 opacity-0 overflow-hidden"
-                      }`}
-                  >
-                    <div className="pl-4 pb-1 space-y-0.5">
-                      {link.isDestinationMega && link.tree ? (
-                        <div className="space-y-4 pt-2">
-                          {(link.tree as DestinationTreeCountry[]).map((country) => (
-                            <div key={country.id} className="border-b border-[#f0f0f0] pb-3 last:border-0 last:pb-0">
-                              <Link
-                                href={country.href}
-                                onClick={() => { setIsMobileMenuOpen(false); setOpenMobileDropdown(null); }}
-                                className="block font-bold text-[#1C1C1C] text-[15px] mb-2"
-                              >
-                                {country.title}
-                              </Link>
-                              <div className="space-y-3 pl-2">
-                                {country.states.map((state) => (
-                                  <div key={state.id}>
-                                    <Link
-                                      href={state.href}
-                                      onClick={() => { setIsMobileMenuOpen(false); setOpenMobileDropdown(null); }}
-                                      className="block text-[14px] font-semibold text-[#2E8B8B] hover:opacity-80 mb-1"
-                                    >
-                                      {state.title}
-                                    </Link>
-                                    {state.cities.length > 0 && (
-                                      <div className="pl-3 flex flex-col gap-1">
-                                        {state.cities.slice(0, 5).map((city) => (
-                                          <Link
-                                            key={city.id}
-                                            href={city.href}
-                                            onClick={() => { setIsMobileMenuOpen(false); setOpenMobileDropdown(null); }}
-                                            className="text-[13px] text-[#777] hover:text-[#2E8B8B]"
-                                          >
-                                            {city.title}
-                                          </Link>
-                                        ))}
-                                        {state.cities.length > 5 && (
-                                          <Link
-                                            href={state.href}
-                                            onClick={() => { setIsMobileMenuOpen(false); setOpenMobileDropdown(null); }}
-                                            className="text-[12px] font-semibold text-[#D4561A] mt-1"
-                                          >
-                                            View all {state.cities.length} →
-                                          </Link>
-                                        )}
-                                      </div>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <>
-                          {link.children?.map((child) => (
-                            <Link
-                              key={child.href}
-                              href={child.href}
-                              onClick={() => {
-                                setIsMobileMenuOpen(false);
-                                setOpenMobileDropdown(null);
-                              }}
-                              className="block px-4 py-2.5 rounded-lg text-sm text-[#666] hover:text-[#1C1C1C] hover:bg-[#f8f8f8] transition-colors"
-                            >
-                              {child.label}
-                            </Link>
-                          ))}
-                          {link.seeAllHref && (
-                            <Link
-                              href={link.seeAllHref}
-                              onClick={() => {
-                                setIsMobileMenuOpen(false);
-                                setOpenMobileDropdown(null);
-                              }}
-                              className="flex items-center gap-1 px-4 py-2.5 rounded-lg text-sm font-semibold text-[#D4561A]"
-                            >
-                              See All
-                              <span aria-hidden>→</span>
-                            </Link>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ) : (
+      {/* Mobile drawer navigation (slide-in, drill-down) */}
+      {!isOfferPage &&
+        typeof document !== "undefined" &&
+        mounted &&
+        createPortal(
+          <>
+            {/* Backdrop */}
+            <div
+              className={`fixed inset-0 z-[65] bg-black/50 backdrop-blur-[2px] transition-opacity duration-300 md:hidden ${isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
+              onClick={handleMobileClose}
+              aria-hidden="true"
+            />
+
+            {/* Drawer panel */}
+            <div
+              className={`fixed top-0 left-0 z-[70] flex h-full w-[86vw] max-w-[380px] flex-col bg-white shadow-2xl transition-transform duration-300 ease-out md:hidden ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+                }`}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile navigation"
+            >
+              {/* Drawer head */}
+              <div className="flex h-16 shrink-0 items-center justify-between border-b border-[#ececec] px-4">
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-[#555] hover:text-[#1C1C1C] hover:bg-[#f8f8f8]"
+                  href="/"
+                  onClick={handleMobileClose}
+                  className="text-[19px] font-extrabold tracking-tight text-[#1C1C1C]"
                 >
-                  {link.label}
+                  Arivo<span className="text-[#2E8B8B]"> Holidays</span>
                 </Link>
-              )
-            )}
-            <div className="pt-3 mt-2 border-t border-[#ececec] flex flex-col gap-2">
-              <QuoteModal>
-                <button className="btn-primary w-full py-3 flex items-center justify-center gap-2 text-base">
-                  <span>Enquire Now</span>
+                <button
+                  onClick={handleMobileClose}
+                  aria-label="Close menu"
+                  className="rounded-lg p-2 text-[#555] transition-colors hover:bg-[#f5f5f5]"
+                >
+                  <X className="h-5 w-5" />
                 </button>
-              </QuoteModal>
+              </div>
+
+              {/* Accordion menu */}
+              <div className="flex-1 overflow-y-auto px-3 py-3">
+                <div className="space-y-2">{renderMobileAccordion}</div>
+              </div>
+
+                  {/* Drawer actions */}
+              <div className="shrink-0 space-y-2 border-t border-[#ececec] px-4 py-3">
+                <QuoteModal>
+                  <button className="btn-primary w-full py-3 text-base">
+                    <span>Enquire Now</span>
+                  </button>
+                </QuoteModal>
+                <a
+                  href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178"}?text=${encodeURIComponent("Hi Arivo Holidays, I want to inquire about a custom holiday tour package.")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#2E8B8B] py-3 text-base font-bold text-white transition-colors hover:bg-[#266f6f] active:scale-95"
+                >
+                  <WhatsAppIcon className="h-4 w-4" />
+                  Chat on WhatsApp
+                </a>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </>,
+          document.body
+        )}
     </header>
   );
 };
