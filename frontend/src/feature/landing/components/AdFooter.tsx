@@ -8,8 +8,8 @@ interface AdFooterProps {
 }
 
 export default function AdFooter({ destinationName = "Holidays" }: AdFooterProps) {
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918447273005";
-  const salesPhone = process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005";
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178";
+  const salesPhone = process.env.NEXT_PUBLIC_SALES_PHONE || "+919136739178";
   return (
     <footer className="relative bg-[#1C1C1C] text-[#999] pt-14 pb-24 lg:pb-12 border-t border-white/10 overflow-hidden">
       {/* Subtle top accent line matching main site footer */}

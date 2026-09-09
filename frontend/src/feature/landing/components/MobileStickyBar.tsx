@@ -14,8 +14,8 @@ interface MobileStickyBarProps {
 
 export default function MobileStickyBar({
   destinationName = "Holiday Package",
-  phoneNumber = process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005",
-  whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918447273005",
+  phoneNumber = process.env.NEXT_PUBLIC_SALES_PHONE || "+919136739178",
+  whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178",
 }: MobileStickyBarProps) {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "", travelDate: "" });

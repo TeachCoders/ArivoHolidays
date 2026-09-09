@@ -13,7 +13,7 @@ export const organizationSchema: Record<string, unknown> = {
   name: "Arivo Holidays",
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
-  telephone: process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005",
+  telephone: process.env.NEXT_PUBLIC_SALES_PHONE || "+919136739178",
   email: "support@arivoholidays.com",
   address: {
     "@type": "PostalAddress",
@@ -90,13 +90,13 @@ interface TouristTripInput {
 
 export function touristTripSchema(trip: TouristTripInput): Record<string, unknown> {
   return {
-    "@type": "TouristTrip",
+    "@type": "Product",
     name: trip.name,
     description: trip.description ? stripHtml(trip.description).slice(0, 160) : undefined,
     image: absoluteImage(trip.image),
     url: `${SITE_URL}${trip.url}`,
-    provider: {
-      "@type": "TravelAgency",
+    brand: {
+      "@type": "Organization",
       name: "Arivo Holidays",
       url: SITE_URL,
     },

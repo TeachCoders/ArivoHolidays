@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     "Thank you for contacting Arivo Holidays. Your travel inquiry has been received and our destination specialists will contact you shortly.",
 };
 
-const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+91 84472 73005";
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918447273005";
+const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+91 91367 39178";
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178";
 const CLEAN_PHONE = SALES_PHONE.replace(/[^0-9+]/g, "");
 
 export default async function ThankYouPage() {

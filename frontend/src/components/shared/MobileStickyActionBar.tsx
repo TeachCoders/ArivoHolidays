@@ -4,8 +4,8 @@ import { Phone, MessageCircle, Sparkles } from "lucide-react";
 import { QuoteModal } from "@/components/shared/QuoteModal";
 
 export default function MobileStickyActionBar() {
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918447273005"; // Official WhatsApp
-  const phone = process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005";
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178"; // Official WhatsApp
+  const phone = process.env.NEXT_PUBLIC_SALES_PHONE || "+919136739178";
 
   return (
     <aside aria-label="Quick Actions" className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-800 p-2.5 shadow-2xl">

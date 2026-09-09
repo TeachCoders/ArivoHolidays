@@ -3,7 +3,7 @@
 import { MessageCircle } from "lucide-react";
 
 export default function WhatsAppWidget() {
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918447273005"; // Official WhatsApp
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919136739178"; // Official WhatsApp
   const message = "Hi Arivo Holidays, I want to inquire about a custom holiday tour package.";
 
   return (

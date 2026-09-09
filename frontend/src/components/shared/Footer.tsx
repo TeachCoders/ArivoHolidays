@@ -181,10 +181,10 @@ export const Footer: React.FC = () => {
                   <Phone className="w-4 h-4 text-[#2E8B8B]" />
                 </div>
                 <a
-                  href={`tel:${(process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005").replace(/[^0-9+]/g, "")}`}
+                  href="tel:+918447273005"
                   className="text-[#a8a8a8] hover:text-white transition-colors font-medium"
                 >
-                  {process.env.NEXT_PUBLIC_SALES_PHONE || "+91 84472 73005"}
+                  +91 84472 73005
                 </a>
               </div>
               <div className="flex items-center gap-3">

@@ -11,8 +11,8 @@ const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME || "Arivo Holidays";
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_CHAT_PARTNER_NUMBER ||
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ||
-  "918447273005";
-const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005";
+  "919136739178";
+const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+919136739178";
 const STORAGE_KEY = "arivo_chat_v1";
 
 // Unique negative ids for optimistic messages (never collide with server ids).

@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/
 import TourBookingForm from "@/feature/leads/components/TourBookingForm";
 import Link from "next/link";
 
-const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+918447273005";
+const SALES_PHONE = process.env.NEXT_PUBLIC_SALES_PHONE || "+919136739178";
 
 const FacebookIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
